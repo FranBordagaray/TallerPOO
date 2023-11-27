@@ -1,4 +1,4 @@
 package Clases;
 
-public class Funcionario {
+public abstract class Funcionario extends Persona {
 }

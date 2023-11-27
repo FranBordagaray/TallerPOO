@@ -2,8 +2,8 @@
 package Clases;
 
 import java.util.Date;
-        
-public class HistoriaClinicaPaciente {
+
+public class HistoriaClinicaPaciente  {
     
     private Date fecha;
     private String historialDiagnostico;
