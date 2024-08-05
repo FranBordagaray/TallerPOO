@@ -1,24 +1,27 @@
 package Vista;
 
 import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.Font;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JTextField;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.SwingConstants;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+import Controlador.ClienteControlador;
 
 public class Login extends JFrame {
 
@@ -26,6 +29,8 @@ public class Login extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtUsuario;
 	private JPasswordField txtContrasenia;
+	
+	ClienteControlador controlador = new ClienteControlador();
 
 	/**
 	 * Launch the application.
@@ -115,6 +120,18 @@ public class Login extends JFrame {
 		JButton btnLogin = new JButton("Iniciar sesión");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					if (verificarCampos()) {
+						return;
+					} else if(controlador.iniciarSesion(txtUsuario.getText(), String.valueOf(txtContrasenia.getPassword()))){
+						JOptionPane.showMessageDialog(Login.this, "Bienvenido", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+						// aca redigire a la pantalla de inicio
+					} else {
+						JOptionPane.showMessageDialog(Login.this, "Error al iniciar sesion, verifique sus datos", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(Login.this, "Error inesperado: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		btnLogin.addMouseListener(new MouseAdapter() {
@@ -186,6 +203,9 @@ public class Login extends JFrame {
 		JButton btnRecuperarClave = new JButton("Recuperar");
 		btnRecuperarClave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				RecuperarCuenta recuperar = new RecuperarCuenta();
+				recuperar.setVisible(true);
+				Login.this.setVisible(false);
 			}
 		});
 		btnRecuperarClave.addMouseListener(new MouseAdapter() {
@@ -209,5 +229,16 @@ public class Login extends JFrame {
 		btnRecuperarClave.setAlignmentX(0.5f);
 		btnRecuperarClave.setBounds(380, 643, 160, 30);
 		pnlContenedor.add(btnRecuperarClave);
+	}
+	
+	private boolean verificarCampos() {
+		String usuario = txtUsuario.getText();
+		String contrasenia = String.valueOf(txtContrasenia.getPassword());
+
+		if (usuario.isEmpty() || contrasenia.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Complete todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
+			return true;
+		}
+		return false;
 	}
 }

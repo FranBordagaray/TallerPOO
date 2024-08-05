@@ -3,10 +3,12 @@ package Controlador;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import Conexion.Conexion;
 import Modelo.Cliente;
+import Modelo.Sesion;
 
 public class ClienteControlador {
 	Conexion cx;
@@ -56,4 +58,48 @@ public class ClienteControlador {
 		}
 		return sb.toString();
 	}
+
+	// Funcion para iniciar sesion
+	public boolean iniciarSesion(String usuario, String contrasenia) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			ps = cx.conectar().prepareStatement("SELECT idCliente, nombre, apellido, domicilio, telefono, email, usuario, contrasenia FROM Cliente WHERE usuario = ?");
+			ps.setString(1, usuario);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				String contraseniaCifrada = rs.getString("contrasenia");
+				String contraseniaIngresada = convertirSHA256(contrasenia);
+				if (contraseniaCifrada.equals(contraseniaIngresada)) {
+					Cliente cliente = new Cliente();
+					cliente.setIdCliente(rs.getInt("idCliente"));
+					cliente.setNombre(rs.getString("nombre"));
+					cliente.setApellido(rs.getString("apellido"));
+					cliente.setDomicilio(rs.getString("domicilio"));
+					cliente.setTelefono(rs.getString("telefono"));
+					cliente.setEmail(rs.getString("email"));
+					cliente.setUsuario(rs.getString("usuario"));
+					cliente.setContrasenia(contraseniaCifrada);
+
+					Sesion.setClienteActual(cliente);
+					return true;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (ps != null)
+					ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
 }
