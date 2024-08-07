@@ -59,14 +59,16 @@ public class Registro extends JFrame {
 	 * Create the frame.
 	 */
 	public Registro() {
+		// Configuración de la ventana principal
 		setTitle("Delicias Gourmet");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1280, 720);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(1, 1, 1, 1));
 		setLocationRelativeTo(null);
 		setResizable(false);
-
+		
+		// Creación del panel
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(1, 1, 1, 1));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
@@ -85,7 +87,7 @@ public class Registro extends JFrame {
 
 		// Panel contenedor de formulario
 		JPanel pnlContenedor = new JPanel();
-		pnlContenedor.setBackground(Color.LIGHT_GRAY);
+		pnlContenedor.setBackground(new Color(195, 155, 107));
 		pnlContenedor.setBounds(551, 1, 712, 679);
 		contentPane.add(pnlContenedor);
 		pnlContenedor.setLayout(null);

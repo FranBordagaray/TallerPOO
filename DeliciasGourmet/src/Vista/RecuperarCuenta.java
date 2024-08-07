@@ -1,6 +1,7 @@
 package Vista;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -37,7 +38,7 @@ public class RecuperarCuenta extends JFrame {
 		// Creación del panel
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(1, 1, 1, 1));
-		contentPane.setBackground(Color.LIGHT_GRAY);
+		contentPane.setBackground(new Color(195, 155, 107));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
@@ -50,7 +51,7 @@ public class RecuperarCuenta extends JFrame {
 		// Texto de instrucciones para recuperar la contraseña
 		JTextPane intrucciones = new JTextPane();
 		intrucciones.setForeground(Color.BLACK);
-		intrucciones.setBackground(Color.LIGHT_GRAY);
+		intrucciones.setBackground(new Color(195, 155, 107));
 		intrucciones.setEditable(false);
 		intrucciones.setFont(new Font("Roboto Light", Font.PLAIN, 15));
 		intrucciones.setText("Para recuperar su contraseña, ingrese el mail con el que se registro en el siguiente campo");
@@ -100,5 +101,34 @@ public class RecuperarCuenta extends JFrame {
 		btnEnviar.setAlignmentX(0.5f);
 		btnEnviar.setBounds(220, 277, 160, 30);
 		contentPane.add(btnEnviar);
+		
+		JButton btnCerrar = new JButton("X");
+		btnCerrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Login login = new Login();
+				login.setVisible(true);
+				RecuperarCuenta.this.setVisible(false);
+			}
+		});
+		btnCerrar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnCerrar.setBackground(new Color(255, 0, 0));
+				btnCerrar.setForeground(Color.WHITE);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnCerrar.setForeground(Color.BLACK);
+				btnCerrar.setBackground(new Color(195, 155, 107));
+			}
+		});
+		btnCerrar.setBackground(new Color(195, 155, 107));
+		btnCerrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnCerrar.setBorder(null);
+		btnCerrar.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btnCerrar.setFont(new Font("Roboto Light", Font.BOLD, 16));
+		btnCerrar.setBounds(555, 0, 45, 30);
+		contentPane.add(btnCerrar);
 	}
 }

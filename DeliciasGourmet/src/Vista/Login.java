@@ -52,14 +52,16 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
+		// Configuración de la ventana principal
 		setTitle("Delicias Gourmet");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1280, 720);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(1, 1, 1, 1));
 		setLocationRelativeTo(null);
 		setResizable(false);
-
+		
+		// Creación del panel
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(1, 1, 1, 1));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
@@ -78,7 +80,7 @@ public class Login extends JFrame {
 
 		// Panel contenedor de formulario
 		JPanel pnlContenedor = new JPanel();
-		pnlContenedor.setBackground(Color.LIGHT_GRAY);
+		pnlContenedor.setBackground(new Color(195, 155, 107));
 		pnlContenedor.setBounds(550, 1, 712, 679);
 		contentPane.add(pnlContenedor);
 		pnlContenedor.setLayout(null);
@@ -98,6 +100,7 @@ public class Login extends JFrame {
 		pnlContenedor.add(lblUsuario);
 
 		txtUsuario = new JTextField();
+		txtUsuario.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		txtUsuario.setBorder(null);
 		txtUsuario.setBounds(300, 250, 300, 30);
 		pnlContenedor.add(txtUsuario);
@@ -112,6 +115,7 @@ public class Login extends JFrame {
 		pnlContenedor.add(lblContrasenia);
 
 		txtContrasenia = new JPasswordField();
+		txtContrasenia.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		txtContrasenia.setBorder(null);
 		txtContrasenia.setBounds(300, 300, 300, 30);
 		pnlContenedor.add(txtContrasenia);
@@ -124,8 +128,10 @@ public class Login extends JFrame {
 					if (verificarCampos()) {
 						return;
 					} else if(controlador.iniciarSesion(txtUsuario.getText(), String.valueOf(txtContrasenia.getPassword()))){
-						JOptionPane.showMessageDialog(Login.this, "Bienvenido", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-						// aca redigire a la pantalla de inicio
+						JOptionPane.showMessageDialog(Login.this, "Bienvenido", "Exito", JOptionPane.INFORMATION_MESSAGE);
+						Inicio inicio = new Inicio();
+						inicio.setVisible(true);
+						Login.this.setVisible(false);
 					} else {
 						JOptionPane.showMessageDialog(Login.this, "Error al iniciar sesion, verifique sus datos", "Error", JOptionPane.ERROR_MESSAGE);
 					}
