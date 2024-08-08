@@ -25,10 +25,10 @@ public class Conexion {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void main(String[]args) {
+
+	public static void main(String[] args) {
 		Conexion con = new Conexion();
-		
+
 		con.conectar();
 	}
 }

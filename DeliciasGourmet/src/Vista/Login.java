@@ -29,7 +29,7 @@ public class Login extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtUsuario;
 	private JPasswordField txtContrasenia;
-	
+
 	ClienteControlador controlador = new ClienteControlador();
 
 	/**
@@ -58,7 +58,7 @@ public class Login extends JFrame {
 		setBounds(100, 100, 1280, 720);
 		setLocationRelativeTo(null);
 		setResizable(false);
-		
+
 		// Creación del panel
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(1, 1, 1, 1));
@@ -88,7 +88,7 @@ public class Login extends JFrame {
 		// Etiqueta de iniciar sesión
 		JLabel lblIniciarSesion = new JLabel("INICIAR SESIÓN");
 		lblIniciarSesion.setFont(new Font("Roboto Light", Font.BOLD, 28));
-		lblIniciarSesion.setBounds(252, 100, 208, 33);
+		lblIniciarSesion.setBounds(252, 100, 234, 33);
 		pnlContenedor.add(lblIniciarSesion);
 
 		// Etiqueta y campo de texto de usuario
@@ -127,16 +127,20 @@ public class Login extends JFrame {
 				try {
 					if (verificarCampos()) {
 						return;
-					} else if(controlador.iniciarSesion(txtUsuario.getText(), String.valueOf(txtContrasenia.getPassword()))){
-						JOptionPane.showMessageDialog(Login.this, "Bienvenido", "Exito", JOptionPane.INFORMATION_MESSAGE);
+					} else if (controlador.iniciarSesion(txtUsuario.getText(),
+							String.valueOf(txtContrasenia.getPassword()))) {
+						JOptionPane.showMessageDialog(Login.this, "Bienvenido", "Exito",
+								JOptionPane.INFORMATION_MESSAGE);
 						Inicio inicio = new Inicio();
 						inicio.setVisible(true);
 						Login.this.setVisible(false);
 					} else {
-						JOptionPane.showMessageDialog(Login.this, "Error al iniciar sesion, verifique sus datos", "Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(Login.this, "Error al iniciar sesion, verifique sus datos",
+								"Error", JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(Login.this, "Error inesperado: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(Login.this, "Error inesperado: " + e2.getMessage(), "Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -236,7 +240,8 @@ public class Login extends JFrame {
 		btnRecuperarClave.setBounds(380, 643, 160, 30);
 		pnlContenedor.add(btnRecuperarClave);
 	}
-	
+
+	// Funcion para verificar campos vacios
 	private boolean verificarCampos() {
 		String usuario = txtUsuario.getText();
 		String contrasenia = String.valueOf(txtContrasenia.getPassword());

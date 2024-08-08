@@ -69,12 +69,4 @@ public class Tarjeta {
 		}
 		return (suma % 10 == 0);
 	}
-
-	// ToString de tarjeta
-	@Override
-	public String toString() {
-		return "Tarjeta[TITULAR: " + getTitular() + ", EMISOR: " + getEmisor() + ", NUMERO: "
-				+ (nroTarjeta != null ? getNroTarjeta() : "No disponible") + ", CODIGO DE VERIFICACION: "
-				+ getCodVerificacion() + "]";
-	}
 }

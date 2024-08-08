@@ -3,7 +3,6 @@ package Vista;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,24 +35,7 @@ public class Registro extends JFrame {
 	private JTextField txtUsuario;
 	private JPasswordField txtContrasenia;
 	private JPasswordField txtRepetirContrasenia;
-	
 	ClienteControlador controlador = new ClienteControlador();
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Registro frame = new Registro();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -65,7 +47,7 @@ public class Registro extends JFrame {
 		setBounds(100, 100, 1280, 720);
 		setLocationRelativeTo(null);
 		setResizable(false);
-		
+
 		// Creación del panel
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(1, 1, 1, 1));
@@ -195,13 +177,13 @@ public class Registro extends JFrame {
 		lblContrasenia.setFont(new Font("Roboto Light", Font.PLAIN, 22));
 		lblContrasenia.setBounds(53, 480, 248, 27);
 		pnlContenedor.add(lblContrasenia);
-		
+
 		txtContrasenia = new JPasswordField();
 		txtContrasenia.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		txtContrasenia.setBorder(null);
 		txtContrasenia.setBounds(300, 480, 300, 30);
 		pnlContenedor.add(txtContrasenia);
-		
+
 		// Etiqueta y campo de texto de repetir contrasenia
 		JLabel lblRepetirContrasea = new JLabel("REPETIR CONTRASEÑA:");
 		lblRepetirContrasea.setHorizontalAlignment(SwingConstants.CENTER);
@@ -209,7 +191,7 @@ public class Registro extends JFrame {
 		lblRepetirContrasea.setAlignmentX(0.5f);
 		lblRepetirContrasea.setBounds(53, 540, 248, 27);
 		pnlContenedor.add(lblRepetirContrasea);
-		
+
 		txtRepetirContrasenia = new JPasswordField();
 		txtRepetirContrasenia.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		txtRepetirContrasenia.setBorder(null);
@@ -233,17 +215,20 @@ public class Registro extends JFrame {
 						cliente.setUsuario(txtUsuario.getText());
 						cliente.setContrasenia(String.valueOf(txtContrasenia.getPassword()));
 						if (controlador.crearCuenta(cliente)) {
-							JOptionPane.showMessageDialog(Registro.this, "Registro exitoso!", "Exito", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(Registro.this, "Registro exitoso!", "Exito",
+									JOptionPane.INFORMATION_MESSAGE);
 							System.out.println("Registro exitoso!");
 							Login login = new Login();
 							login.setVisible(true);
 							Registro.this.setVisible(false);
 						} else {
-							JOptionPane.showMessageDialog(Registro.this, "Error al registrar cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(Registro.this, "Error al registrar cliente.", "Error",
+									JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(Registro.this, "Error inesperado: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(Registro.this, "Error inesperado: " + e2.getMessage(), "Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -268,11 +253,10 @@ public class Registro extends JFrame {
 		btnRegistro.setForeground(Color.BLACK);
 		btnRegistro.setBounds(276, 600, 160, 30);
 		pnlContenedor.add(btnRegistro);
-		
-		
 
 	}
-	
+
+	// Funcion para verificar campos vacios
 	private boolean verificarCampos() {
 		String nombre = txtNombre.getText();
 		String apellido = txtApellido.getText();
@@ -283,14 +267,16 @@ public class Registro extends JFrame {
 		String contrasenia = String.valueOf(txtContrasenia.getPassword());
 		String repetirContrasenia = String.valueOf(txtRepetirContrasenia.getPassword());
 
-		if (nombre.isEmpty() || apellido.isEmpty() || domicilio.isEmpty() || telefono.isEmpty() || mail.isEmpty() || usuario.isEmpty() || contrasenia.isEmpty() || repetirContrasenia.isEmpty()) {
+		if (nombre.isEmpty() || apellido.isEmpty() || domicilio.isEmpty() || telefono.isEmpty() || mail.isEmpty()
+				|| usuario.isEmpty() || contrasenia.isEmpty() || repetirContrasenia.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Complete todos los campos", "Advertencia", JOptionPane.ERROR_MESSAGE);
 			return true;
 		} else if (!contrasenia.equals(repetirContrasenia)) {
 			JOptionPane.showMessageDialog(this, "Las contraseñas no son iguales", "Error", JOptionPane.ERROR_MESSAGE);
 			return true;
 		} else if (contrasenia.length() < 8) {
-			JOptionPane.showMessageDialog(this, "Las contraseñas debe contener minimo 8 caracteres", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Las contraseñas debe contener minimo 8 caracteres", "Error",
+					JOptionPane.ERROR_MESSAGE);
 			return true;
 		}
 		return false;

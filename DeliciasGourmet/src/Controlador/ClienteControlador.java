@@ -65,7 +65,8 @@ public class ClienteControlador {
 		ResultSet rs = null;
 
 		try {
-			ps = cx.conectar().prepareStatement("SELECT idCliente, nombre, apellido, domicilio, telefono, email, usuario, contrasenia FROM Cliente WHERE usuario = ?");
+			ps = cx.conectar().prepareStatement(
+					"SELECT idCliente, nombre, apellido, domicilio, telefono, email, usuario, contrasenia FROM Cliente WHERE usuario = ?");
 			ps.setString(1, usuario);
 			rs = ps.executeQuery();
 

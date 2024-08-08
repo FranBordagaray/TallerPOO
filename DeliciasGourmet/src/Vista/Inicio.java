@@ -3,7 +3,6 @@ package Vista;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,22 +22,6 @@ public class Inicio extends JFrame {
 	private JPanel contentPane;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Inicio frame = new Inicio();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
 	public Inicio() {
@@ -48,21 +31,21 @@ public class Inicio extends JFrame {
 		setResizable(false);
 		setBounds(100, 100, 1280, 720);
 		setLocationRelativeTo(null);
-		
+
 		// Creación del panel
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(1, 1, 1, 1));
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
-		
+
 		// Panel para menu de opciones
 		JPanel panelMenu = new JPanel();
 		panelMenu.setBackground(new Color(195, 155, 107));
 		panelMenu.setBounds(1, 1, 271, 679);
 		contentPane.add(panelMenu);
 		panelMenu.setLayout(null);
-		
+
 		// Panel contenedor de pantallas
 		JPanel panelContenedor = new JPanel();
 		panelContenedor.setBorder(null);
@@ -70,13 +53,13 @@ public class Inicio extends JFrame {
 		panelContenedor.setBounds(271, 1, 992, 679);
 		contentPane.add(panelContenedor);
 		panelContenedor.setLayout(null);
-		
+
 		// Panel contenedor para paneles de pantallas
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBorder(null);
 		tabbedPane.setBounds(0, -25, 992, 704);
 		panelContenedor.add(tabbedPane);
-		
+
 		// Boton para ver pantalla inicio
 		JButton btnInicio = new JButton("INICIO");
 		btnInicio.addActionListener(new ActionListener() {
@@ -105,7 +88,7 @@ public class Inicio extends JFrame {
 		btnInicio.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnInicio.setBounds(0, 100, 271, 35);
 		panelMenu.add(btnInicio);
-		
+
 		// Boton para ver pantalla reservas
 		JButton btnReservas = new JButton("RESERVAS");
 		btnReservas.addActionListener(new ActionListener() {
@@ -133,7 +116,7 @@ public class Inicio extends JFrame {
 		btnReservas.setAlignmentX(0.5f);
 		btnReservas.setBounds(0, 150, 271, 35);
 		panelMenu.add(btnReservas);
-		
+
 		// Boton para ver pantalla historial
 		JButton btnHistorial = new JButton("HISTORIAL");
 		btnHistorial.addActionListener(new ActionListener() {
@@ -166,7 +149,7 @@ public class Inicio extends JFrame {
 		btnHistorial.setAlignmentX(0.5f);
 		btnHistorial.setBounds(0, 200, 271, 35);
 		panelMenu.add(btnHistorial);
-		
+
 		// Boton para ver pantalla perfil
 		JButton btnPerfil = new JButton("PERFIL");
 		btnPerfil.addActionListener(new ActionListener() {
@@ -195,7 +178,7 @@ public class Inicio extends JFrame {
 		btnPerfil.setAlignmentX(0.5f);
 		btnPerfil.setBounds(0, 250, 271, 35);
 		panelMenu.add(btnPerfil);
-		
+
 		// Boton para cerrar sesion
 		JButton btnCerrarSesion = new JButton("CERRAR SESION");
 		btnCerrarSesion.addActionListener(new ActionListener() {
@@ -225,79 +208,74 @@ public class Inicio extends JFrame {
 		btnCerrarSesion.setAlignmentX(0.5f);
 		btnCerrarSesion.setBounds(0, 600, 271, 35);
 		panelMenu.add(btnCerrarSesion);
-		
+
 		// Panel inicio
 		Dashboard dashboard = new Dashboard();
 		JPanel panelInicio = new JPanel();
 		panelInicio.setBorder(null);
 		tabbedPane.addTab("Inicio", dashboard);
 		panelInicio.setLayout(null);
-		
+
 		JLabel lblPanelInicio = new JLabel("INICIO");
 		lblPanelInicio.setFont(new Font("Roboto Light", Font.BOLD, 25));
 		lblPanelInicio.setBounds(455, 310, 77, 31);
 		panelInicio.add(lblPanelInicio);
-		
+
 		// Panel reservas
 		JPanel panelReservas = new JPanel();
 		panelReservas.setBorder(null);
 		tabbedPane.addTab("Reservas", null, panelReservas, null);
 		panelReservas.setLayout(null);
-		
+
 		JLabel lblReservas = new JLabel("RESERVAS");
 		lblReservas.setFont(new Font("Roboto Light", Font.BOLD, 25));
 		lblReservas.setBounds(430, 310, 127, 31);
 		panelReservas.add(lblReservas);
-		
+
 		// Panel historial
 		Historial historial = new Historial();
 		JPanel panelHistorial = new JPanel();
 		panelHistorial.setBorder(null);
-		tabbedPane.addTab("Historial",  historial);
+		tabbedPane.addTab("Historial", historial);
 		panelHistorial.setLayout(null);
-		
+
 		JLabel lblHistorial = new JLabel("HISTORIAL");
 		lblHistorial.setFont(new Font("Roboto Light", Font.BOLD, 25));
 		lblHistorial.setBounds(428, 310, 131, 31);
 		panelHistorial.add(lblHistorial);
-		
+
 		// Panel perfil
 		ActualizarPerfil perfil = new ActualizarPerfil();
 		JPanel panelPerfil = new JPanel();
 		panelPerfil.setBorder(null);
 		tabbedPane.addTab("Perfil", perfil);
 		panelPerfil.setLayout(null);
-		
+
 		JLabel lblPerfil = new JLabel("PERFIL");
 		lblPerfil.setFont(new Font("Roboto Light", Font.BOLD, 25));
 		lblPerfil.setBounds(451, 310, 84, 31);
 		panelPerfil.add(lblPerfil);
-		
-		
+
 	}
+
 	private void MostrarPerfil() {
 		ActualizarPerfil perfil = new ActualizarPerfil();
 		JFrame perfilFrame = new JFrame("Perfil");
 		perfilFrame.add(perfil);
 		perfilFrame.pack();
 	}
-	
+
 	private void MostrarHistorial() {
 		Historial historial = new Historial();
 		JFrame historialFrame = new JFrame("Historial");
 		historialFrame.add(historial);
 		historialFrame.pack();
-		
-		
 	}
-	
+
 	private void MostrarDashboard() {
-		
 		Dashboard dashboard = new Dashboard();
-		JFrame	dashboardFrame = new JFrame("Dashboard");
+		JFrame dashboardFrame = new JFrame("Dashboard");
 		dashboardFrame.add(dashboard);
 		dashboardFrame.pack();
-		
 	}
-	
 }

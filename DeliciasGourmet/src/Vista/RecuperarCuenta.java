@@ -22,7 +22,7 @@ public class RecuperarCuenta extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	
+
 	/**
 	 * Create the frame.
 	 */
@@ -68,7 +68,7 @@ public class RecuperarCuenta extends JFrame {
 		txtEmail.setBorder(null);
 		txtEmail.setBounds(125, 190, 350, 30);
 		contentPane.add(txtEmail);
-		
+
 		// Boton para enviar correo de recuperación
 		JButton btnEnviar = new JButton("ENVIAR");
 		btnEnviar.addActionListener(new ActionListener() {
@@ -101,7 +101,7 @@ public class RecuperarCuenta extends JFrame {
 		btnEnviar.setAlignmentX(0.5f);
 		btnEnviar.setBounds(220, 277, 160, 30);
 		contentPane.add(btnEnviar);
-		
+
 		JButton btnCerrar = new JButton("X");
 		btnCerrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
