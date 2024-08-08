@@ -144,7 +144,7 @@ public class ActualizarPerfil extends JPanel {
 		add(txtContrasenia);
 		
 		JButton btnGuardar = new JButton("Guardar");
-		btnGuardar.setIcon(new ImageIcon(ActualizarPerfil.class.getResource("/Img/guardar (1).jpg")));
+		btnGuardar.setIcon(new ImageIcon(ActualizarPerfil.class.getResource("/Img/ImgGuardar.jpg")));
 		btnGuardar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
