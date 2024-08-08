@@ -1,6 +1,7 @@
 package Vista;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.JLabel;
@@ -17,6 +18,7 @@ public class Historial extends JPanel {
 	
 	public Historial() {
 		setBackground(new Color(222, 184, 135));
+		setPreferredSize(new Dimension(992, 679));
 		setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("HISTORIAL DE RESERVAS");

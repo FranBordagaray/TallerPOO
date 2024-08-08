@@ -138,6 +138,7 @@ public class Inicio extends JFrame {
 		btnHistorial.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(2);
+				MostrarHistorial();
 			}
 		});
 		btnHistorial.addActionListener(new ActionListener() {
@@ -247,9 +248,10 @@ public class Inicio extends JFrame {
 		panelReservas.add(lblReservas);
 		
 		// Panel historial
+		Historial historial = new Historial();
 		JPanel panelHistorial = new JPanel();
 		panelHistorial.setBorder(null);
-		tabbedPane.addTab("Historial", null, panelHistorial, null);
+		tabbedPane.addTab("Historial",  historial);
 		panelHistorial.setLayout(null);
 		
 		JLabel lblHistorial = new JLabel("HISTORIAL");
@@ -276,6 +278,13 @@ public class Inicio extends JFrame {
 		JFrame perfilFrame = new JFrame("Perfil");
 		perfilFrame.add(perfil);
 		perfilFrame.pack();
+	}
+	private void MostrarHistorial() {
+		Historial historial = new Historial();
+		JFrame historialFrame = new JFrame("Historial");
+		historialFrame.add(historial);
+		historialFrame.pack();
+		
 	}
 	
 }
