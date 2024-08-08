@@ -82,6 +82,7 @@ public class Inicio extends JFrame {
 		btnInicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(0);
+				MostrarDashboard();
 			}
 		});
 		btnInicio.addMouseListener(new MouseAdapter() {
@@ -226,9 +227,10 @@ public class Inicio extends JFrame {
 		panelMenu.add(btnCerrarSesion);
 		
 		// Panel inicio
+		Dashboard dashboard = new Dashboard();
 		JPanel panelInicio = new JPanel();
 		panelInicio.setBorder(null);
-		tabbedPane.addTab("Inicio", null, panelInicio, null);
+		tabbedPane.addTab("Inicio", dashboard);
 		panelInicio.setLayout(null);
 		
 		JLabel lblPanelInicio = new JLabel("INICIO");
@@ -279,11 +281,22 @@ public class Inicio extends JFrame {
 		perfilFrame.add(perfil);
 		perfilFrame.pack();
 	}
+	
 	private void MostrarHistorial() {
 		Historial historial = new Historial();
 		JFrame historialFrame = new JFrame("Historial");
 		historialFrame.add(historial);
 		historialFrame.pack();
+		
+		
+	}
+	
+	private void MostrarDashboard() {
+		
+		Dashboard dashboard = new Dashboard();
+		JFrame	dashboardFrame = new JFrame("Dashboard");
+		dashboardFrame.add(dashboard);
+		dashboardFrame.pack();
 		
 	}
 	
