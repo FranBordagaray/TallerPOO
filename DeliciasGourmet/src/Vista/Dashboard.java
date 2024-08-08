@@ -52,16 +52,16 @@ public class Dashboard extends JPanel {
 		
 		//Panel de Notificaciones
 		JPanel pnlNotificaciones = new JPanel();
-		pnlNotificaciones.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		pnlNotificaciones.setBounds(498, 10, 430, 243);
+		pnlNotificaciones.setBorder(null);
+		pnlNotificaciones.setBounds(549, 10, 433, 250);
 		add(pnlNotificaciones);
 		pnlNotificaciones.setLayout(null);
 		
 		// Panel Header Notificaciones
 		JPanel pnlHeaderNot = new JPanel();
-		pnlHeaderNot.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		pnlHeaderNot.setBorder(null);
 		pnlHeaderNot.setBackground(Color.PINK);
-		pnlHeaderNot.setBounds(0, 0, 430, 47);
+		pnlHeaderNot.setBounds(0, 0, 433, 47);
 		pnlNotificaciones.add(pnlHeaderNot);
 		pnlHeaderNot.setLayout(null);
 		
@@ -76,7 +76,7 @@ public class Dashboard extends JPanel {
 		JPanel pnlRumenReservas = new JPanel();
 		pnlRumenReservas.setBorder(null);
 		pnlRumenReservas.setBackground(new Color(255, 255, 255));
-		pnlRumenReservas.setBounds(10, 107, 309, 394);
+		pnlRumenReservas.setBounds(10, 107, 309, 153);
 		add(pnlRumenReservas);
 		pnlRumenReservas.setLayout(null);
 		
@@ -89,7 +89,7 @@ public class Dashboard extends JPanel {
 		// ScrollPane Tabla Resumen
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBorder(null);
-		scrollPane.setBounds(0, 0, 309, 394);
+		scrollPane.setBounds(0, 0, 309, 153);
 		pnlRumenReservas.add(scrollPane);
 		
 		String[] columna = {"Mesa", "Fecha", "Hora", "Estado"};
@@ -109,12 +109,13 @@ public class Dashboard extends JPanel {
 
 		scrollPane.setViewportView(tabla);
 		
-		 //Panel Oferta Imagenes 
-		ImgOfertas pnlImagenes = new ImgOfertas();
-		JPanel pnlOfertas = new JPanel();
-		pnlOfertas.setBounds(696, 299, 286, 370);
-		add(pnlOfertas);
-		pnlOfertas.add(pnlImagenes);
+		// Panel Oferta Imagenes
+        ImgOfertas Ofertas = new ImgOfertas();
+        Ofertas.setLocation(696, 298);
+        JPanel pnlOfertas = new JPanel();
+        pnlOfertas.setBorder(null);
+        pnlOfertas.setBounds(696, 298, 286, 370);
+        add(Ofertas);
 		
 		
 		

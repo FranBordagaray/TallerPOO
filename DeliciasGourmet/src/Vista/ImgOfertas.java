@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 public class ImgOfertas extends JPanel {
@@ -15,11 +14,11 @@ public class ImgOfertas extends JPanel {
     private static final long serialVersionUID = 1L;
     private JLabel ImgImagen;
     private String[] ImgPath = {
-            "..\\DeliciasGourmet\\src\\ImgOferta1.png",
-            "..\\DeliciasGourmet\\src\\ImgOferta2.png",
-            "..\\DeliciasGourmet\\src\\ImgOferta3.png",
-            "..\\DeliciasGourmet\\src\\ImgOferta4.png",
-            "..\\DeliciasGourmet\\src\\ImgOferta5.png"
+            "..\\DeliciasGourmet\\src\\Img\\ImgOferta1.png",
+            "..\\DeliciasGourmet\\src\\Img\\ImgOferta2.png",
+            "..\\DeliciasGourmet\\src\\Img\\ImgOferta3.png",
+            "..\\DeliciasGourmet\\src\\Img\\ImgOferta4.png",
+            "..\\DeliciasGourmet\\src\\Img\\ImgOferta5.png"
     };
     private int Indice = 0;
 
@@ -46,5 +45,4 @@ public class ImgOfertas extends JPanel {
         ImageIcon icon = new ImageIcon(ImgPath[Indice]);
         ImgImagen.setIcon(icon);
     }
-    
 }
