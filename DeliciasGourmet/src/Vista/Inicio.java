@@ -170,6 +170,7 @@ public class Inicio extends JFrame {
 		btnPerfil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(3);
+				MostrarPerfil();
 			}
 		});
 		btnPerfil.addMouseListener(new MouseAdapter() {
@@ -257,9 +258,10 @@ public class Inicio extends JFrame {
 		panelHistorial.add(lblHistorial);
 		
 		// Panel perfil
+		ActualizarPerfil perfil = new ActualizarPerfil();
 		JPanel panelPerfil = new JPanel();
 		panelPerfil.setBorder(null);
-		tabbedPane.addTab("Perfil", null, panelPerfil, null);
+		tabbedPane.addTab("Perfil", perfil);
 		panelPerfil.setLayout(null);
 		
 		JLabel lblPerfil = new JLabel("PERFIL");
@@ -267,5 +269,13 @@ public class Inicio extends JFrame {
 		lblPerfil.setBounds(451, 310, 84, 31);
 		panelPerfil.add(lblPerfil);
 		
+		
 	}
+	private void MostrarPerfil() {
+		ActualizarPerfil perfil = new ActualizarPerfil();
+		JFrame perfilFrame = new JFrame("Perfil");
+		perfilFrame.add(perfil);
+		perfilFrame.pack();
+	}
+	
 }
