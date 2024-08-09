@@ -52,17 +52,17 @@ public class Historial extends JPanel {
 		
 		JLabel lblHistorial = new JLabel("HISTORIAL DE RESERVAS");
 		lblHistorial.setFont(new Font("Roboto Light", Font.BOLD, 20));
-		lblHistorial.setBounds(98, 19, 240, 24);
+		lblHistorial.setBounds(98, 19, 248, 24);
 		pnlHeader.add(lblHistorial);
 		
 		JLabel lblFiltro1 = new JLabel("Filtrar estados:");
-		lblFiltro1.setBounds(10, 54, 80, 14);
+		lblFiltro1.setBounds(10, 54, 86, 14);
 		add(lblFiltro1);
 
 		// seleccion de filtro de estados 
 		String[] estados = { "Todos", "Reservado", "Cancelado", "Finalizado" };
 		JComboBox<String> comboBox = new JComboBox<>(estados);
-		comboBox.setBounds(85, 50, 137, 22);
+		comboBox.setBounds(98, 50, 137, 22);
 		add(comboBox);
 		
 		//Opciones para el actionListener

@@ -19,19 +19,20 @@ public class Dashboard extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	public Dashboard() {
+		
 		// Configuracion del panel
 		setLayout(null);
 		setPreferredSize(new Dimension(992, 679));
 		setBackground(new Color(222, 184, 135));
 
-		// Panel de Bienvenio
+		// Panel de Bienvenida
 		JPanel pnlBienvenido = new JPanel();
 		pnlBienvenido.setBackground(new Color(195, 155, 107));
 		pnlBienvenido.setBounds(0, 0, 484, 66);
 		add(pnlBienvenido);
 		pnlBienvenido.setLayout(null);
 
-		// Etiqueta de Bienvenido
+		// Label de Bienvenida
 		JLabel lblBienvenido = new JLabel("Bienvenido, ");
 		lblBienvenido.setIcon(new ImageIcon(Dashboard.class.getResource("/Img/ImgHome.png")));
 		lblBienvenido.setHorizontalAlignment(SwingConstants.CENTER);
@@ -40,7 +41,7 @@ public class Dashboard extends JPanel {
 		lblBienvenido.setBounds(10, 9, 163, 48);
 		pnlBienvenido.add(lblBienvenido);
 
-		// Etiqueta Nombre de Usuario
+		// Label Nombre de Usuario
 		Sesion s1 = new Sesion();
 		JLabel lblNombreUsuario = new JLabel(s1.getClienteActual().getNombre() + " " + s1.getClienteActual().getApellido());
 		lblNombreUsuario.setForeground(Color.BLACK);
@@ -58,19 +59,21 @@ public class Dashboard extends JPanel {
 		// Panel Header Notificaciones
 		JPanel pnlHeaderNot = new JPanel();
 		pnlHeaderNot.setBorder(null);
-		pnlHeaderNot.setBackground(Color.PINK);
+		pnlHeaderNot.setBackground(new Color(195, 155, 107));
 		pnlHeaderNot.setBounds(0, 0, 433, 47);
 		pnlNotificaciones.add(pnlHeaderNot);
 		pnlHeaderNot.setLayout(null);
 
-		// Label TituloNotificaciones
+		// Label Titulo Notificaciones
 		JLabel lblTituloNotificaciones = new JLabel("Notificaciones");
+		lblTituloNotificaciones.setForeground(Color.BLACK);
 		lblTituloNotificaciones.setBounds(155, 7, 119, 32);
 		lblTituloNotificaciones.setIcon(new ImageIcon(Dashboard.class.getResource("/Img/ImgNotificacion.png")));
 		pnlHeaderNot.add(lblTituloNotificaciones);
-		lblTituloNotificaciones.setFont(new Font("Roboto Light", Font.PLAIN, 12));
+		lblTituloNotificaciones.setFont(new Font("Roboto Light", Font.BOLD, 12));
+		
 
-		// Panel Resumen Reservas
+		// Panel Mis Reservas
 		JPanel pnlRumenReservas = new JPanel();
 		pnlRumenReservas.setBorder(null);
 		pnlRumenReservas.setBackground(new Color(255, 255, 255));
@@ -78,13 +81,16 @@ public class Dashboard extends JPanel {
 		add(pnlRumenReservas);
 		pnlRumenReservas.setLayout(null);
 
-		// Etiqueta de Tabla Resumen
-		JLabel lblNewLabel = new JLabel("Mis Reservas");
-		lblNewLabel.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		lblNewLabel.setBounds(109, 76, 113, 19);
-		add(lblNewLabel);
+		// Label Mis Reservas
+		JLabel lblMisReservas = new JLabel("Mis Reservas");
+		lblMisReservas.setForeground(Color.BLACK);
+		lblMisReservas.setFont(new Font("Roboto Light", Font.BOLD, 16));
+		lblMisReservas.setBounds(109, 76, 107, 19);
+		add(lblMisReservas);
+		
+		
 
-		// ScrollPane Tabla Resumen
+		// ScrollPane Mis Reservas
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBorder(null);
 		scrollPane.setBounds(0, 0, 309, 153);
@@ -114,3 +120,4 @@ public class Dashboard extends JPanel {
 
 	}
 }
+
