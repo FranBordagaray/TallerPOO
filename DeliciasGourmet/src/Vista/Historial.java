@@ -10,11 +10,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JComboBox;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 public class Historial extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
+
+	private JTable tabla;
+	private DefaultTableModel model;
+	private Object[][] datos; 
 	public Historial() {
 		setBorder(null);
 		setBackground(new Color(222, 184, 135));
@@ -23,14 +28,16 @@ public class Historial extends JPanel {
 
 		String[] columna = { "Fecha", "Hora", "Estado", "Mesa", "Personas" };
 
-		// Datos
-		Object[][] datos = { { "15-03-2022", "12:00", "Reservado", "Mesa 5", 2 },
-				{ "17-08-2023", "21:30", "Cancelado", "Mesa 3", 6 },
-				{ "25-05-2024", "20:00", "Finalizado", "Mesa 7", 1 }, };
+		// Datos de tabla 
+		datos = new Object[][] { 
+			{ "15-03-2022", "12:00", "Reservado", "Mesa 5", 2 },
+			{ "17-08-2023", "21:30", "Cancelado", "Mesa 3", 6 },
+			{ "25-05-2024", "20:00", "Finalizado", "Mesa 7", 1 }, 
+		};
 
-		DefaultTableModel model = new DefaultTableModel(datos, columna);
-
-		JTable tabla = new JTable(model);
+		// Crear el modelo de la tabla
+		model = new DefaultTableModel(datos, columna);
+		tabla = new JTable(model);
 
 		JScrollPane scrollPane = new JScrollPane(tabla);
 		scrollPane.setBounds(10, 73, 951, 226);
@@ -43,18 +50,45 @@ public class Historial extends JPanel {
 		add(pnlHeader);
 		pnlHeader.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("HISTORIAL DE RESERVAS");
-		lblNewLabel.setFont(new Font("Roboto Light", Font.BOLD, 20));
-		lblNewLabel.setBounds(98, 19, 240, 24);
-		pnlHeader.add(lblNewLabel);
+		JLabel lblHistorial = new JLabel("HISTORIAL DE RESERVAS");
+		lblHistorial.setFont(new Font("Roboto Light", Font.BOLD, 20));
+		lblHistorial.setBounds(98, 19, 240, 24);
+		pnlHeader.add(lblHistorial);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(200, 306, 95, 22);
+		JLabel lblFiltro1 = new JLabel("Filtrar estados:");
+		lblFiltro1.setBounds(10, 54, 80, 14);
+		add(lblFiltro1);
+
+		// seleccion de filtro de estados 
+		String[] estados = { "Todos", "Reservado", "Cancelado", "Finalizado" };
+		JComboBox<String> comboBox = new JComboBox<>(estados);
+		comboBox.setBounds(85, 50, 137, 22);
 		add(comboBox);
 		
-		JLabel lblNewLabel_1 = new JLabel("Filtrar:");
-		lblNewLabel_1.setBounds(166, 310, 46, 14);
-		add(lblNewLabel_1);
+		//Opciones para el actionListener
+		comboBox.addActionListener(new ActionListener() {
+			// fijarse si anda
+			public void actionPerformed(ActionEvent e) {
+				String estadoSeleccionado = (String) comboBox.getSelectedItem();
+				filtrarEstado(estadoSeleccionado);
+			}
+		});
+	}
 
+	
+	private void filtrarEstado(String estado) {
+		if (estado.equals("Todos")) {
+			model.setDataVector(datos, new String[] { "Fecha", "Hora", "Estado", "Mesa", "Ocupantes" });
+		} else {
+			Object[][] datosFiltrados = filtrarEstado(datos, estado);
+			model.setDataVector(datosFiltrados, new String[] { "Fecha", "Hora", "Estado", "Mesa", "Ocupantes" });
+		}
+	}
+
+	
+	private Object[][] filtrarEstado(Object[][] datos, String estado) {
+		return java.util.Arrays.stream(datos)
+				.filter(fila -> fila[2].equals(estado))
+				.toArray(Object[][]::new);
 	}
 }
