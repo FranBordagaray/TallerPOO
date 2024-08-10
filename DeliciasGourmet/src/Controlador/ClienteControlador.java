@@ -2,6 +2,7 @@ package Controlador;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ import Modelo.Sesion;
 
 public class ClienteControlador {
 	Conexion cx;
+	private Connection connection;
 
 	public ClienteControlador() {
 		cx = new Conexion();
@@ -38,6 +40,32 @@ public class ClienteControlador {
 			return false;
 		}
 	}
+	
+	public void actualizarCliente(Cliente cliente) throws SQLException {
+	    String sql = "UPDATE Cliente SET email = ?, telefono = ? WHERE idCliente = ?";
+	    PreparedStatement stmt = null;
+
+	    try {
+	        // Inicializar la conexión si no ha sido establecida
+	        connection = cx.conectar();
+
+	        stmt = connection.prepareStatement(sql);
+	        stmt.setString(1, cliente.getEmail());
+	        stmt.setString(2, cliente.getTelefono());
+	        stmt.setInt(3, cliente.getIdCliente());  
+	        stmt.executeUpdate();
+
+	        System.out.println("Cliente actualizado exitosamente.");
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Error al actualizar el cliente.");
+	    } finally {
+	        // Cerrar el PreparedStatement y la conexión
+	        if (stmt != null) stmt.close();
+	        if (connection != null) connection.close();
+	    }
+	}
+	
 
 	// Funcion para cifrar contraseñas
 	public String convertirSHA256(String contrasenia) {
@@ -102,5 +130,6 @@ public class ClienteControlador {
 		}
 		return false;
 	}
+
 
 }
