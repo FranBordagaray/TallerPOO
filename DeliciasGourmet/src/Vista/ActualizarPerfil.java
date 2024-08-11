@@ -22,7 +22,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import Controlador.ClienteControlador;
-import vista.Sesion;
 import javax.swing.JSeparator;
 
 public class ActualizarPerfil extends JPanel {
@@ -42,18 +41,19 @@ public class ActualizarPerfil extends JPanel {
 	public ActualizarPerfil() {
 		
 		Sesion s1 = new Sesion();
+		
 		// Configuracion del panel
 		setLayout(null);
 		setPreferredSize(new Dimension(992, 679));
 		setBackground(new Color(222, 184, 135));
 
-		// Etiquera de perfil
+		// Etiqueta de perfil
 		JLabel lblRegistro = new JLabel("PERFIL");
 		lblRegistro.setFont(new Font("Roboto Light", Font.BOLD, 32));
 		lblRegistro.setBounds(427, 10, 138, 33);
 		add(lblRegistro);
 
-		// Etiquera y campo de texto de nombre
+		// Etiqueta y campo de texto de nombre
 		JLabel lblNombre = new JLabel("NOMBRE: ");
 		lblNombre.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNombre.setFont(new Font("Roboto Light", Font.BOLD, 22));
@@ -67,7 +67,7 @@ public class ActualizarPerfil extends JPanel {
 		txtNombre.setBounds(141, 301, 203, 39);
 		add(txtNombre);
 
-		// Etiquera y campo de texto de apellido
+		// Etiqueta y campo de texto de apellido
 		JLabel lblApellido = new JLabel("APELLIDO: ");
 		lblApellido.setHorizontalAlignment(SwingConstants.CENTER);
 		lblApellido.setFont(new Font("Roboto Light", Font.BOLD, 22));
@@ -81,100 +81,88 @@ public class ActualizarPerfil extends JPanel {
 		txtApellido.setBounds(141, 384, 203, 39);
 		add(txtApellido);
 
-		// Etiquera y campo de texto de domicilio
+		// Etiqueta y campo de texto de domicilio
 		JLabel lblDomicilio = new JLabel("DOMICILIO: ");
 		lblDomicilio.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDomicilio.setFont(new Font("Roboto Light", Font.BOLD, 22));
 		lblDomicilio.setAlignmentX(1.0f);
 		lblDomicilio.setBounds(493, 390, 248, 27);
 		add(lblDomicilio);
-
-		// Etiquera y campo de texto de telefono
-		JLabel lblTelefono = new JLabel("TELEFONO: ");
-		lblTelefono.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTelefono.setFont(new Font("Roboto Light", Font.BOLD, 22));
-		lblTelefono.setAlignmentX(1.0f);
-		lblTelefono.setBounds(509, 504, 248, 27);
-		add(lblTelefono);
-
-		// Etiquera y campo de texto de email
-		JLabel lblEmail = new JLabel("EMAIL: ");
-		lblEmail.setHorizontalAlignment(SwingConstants.CENTER);
-		lblEmail.setFont(new Font("Roboto Light", Font.BOLD, 22));
-		lblEmail.setAlignmentX(1.0f);
-		lblEmail.setBounds(-51, 504, 248, 27);
-		add(lblEmail);
-
-		// Etiquera y campo de texto de usuario
-		JLabel lblUsuario = new JLabel("USUARIO: ");
-		lblUsuario.setHorizontalAlignment(SwingConstants.CENTER);
-		lblUsuario.setFont(new Font("Roboto Light", Font.BOLD, 22));
-		lblUsuario.setAlignmentX(1.0f);
-		lblUsuario.setBounds(203, 223, 248, 27);
-		add(lblUsuario);
-
-		// Etiquera y campo de texto de contrasenia
-		JLabel lblContrasenia = new JLabel("CONTRASEÑA:");
-		lblContrasenia.setHorizontalAlignment(SwingConstants.CENTER);
-		lblContrasenia.setFont(new Font("Roboto Light", Font.BOLD, 22));
-		lblContrasenia.setAlignmentX(0.5f);
-		lblContrasenia.setBounds(509, 307, 248, 27);
-		add(lblContrasenia);
-
-		
-		
-		// Label de Nombre 
-		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(ActualizarPerfil.class.getResource("/Img/ImgPerfil (1).jpg")));
-		lblNewLabel.setBounds(405, 38, 160, 176);
-		add(lblNewLabel);
-				
-		txtUsuario = new JTextField(s1.getClienteActual().getUsuario());
-		txtUsuario.setEditable(false);
-		txtUsuario.setFont(new Font("Roboto Light", Font.PLAIN, 22));
-		txtUsuario.setBounds(394, 217, 203, 39);
-		add(txtUsuario);
-		txtUsuario.setColumns(10);
-				
-		
-				
-		
-				
-		txtContrasenia = new JTextField("**********");
-		txtContrasenia.setEditable(false);
-		txtContrasenia.setFont(new Font("Roboto Light", Font.PLAIN, 22));
-		txtContrasenia.setColumns(10);
-		txtContrasenia.setBounds(731, 301, 203, 39);
-		add(txtContrasenia);
-				
 		txtDomicilio = new JTextField(s1.getClienteActual().getDomicilio());
 		txtDomicilio.setEditable(false);
 		txtDomicilio.setFont(new Font("Roboto Light", Font.PLAIN, 22));
 		txtDomicilio.setColumns(10);
 		txtDomicilio.setBounds(731, 384, 203, 39);
 		add(txtDomicilio);
-				
-		txtEmail = new JTextField(s1.getClienteActual().getEmail());
-		txtEmail.setFont(new Font("Roboto Light", Font.PLAIN, 22));
-		txtEmail.setColumns(10);
-		txtEmail.setBounds(141, 498, 203, 39);
-		add(txtEmail);
-		
-		// 
+
+		// Etiqueta y campo de texto de telefono
+		JLabel lblTelefono = new JLabel("TELÉFONO: ");
+		lblTelefono.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTelefono.setFont(new Font("Roboto Light", Font.BOLD, 22));
+		lblTelefono.setAlignmentX(1.0f);
+		lblTelefono.setBounds(509, 504, 248, 27);
+		add(lblTelefono);
 		txtTelefono = new JTextField(s1.getClienteActual().getTelefono());
 		txtTelefono.setFont(new Font("Roboto Light", Font.PLAIN, 22));
 		txtTelefono.setColumns(10);
 		txtTelefono.setBounds(731, 498, 203, 39);
 		add(txtTelefono);
 			
+
+		// Etiqueta y campo de texto de email
+		JLabel lblEmail = new JLabel("EMAIL: ");
+		lblEmail.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEmail.setFont(new Font("Roboto Light", Font.BOLD, 22));
+		lblEmail.setAlignmentX(1.0f);
+		lblEmail.setBounds(-51, 504, 248, 27);
+		add(lblEmail);
+		txtEmail = new JTextField(s1.getClienteActual().getEmail());
+		txtEmail.setFont(new Font("Roboto Light", Font.PLAIN, 22));
+		txtEmail.setColumns(10);
+		txtEmail.setBounds(141, 498, 203, 39);
+		add(txtEmail);
+
+		// Etiqueta y campo de texto de usuario
+		JLabel lblUsuario = new JLabel("USUARIO: ");
+		lblUsuario.setHorizontalAlignment(SwingConstants.CENTER);
+		lblUsuario.setFont(new Font("Roboto Light", Font.BOLD, 22));
+		lblUsuario.setAlignmentX(1.0f);
+		lblUsuario.setBounds(203, 223, 248, 27);
+		add(lblUsuario);
+		txtUsuario = new JTextField(s1.getClienteActual().getUsuario());
+		txtUsuario.setEditable(false);
+		txtUsuario.setFont(new Font("Roboto Light", Font.PLAIN, 22));
+		txtUsuario.setBounds(394, 217, 203, 39);
+		add(txtUsuario);
+		txtUsuario.setColumns(10);
+
+		// Etiqueta y campo de texto de contrasenia
+		JLabel lblContrasenia = new JLabel("CONTRASEÑA:");
+		lblContrasenia.setHorizontalAlignment(SwingConstants.CENTER);
+		lblContrasenia.setFont(new Font("Roboto Light", Font.BOLD, 22));
+		lblContrasenia.setAlignmentX(0.5f);
+		lblContrasenia.setBounds(509, 307, 248, 27);
+		add(lblContrasenia);
+		txtContrasenia = new JTextField("**********");
+		txtContrasenia.setEditable(false);
+		txtContrasenia.setFont(new Font("Roboto Light", Font.PLAIN, 22));
+		txtContrasenia.setColumns(10);
+		txtContrasenia.setBounds(731, 301, 203, 39);
+		add(txtContrasenia);
+		
+		// Imagen Del Jlabel del Perfil
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(ActualizarPerfil.class.getResource("/Img/ImgPerfil (1).jpg")));
+		lblNewLabel.setBounds(405, 38, 160, 176);
+		add(lblNewLabel);
+				
 		// Separador 
 		JSeparator separator = new JSeparator();
 		separator.setBounds(10, 453, 972, 18);
 		add(separator);
 				
 		// Boton para actualizar informacion de contacto
-		JButton btnGuardar = new JButton("Guardar");
+		JButton btnGuardar = new JButton("Guardar Cambios");
 		btnGuardar.setIcon(new ImageIcon(ActualizarPerfil.class.getResource("/Img/ImgGuardar.jpg")));
 		btnGuardar.addMouseListener(new MouseAdapter() {
 			@Override
