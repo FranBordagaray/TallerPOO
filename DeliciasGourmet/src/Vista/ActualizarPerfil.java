@@ -1,7 +1,5 @@
 package Vista;
 
-import Modelo.Cliente;
-import Modelo.Sesion;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -17,12 +15,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import Controlador.ClienteControlador;
-import javax.swing.JSeparator;
+import Modelo.Cliente;
+import Modelo.Sesion;
 
 public class ActualizarPerfil extends JPanel {
 
