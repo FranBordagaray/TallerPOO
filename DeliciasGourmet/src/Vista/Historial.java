@@ -62,6 +62,8 @@ public class Historial extends JPanel {
 		// seleccion de filtro de estados 
 		String[] estados = { "Todos", "Reservado", "Cancelado", "Finalizado" };
 		JComboBox<String> comboBox = new JComboBox<>(estados);
+		comboBox.setBackground(Color.WHITE);
+		comboBox.setBorder(null);
 		comboBox.setBounds(98, 50, 137, 22);
 		add(comboBox);
 		
