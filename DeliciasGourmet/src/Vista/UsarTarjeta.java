@@ -16,6 +16,7 @@ import java.awt.EventQueue;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
+import javax.swing.ImageIcon;
 
 public class UsarTarjeta extends JPanel {
 
@@ -128,6 +129,7 @@ public class UsarTarjeta extends JPanel {
 		
 		// Boton Guardar
 		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar.setIcon(new ImageIcon(UsarTarjeta.class.getResource("/Img/icono de guardar.png")));
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Guarda tarjeta
@@ -155,8 +157,8 @@ public class UsarTarjeta extends JPanel {
 		btnGuardar.setBorder(null);
 		btnGuardar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnGuardar.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnGuardar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-		btnGuardar.setBounds(180, 217, 89, 23);
+		btnGuardar.setFont(new Font("Roboto Light", Font.BOLD, 16));
+		btnGuardar.setBounds(168, 217, 101, 23);
 		panelContenedor.add(btnGuardar);
 
 	}

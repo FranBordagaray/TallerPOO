@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.ImageIcon;
 
 public class Inicio extends JFrame {
 
@@ -62,6 +63,7 @@ public class Inicio extends JFrame {
 
 		// Boton para ver pantalla inicio
 		JButton btnInicio = new JButton("INICIO");
+		btnInicio.setIcon(new ImageIcon(Inicio.class.getResource("/Img/icono de inicio.png")));
 		btnInicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(0);
@@ -91,6 +93,7 @@ public class Inicio extends JFrame {
 
 		// Boton para ver pantalla reservas
 		JButton btnReservas = new JButton("RESERVAS");
+		btnReservas.setIcon(new ImageIcon(Inicio.class.getResource("/Img/icono de reservas.png")));
 		btnReservas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(1);
@@ -119,6 +122,7 @@ public class Inicio extends JFrame {
 
 		// Boton para ver pantalla historial
 		JButton btnHistorial = new JButton("HISTORIAL");
+		btnHistorial.setIcon(new ImageIcon(Inicio.class.getResource("/Img/icono de historial.png")));
 		btnHistorial.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(2);
@@ -152,6 +156,7 @@ public class Inicio extends JFrame {
 
 		// Boton para ver pantalla perfil
 		JButton btnPerfil = new JButton("PERFIL");
+		btnPerfil.setIcon(new ImageIcon(Inicio.class.getResource("/Img/icono de perfil.png")));
 		btnPerfil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(3);
@@ -181,6 +186,7 @@ public class Inicio extends JFrame {
 
 		// Boton para cerrar sesion
 		JButton btnCerrarSesion = new JButton("CERRAR SESION");
+		btnCerrarSesion.setIcon(new ImageIcon(Inicio.class.getResource("/Img/icono de cerrar sesion.png")));
 		btnCerrarSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Login login = new Login();
@@ -261,21 +267,21 @@ public class Inicio extends JFrame {
 	private void MostrarPerfil() {
 		ActualizarPerfil perfil = new ActualizarPerfil();
 		JFrame perfilFrame = new JFrame("Perfil");
-		perfilFrame.add(perfil);
+		perfilFrame.getContentPane().add(perfil);
 		perfilFrame.pack();
 	}
 
 	private void MostrarHistorial() {
 		Historial historial = new Historial();
 		JFrame historialFrame = new JFrame("Historial");
-		historialFrame.add(historial);
+		historialFrame.getContentPane().add(historial);
 		historialFrame.pack();
 	}
 
 	private void MostrarDashboard() {
 		Dashboard dashboard = new Dashboard();
 		JFrame dashboardFrame = new JFrame("Dashboard");
-		dashboardFrame.add(dashboard);
+		dashboardFrame.getContentPane().add(dashboard);
 		dashboardFrame.pack();
 	}
 }

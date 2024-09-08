@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.ImageIcon;
 
 public class InicioEmpleado extends JFrame {
 
@@ -76,6 +77,7 @@ public class InicioEmpleado extends JFrame {
 
 		// Boton para ver pantalla inicio
 		JButton btnInicio = new JButton("INICIO");
+		btnInicio.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de inicio.png")));
 		btnInicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(0);
@@ -104,6 +106,7 @@ public class InicioEmpleado extends JFrame {
 
 		// Boton para ver pantalla gestion de empleados
 		JButton btnGestionEmpleados = new JButton("GESTION DE EMPLEADOS");
+		btnGestionEmpleados.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono empleado.png")));
 		btnGestionEmpleados.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(1);
@@ -132,6 +135,7 @@ public class InicioEmpleado extends JFrame {
 		
 		// Boton para ver pantalla gestion de mesas
 		JButton btnGestionDeMesas = new JButton("GESTION DE MESAS");
+		btnGestionDeMesas.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de mesas.png")));
 		btnGestionDeMesas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(2);
@@ -160,6 +164,7 @@ public class InicioEmpleado extends JFrame {
 		
 		// Boton para ver pantalla eventos especiales
 		JButton btnEventosEspeciales = new JButton("EVENTOS ESPECIALES");
+		btnEventosEspeciales.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de eventos especiales.png")));
 		btnEventosEspeciales.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(3);
@@ -188,6 +193,7 @@ public class InicioEmpleado extends JFrame {
 		
 		// Boton para pantalla reportes
 		JButton btnReportes = new JButton("REPORTES");
+		btnReportes.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de reportes.png")));
 		btnReportes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(4);
@@ -216,6 +222,7 @@ public class InicioEmpleado extends JFrame {
 
 		// Boton para ver pantalla perfil
 		JButton btnPerfil = new JButton("PERFIL");
+		btnPerfil.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de perfil.png")));
 		btnPerfil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(5);
@@ -244,6 +251,7 @@ public class InicioEmpleado extends JFrame {
 
 		// Boton para cerrar sesion
 		JButton btnCerrarSesion = new JButton("CERRAR SESION");
+		btnCerrarSesion.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de cerrar sesion.png")));
 		btnCerrarSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Login login = new Login();

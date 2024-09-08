@@ -61,9 +61,9 @@ public class ActualizarPerfil extends JPanel {
 		add(lblNombre);
 		txtNombre = new JTextField(s1.getClienteActual().getNombre());
 		txtNombre.setEditable(false);
-		txtNombre.setFont(new Font("Roboto Light", Font.PLAIN, 22));
+		txtNombre.setFont(new Font("Roboto Light", Font.PLAIN, 21));
 		txtNombre.setColumns(10);
-		txtNombre.setBounds(141, 301, 203, 39);
+		txtNombre.setBounds(141, 301, 253, 39);
 		add(txtNombre);
 
 		// Etiqueta y campo de texto de apellido
@@ -75,9 +75,9 @@ public class ActualizarPerfil extends JPanel {
 		add(lblApellido);
 		txtApellido = new JTextField(s1.getClienteActual().getApellido());
 		txtApellido.setEditable(false);
-		txtApellido.setFont(new Font("Roboto Light", Font.PLAIN, 22));
+		txtApellido.setFont(new Font("Roboto Light", Font.PLAIN, 21));
 		txtApellido.setColumns(10);
-		txtApellido.setBounds(141, 384, 203, 39);
+		txtApellido.setBounds(141, 384, 253, 39);
 		add(txtApellido);
 
 		// Etiqueta y campo de texto de domicilio
@@ -85,13 +85,13 @@ public class ActualizarPerfil extends JPanel {
 		lblDomicilio.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDomicilio.setFont(new Font("Roboto Light", Font.BOLD, 22));
 		lblDomicilio.setAlignmentX(1.0f);
-		lblDomicilio.setBounds(493, 390, 248, 27);
+		lblDomicilio.setBounds(462, 390, 248, 27);
 		add(lblDomicilio);
 		txtDomicilio = new JTextField(s1.getClienteActual().getDomicilio());
 		txtDomicilio.setEditable(false);
-		txtDomicilio.setFont(new Font("Roboto Light", Font.PLAIN, 22));
+		txtDomicilio.setFont(new Font("Roboto Light", Font.PLAIN, 21));
 		txtDomicilio.setColumns(10);
-		txtDomicilio.setBounds(731, 384, 203, 39);
+		txtDomicilio.setBounds(687, 384, 248, 39);
 		add(txtDomicilio);
 
 		// Etiqueta y campo de texto de telefono
@@ -99,12 +99,12 @@ public class ActualizarPerfil extends JPanel {
 		lblTelefono.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTelefono.setFont(new Font("Roboto Light", Font.BOLD, 22));
 		lblTelefono.setAlignmentX(1.0f);
-		lblTelefono.setBounds(509, 504, 248, 27);
+		lblTelefono.setBounds(462, 504, 248, 27);
 		add(lblTelefono);
 		txtTelefono = new JTextField(s1.getClienteActual().getTelefono());
-		txtTelefono.setFont(new Font("Roboto Light", Font.PLAIN, 22));
+		txtTelefono.setFont(new Font("Roboto Light", Font.PLAIN, 21));
 		txtTelefono.setColumns(10);
-		txtTelefono.setBounds(731, 498, 203, 39);
+		txtTelefono.setBounds(687, 498, 248, 39);
 		add(txtTelefono);
 			
 
@@ -116,9 +116,9 @@ public class ActualizarPerfil extends JPanel {
 		lblEmail.setBounds(-51, 504, 248, 27);
 		add(lblEmail);
 		txtEmail = new JTextField(s1.getClienteActual().getEmail());
-		txtEmail.setFont(new Font("Roboto Light", Font.PLAIN, 22));
+		txtEmail.setFont(new Font("Roboto Light", Font.PLAIN, 21));
 		txtEmail.setColumns(10);
-		txtEmail.setBounds(141, 498, 203, 39);
+		txtEmail.setBounds(141, 498, 253, 39);
 		add(txtEmail);
 
 		// Etiqueta y campo de texto de usuario
@@ -140,13 +140,13 @@ public class ActualizarPerfil extends JPanel {
 		lblContrasenia.setHorizontalAlignment(SwingConstants.CENTER);
 		lblContrasenia.setFont(new Font("Roboto Light", Font.BOLD, 22));
 		lblContrasenia.setAlignmentX(0.5f);
-		lblContrasenia.setBounds(509, 307, 248, 27);
+		lblContrasenia.setBounds(446, 307, 248, 27);
 		add(lblContrasenia);
 		txtContrasenia = new JTextField("**********");
 		txtContrasenia.setEditable(false);
-		txtContrasenia.setFont(new Font("Roboto Light", Font.PLAIN, 22));
+		txtContrasenia.setFont(new Font("Roboto Light", Font.PLAIN, 21));
 		txtContrasenia.setColumns(10);
-		txtContrasenia.setBounds(731, 301, 203, 39);
+		txtContrasenia.setBounds(687, 301, 248, 39);
 		add(txtContrasenia);
 		
 		// Imagen Del Jlabel del Perfil
@@ -162,7 +162,7 @@ public class ActualizarPerfil extends JPanel {
 				
 		// Boton para actualizar informacion de contacto
 		JButton btnGuardar = new JButton("Guardar Cambios");
-		btnGuardar.setIcon(new ImageIcon(ActualizarPerfil.class.getResource("/Img/ImgGuardar.jpg")));
+		btnGuardar.setIcon(new ImageIcon(ActualizarPerfil.class.getResource("/Img/icono de guardar.png")));
 		btnGuardar.addMouseListener(new MouseAdapter() {
 			@Override
 		public void mouseEntered(MouseEvent e) {
@@ -206,7 +206,7 @@ public class ActualizarPerfil extends JPanel {
 		btnGuardar.setBorder(null);
 		btnGuardar.setBackground(Color.WHITE);
 		btnGuardar.setAlignmentX(0.5f);
-		btnGuardar.setBounds(394, 601, 160, 30);
+		btnGuardar.setBounds(394, 601, 171, 30);
 		add(btnGuardar);
 	}
 }

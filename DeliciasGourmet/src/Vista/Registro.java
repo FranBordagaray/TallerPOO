@@ -200,6 +200,7 @@ public class Registro extends JFrame {
 
 		// Boton para crear cuenta
 		JButton btnRegistro = new JButton("Crear cuenta");
+		btnRegistro.setIcon(new ImageIcon(Registro.class.getResource("/Img/icono de crear cuenta.png")));
 		btnRegistro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {

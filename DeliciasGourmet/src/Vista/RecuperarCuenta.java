@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.ImageIcon;
 
 public class RecuperarCuenta extends JFrame {
 
@@ -71,6 +72,7 @@ public class RecuperarCuenta extends JFrame {
 
 		// Boton para enviar correo de recuperación
 		JButton btnEnviar = new JButton("ENVIAR");
+		btnEnviar.setIcon(new ImageIcon(RecuperarCuenta.class.getResource("/Img/icono enviar.png")));
 		btnEnviar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// envia el correo con la clave del usuario

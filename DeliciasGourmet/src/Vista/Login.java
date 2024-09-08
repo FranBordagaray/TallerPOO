@@ -122,6 +122,7 @@ public class Login extends JFrame {
 
 		// Boton para iniciar sesion
 		JButton btnLogin = new JButton("Iniciar sesión");
+		btnLogin.setIcon(new ImageIcon(Login.class.getResource("/Img/icono de inicio de sesion.png")));
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -174,6 +175,7 @@ public class Login extends JFrame {
 
 		// Boton para registrarse
 		JButton btnRegistro = new JButton("Registrarse");
+		btnRegistro.setIcon(new ImageIcon(Login.class.getResource("/Img/icono de registrarse.png")));
 		btnRegistro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Registro registro = new Registro();
@@ -211,6 +213,7 @@ public class Login extends JFrame {
 
 		// Boton para recuperar clave
 		JButton btnRecuperarClave = new JButton("Recuperar");
+		btnRecuperarClave.setIcon(new ImageIcon(Login.class.getResource("/Img/icono de recuperar cuenta.png")));
 		btnRecuperarClave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RecuperarCuenta recuperar = new RecuperarCuenta();
