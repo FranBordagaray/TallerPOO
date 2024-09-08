@@ -2,10 +2,10 @@ package Vista;
 
 import java.awt.Color;
 import java.awt.Dimension;
-
-import javax.swing.JPanel;
-import javax.swing.JLabel;
 import java.awt.Font;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
 public class Reporte extends JPanel {

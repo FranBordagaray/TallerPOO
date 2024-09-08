@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -142,7 +141,6 @@ public class PerfilEmpleado extends JPanel {
         
      // Boton para actualizar informacion de contacto
      		JButton btnGuardar = new JButton("Guardar Cambios");
-     		btnGuardar.setIcon(new ImageIcon(ActualizarPerfil.class.getResource("/Img/ImgGuardar.jpg")));
      		btnGuardar.addMouseListener(new MouseAdapter() {
      			@Override
      		public void mouseEntered(MouseEvent e) {

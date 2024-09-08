@@ -10,13 +10,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
-import javax.swing.ImageIcon;
 
 public class InicioEmpleado extends JFrame {
 
@@ -254,9 +254,6 @@ public class InicioEmpleado extends JFrame {
 		btnCerrarSesion.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de cerrar sesion.png")));
 		btnCerrarSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Login login = new Login();
-				login.setVisible(true);
-				InicioEmpleado.this.setVisible(false);
 			}
 		});
 		btnCerrarSesion.addMouseListener(new MouseAdapter() {
@@ -292,14 +289,9 @@ public class InicioEmpleado extends JFrame {
 		inicio.add(lblComingSoonInicio);
 		
 		// Panel para gestion de empleados
-		JPanel gestionEmpleados = new JPanel();
-		tabbedPane.addTab("EMPLEADOS", null, gestionEmpleados, null);
-		gestionEmpleados.setLayout(null);
-		
-		JLabel lblComingSoonGestionEmpleado = new JLabel("COMING SOON GESTION EMPLEADOS");
-		lblComingSoonGestionEmpleado.setFont(new Font("Roboto Light", Font.BOLD, 30));
-		lblComingSoonGestionEmpleado.setBounds(227, 302, 533, 36);
-		gestionEmpleados.add(lblComingSoonGestionEmpleado);
+		GestionEmpleados gestionEmpleado = new GestionEmpleados();
+		tabbedPane.addTab("EMPLEADOS", gestionEmpleado);
+		gestionEmpleado.setLayout(null);
 		
 		// Panel para gestion de mesas
 		JPanel gestionMesas = new JPanel();
