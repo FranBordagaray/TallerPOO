@@ -48,6 +48,7 @@ public class MapaMesas extends JFrame {
 	public MapaMesas() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 885, 493);
+		setResizable(false);
 		ContenedorMapaMesas = new JPanel();
 		ContenedorMapaMesas.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(ContenedorMapaMesas);
