@@ -54,7 +54,7 @@ public class MapaMesas extends JFrame {
 		setContentPane(ContenedorMapaMesas);
 		ContenedorMapaMesas.setLayout(null);
 		
-		
+		// Panel Superior 
 		JPanel pnlVertical = new JPanel();
 		pnlVertical.setBorder(new CompoundBorder(new LineBorder(new Color(0, 0, 0)), null));
 		pnlVertical.setBackground(new Color(195, 155, 107));
@@ -62,7 +62,7 @@ public class MapaMesas extends JFrame {
 		ContenedorMapaMesas.add(pnlVertical);
 		pnlVertical.setLayout(null);
 		
-		// JComboBox Ubicaciones
+		// Desplegable Ubicaciones
         String[] ubicaciones = {"Comedor Principal", "Terraza", "Bar", "Sala Privada", "Patio"};
         JComboBox<String> comboUbicaciones = new JComboBox<>(ubicaciones);
         comboUbicaciones.setFont(new Font("Roboto Light", Font.BOLD, 10));
@@ -76,7 +76,7 @@ public class MapaMesas extends JFrame {
         lblUbicacion.setBounds(10, 21, 55, 15);
         pnlVertical.add(lblUbicacion);
         
-        // JComboBox Fecha
+        // Desplegable Fecha
         JComboBox<String> comboFecha = new JComboBox<>();
         comboFecha.setFont(new Font("Roboto Light", Font.BOLD, 10));
         comboFecha.setBounds(10, 83, 81, 21);
@@ -88,7 +88,7 @@ public class MapaMesas extends JFrame {
         lblFecha.setBounds(10, 69, 45, 13);
         pnlVertical.add(lblFecha);
         
-        // JComboBox Hora
+        // Desplegable Hora
         JComboBox<String> comboHora = new JComboBox<>();
         comboHora.setFont(new Font("Roboto Light", Font.BOLD, 10));
         comboHora.setBounds(10, 128, 81, 21);
@@ -107,7 +107,7 @@ public class MapaMesas extends JFrame {
         lblMesa.setBounds(10, 159, 45, 13);
         pnlVertical.add(lblMesa);
         
-        // JComboBox Mesa
+        // Desplegable Mesa
         String[] mesas = {"Mesa1", "Mesa2", "Mesa3", "Mesa5", "Mesa5" };
         JComboBox<String> comboMesa = new JComboBox<>(mesas);
         comboMesa.setFont(new Font("Roboto Light", Font.BOLD, 10));
@@ -149,7 +149,7 @@ public class MapaMesas extends JFrame {
 
 		FormularioMesas.setViewportView(tabla);
 		
-		//Boton Seleccionar Mesa
+		// Boton Seleccionar Mesa
 		JButton SeleccionarMesa = new JButton("Seleccionar");
 		SeleccionarMesa.setFont(new Font("Tahoma", Font.BOLD, 12));
 		SeleccionarMesa.setBounds(69, 416, 111, 21);
@@ -160,12 +160,12 @@ public class MapaMesas extends JFrame {
         Mapas.setBounds(189, 0, 682, 455);
         ContenedorMapaMesas.add(Mapas);
         
-        //Panel Terraza
+        // Panel Terraza
         JPanel panelTerraza = new JPanel();
         Mapas.add(panelTerraza, "Terraza");
         
         
-        //Imagen Terraza
+        // Imagen Terraza
         JLabel ImagenTerraza = new JLabel();
         ImagenTerraza.setIcon(new ImageIcon(MapaMesas.class.getResource("/Img/TERRAZA.jpg")));
         ImagenTerraza.setBounds(0, 0, 682, 455);
@@ -175,41 +175,44 @@ public class MapaMesas extends JFrame {
         JPanel panelComedor = new JPanel();
         Mapas.add(panelComedor, "Comedor Principal");
         
-        //Imagen Comedor Principal
+        // Imagen Comedor Principal
         JLabel ImagenComedor = new JLabel();
         ImagenComedor.setIcon(new ImageIcon(MapaMesas.class.getResource("/Img/COMEDOR PRINCIPAL.png")));
         ImagenComedor.setBounds(189, 0, 587, 473);
         panelComedor.add(ImagenComedor);
         
-        //Panel Barra
+        // Panel Barra
         JPanel panelBarra = new JPanel();
         Mapas.add(panelBarra, "Bar");
         
-        //Imagen Barra
+        // Imagen Barra
         JLabel ImagenBarra = new JLabel();
         ImagenBarra.setIcon(new ImageIcon(MapaMesas.class.getResource("/Img/BAR.jpg")));
         ImagenBarra.setBounds(189, 0, 587, 473);
         panelBarra.add(ImagenBarra);
         
-        //Panel Sala Privada
+        // Panel Sala Privada
         JPanel panelSalaPrivada = new JPanel();
         Mapas.add(panelSalaPrivada, "Sala Privada");
         
-        //Imagen Sala Privada
+        // Imagen Sala Privada
         JLabel ImagenSalaPrivada = new JLabel();
         ImagenSalaPrivada.setIcon(new ImageIcon(MapaMesas.class.getResource("/Img/SALA PRIVADA.png")));
         ImagenSalaPrivada.setBounds(189, 0, 587, 473);
         panelSalaPrivada.add(ImagenSalaPrivada);
         
-        //Panel Patio
+        // Panel Patio
         JPanel panelPatio = new JPanel();
         Mapas.add(panelPatio, "Patio");
         
-        //Imagen Patio
+        // Imagen Patio
         JLabel ImagenPatio = new JLabel();
         ImagenPatio.setIcon(new ImageIcon(MapaMesas.class.getResource("/Img/PATIO.png")));
         ImagenPatio.setBounds(189, 0, 587, 473);
         panelPatio.add(ImagenPatio);
+        
+        // Asegura que se inicie con el panel de "Comedor Principal"
+        cambioPanel("Comedor Principal");
         
         // Evento del Desplegable Ubicaciones
         comboUbicaciones.addActionListener(new ActionListener() {
@@ -221,13 +224,13 @@ public class MapaMesas extends JFrame {
         });
         
 	}
-	//Cambia el panel visible en el contenedor 'Mapas' basado en el nombre del panel seleccionado.
+	// Cambia el panel visible en el contenedor 'Mapas' basado en el nombre del panel seleccionado.
     private void cambioPanel(String panel) {
         CardLayout cl = (CardLayout) (Mapas.getLayout());
         cl.show(Mapas, panel);
     }
     
-    //Metodo para obtener fecha y hora local
+    // Metodo para obtener fecha y hora local
     public static String obtenerFechaHoraActual() {
         LocalDateTime ahora = LocalDateTime.now();
         DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
