@@ -20,6 +20,8 @@ public class Historial extends JPanel {
 	private JTable tabla;
 	private DefaultTableModel modelo;
 	private Object[][] datos; 
+	private JComboBox<String> comboBoxEstado;
+	private JComboBox<String> comboBoxMesa;
 	public Historial() {
 		setBorder(null);
 		setBackground(new Color(222, 184, 135));
@@ -47,7 +49,7 @@ public class Historial extends JPanel {
 
 	    //Panel de tabla
 		JScrollPane scrollPane = new JScrollPane(tabla);
-		scrollPane.setBounds(10, 73, 951, 226);
+		scrollPane.setBounds(10, 127, 951, 277);
 		add(scrollPane);
 		
 		//Panel Superior
@@ -64,43 +66,56 @@ public class Historial extends JPanel {
 		lblHistorial.setBounds(98, 19, 248, 24);
 		pnlHeader.add(lblHistorial);
 		
-		//Filtro Estado
-		JLabel lblFiltro1 = new JLabel("Filtrar estados:");
-		lblFiltro1.setBounds(10, 54, 86, 14);
-		add(lblFiltro1);
+		// Filtro Estado
+				JLabel lblFiltro1 = new JLabel("Filtrar estados:");
+				lblFiltro1.setBounds(10, 102, 86, 14);
+				add(lblFiltro1);
 
-		// Seleccion de Filtro de Estados 
-		String[] estados = { "Todos", "Reservado", "Cancelado", "Finalizado" };
-		JComboBox<String> comboBox = new JComboBox<>(estados);
-		comboBox.setBackground(Color.WHITE);
-		comboBox.setBorder(null);
-		comboBox.setBounds(98, 50, 137, 22);
-		add(comboBox);
-		
-		//Opciones para el actionListener
-		comboBox.addActionListener(new ActionListener() {
-			// fijarse si anda
-			public void actionPerformed(ActionEvent e) {
-				String estadoSeleccionado = (String) comboBox.getSelectedItem();
-				filtrarEstado(estadoSeleccionado);
+				// Selección de Filtro de Estados 
+				String[] estados = { "Todos", "Reservado", "Cancelado", "Finalizado" };
+				comboBoxEstado = new JComboBox<>(estados);
+				comboBoxEstado.setBackground(Color.WHITE);
+				comboBoxEstado.setBorder(null);
+				comboBoxEstado.setBounds(92, 94, 137, 22);
+				add(comboBoxEstado);
+
+				// Filtro Mesas
+				JLabel lblFiltro2 = new JLabel("Filtrar mesas:");
+				lblFiltro2.setBounds(247, 102, 86, 14);
+				add(lblFiltro2);
+
+				// Selección de Filtro de Mesas
+				String[] mesas = { "Todas", "Mesa 3", "Mesa 5", "Mesa 7" };
+				comboBoxMesa = new JComboBox<>(mesas);
+				comboBoxMesa.setBackground(Color.WHITE);
+				comboBoxMesa.setBorder(null);
+				comboBoxMesa.setBounds(323, 94, 137, 22);
+				add(comboBoxMesa);
+				
+				// Opciones para los actionListeners
+				ActionListener filtroListener = new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						String estadoSeleccionado = (String) comboBoxEstado.getSelectedItem();
+						String mesaSeleccionada = (String) comboBoxMesa.getSelectedItem();
+						filtrar(estadoSeleccionado, mesaSeleccionada);
+					}
+				};
+
+				comboBoxEstado.addActionListener(filtroListener);
+				comboBoxMesa.addActionListener(filtroListener);
 			}
-		});
-	}
 
-	//Metodo que filtra por estado
-	private void filtrarEstado(String estado) {
-		if (estado.equals("Todos")) {
-			modelo.setDataVector(datos, new String[] { "Fecha", "Hora", "Estado", "Mesa", "Ocupantes" });
-		} else {
-			Object[][] datosFiltrados = filtrarEstado(datos, estado);
-			modelo.setDataVector(datosFiltrados, new String[] { "Fecha", "Hora", "Estado", "Mesa", "Ocupantes" });
+			// Método que filtra por estado y mesa
+			private void filtrar(String estado, String mesa) {
+				Object[][] datosFiltrados = filtrarDatos(datos, estado, mesa);
+				modelo.setDataVector(datosFiltrados, new String[] { "Fecha", "Hora", "Estado", "Mesa", "Ocupantes" });
+			}
+
+			// Método que aplica los filtros
+			private Object[][] filtrarDatos(Object[][] datos, String estado, String mesa) {
+				return java.util.Arrays.stream(datos)
+						.filter(fila -> (estado.equals("Todos") || fila[2].equals(estado)) &&
+										(mesa.equals("Todas") || fila[3].equals(mesa)))
+						.toArray(Object[][]::new);
+			}
 		}
-	}
-
-	
-	private Object[][] filtrarEstado(Object[][] datos, String estado) {
-		return java.util.Arrays.stream(datos)
-				.filter(fila -> fila[2].equals(estado))
-				.toArray(Object[][]::new);
-	}
-}
