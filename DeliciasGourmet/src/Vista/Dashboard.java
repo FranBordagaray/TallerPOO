@@ -13,6 +13,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import Modelo.Sesion;
+import com.toedter.calendar.JCalendar;
 
 public class Dashboard extends JPanel {
 
@@ -117,6 +118,11 @@ public class Dashboard extends JPanel {
 		pnlOfertas.setBorder(null);
 		pnlOfertas.setBounds(696, 298, 286, 370);
 		add(Ofertas);
+		
+		JCalendar calendar = new JCalendar();
+		calendar.getDayChooser().getDayPanel().setBackground(new Color(195, 155, 107));
+		calendar.setBounds(10, 447, 309, 221);
+		add(calendar);
 
 	}
 }
