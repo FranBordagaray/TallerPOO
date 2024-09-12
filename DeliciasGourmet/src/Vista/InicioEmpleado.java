@@ -3,7 +3,6 @@ package Vista;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,37 +22,24 @@ public class InicioEmpleado extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					InicioEmpleado frame = new InicioEmpleado();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public InicioEmpleado() {
 		// Configuración de la ventana principal
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Inicio Empleado");
+		ImageIcon icon = new ImageIcon(getClass().getResource("/Img/Icono pantalla empleado.png"));
+        setIconImage(icon.getImage());
 		setLocationByPlatform(true);
 		setResizable(false);
 		setBounds(100, 100, 1280, 720);
 		setLocationRelativeTo(null);
-
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		// Creación del panel
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(1, 1, 1, 1));
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
-
+		
 		// Panel para menu de opciones
 		JPanel panelMenu = new JPanel();
 		panelMenu.setBackground(new Color(195, 155, 107));
@@ -254,6 +240,9 @@ public class InicioEmpleado extends JFrame {
 		btnCerrarSesion.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de cerrar sesion.png")));
 		btnCerrarSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				LoginEmpleado login = new LoginEmpleado();
+				login.setVisible(true);
+				InicioEmpleado.this.setVisible(false);
 			}
 		});
 		btnCerrarSesion.addMouseListener(new MouseAdapter() {
@@ -280,7 +269,7 @@ public class InicioEmpleado extends JFrame {
 		// Panel para inicio
 		JPanel inicio = new JPanel();
 		inicio.setBorder(null);
-		tabbedPane.addTab("INICIO", null, inicio, null);
+		tabbedPane.addTab("INICIO", inicio);
 		inicio.setLayout(null);
 		
 		JLabel lblComingSoonInicio = new JLabel("COMING SOON INICIO");
@@ -295,7 +284,7 @@ public class InicioEmpleado extends JFrame {
 		
 		// Panel para gestion de mesas
 		JPanel gestionMesas = new JPanel();
-		tabbedPane.addTab("MESAS", null, gestionMesas, null);
+		tabbedPane.addTab("MESAS", gestionMesas);
 		gestionMesas.setLayout(null);
 		
 		JLabel lblComingSoonGestionMesas = new JLabel("COMING SOON GESTION MESAS");
@@ -305,7 +294,7 @@ public class InicioEmpleado extends JFrame {
 		
 		// Panel para eventos especiales
 		JPanel eventosEspeciales = new JPanel();
-		tabbedPane.addTab("EVENTOS ESPECIALES", null, eventosEspeciales, null);
+		tabbedPane.addTab("EVENTOS ESPECIALES", eventosEspeciales);
 		eventosEspeciales.setLayout(null);
 		
 		JLabel lblComingSoonEventEspecial = new JLabel("COMING SOON EVENTO ESPECIAL");

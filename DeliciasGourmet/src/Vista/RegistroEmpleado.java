@@ -23,7 +23,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import Controlador.EmpleadoControlador;
-import Modelo.Cliente;
 import Modelo.Empleado;
 import Modelo.EnumRoles;
 
@@ -41,9 +40,6 @@ public class RegistroEmpleado extends JFrame {
 	private JPasswordField txtRepetirContrasenia;
 	EmpleadoControlador controlador = new EmpleadoControlador();
 
-	/**
-	 * Create the frame.
-	 */
 	public RegistroEmpleado() {
 		// Configuración de la ventana principal
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -225,17 +221,20 @@ public class RegistroEmpleado extends JFrame {
 						empleado.setUsuario(txtUsuario.getText());
 						empleado.setContrasenia(String.valueOf(txtContrasenia.getPassword()));
 						if (controlador.crearCuenta(empleado)) {
-							JOptionPane.showMessageDialog(RegistroEmpleado.this, "Registro exitoso!", "Exito", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(RegistroEmpleado.this, "Registro exitoso!", "Exito", 
+									JOptionPane.INFORMATION_MESSAGE);
 							System.out.println("Registro exitoso!");
 							GestionEmpleados gestion = new GestionEmpleados();
 							gestion.setVisible(true);
 							RegistroEmpleado.this.dispose();
 						} else {
-							JOptionPane.showMessageDialog(RegistroEmpleado.this, "Error al registrar cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(RegistroEmpleado.this, "Error al registrar cliente.", "Error", 
+									JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(RegistroEmpleado.this, "Error inesperado: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(RegistroEmpleado.this, "Error inesperado: " + e2.getMessage(), "Error", 
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});

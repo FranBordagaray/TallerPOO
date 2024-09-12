@@ -11,6 +11,7 @@ import java.util.List;
 import Conexion.Conexion;
 import Modelo.Empleado;
 import Modelo.EnumRoles;
+import Modelo.SesionEmpleado;
 
 public class EmpleadoControlador {
 	Conexion cx;
@@ -72,7 +73,7 @@ public class EmpleadoControlador {
 	            
 	            while (rs.next()) {
 	                Empleado empleado = new Empleado();
-	                empleado.setIdEmpleado(rs.getInt("idCliente"));
+	                empleado.setIdEmpleado(rs.getInt("idEmpleado"));
 	                empleado.setRol(EnumRoles.valueOf(rs.getString("rol")));
 	                empleado.setNombre(rs.getString("nombre"));
 	                empleado.setApellido(rs.getString("apellido"));
@@ -90,4 +91,49 @@ public class EmpleadoControlador {
 	        } 
 	        return empleados;
 	    }
+	    
+	    // Funcion para iniciar sesion
+		public boolean iniciarSesion(String usuario, String contrasenia) {
+			PreparedStatement ps = null;
+			ResultSet rs = null;
+
+			try {
+				ps = cx.conectar().prepareStatement("SELECT idEmpleado, Rol, nombre, apellido, domicilio, telefono, email, usuario, contrasenia FROM Empleado WHERE usuario = ?");
+				ps.setString(1, usuario);
+				rs = ps.executeQuery();
+
+				if (rs.next()) {
+					String contraseniaCifrada = rs.getString("contrasenia");
+					String contraseniaIngresada = convertirSHA256(contrasenia);
+					if (contraseniaCifrada.equals(contraseniaIngresada)) {
+						Empleado empleado = new Empleado();
+						empleado.setIdEmpleado(rs.getInt("idEmpleado"));
+						empleado.setRol(EnumRoles.valueOf(rs.getString("Rol")));
+						empleado.setNombre(rs.getString("nombre"));
+						empleado.setApellido(rs.getString("apellido"));
+						empleado.setDomicilio(rs.getString("domicilio"));
+						empleado.setTelefono(rs.getString("telefono"));
+						empleado.setEmail(rs.getString("email"));
+						empleado.setUsuario(rs.getString("usuario"));
+						empleado.setContrasenia(contraseniaCifrada);
+
+						SesionEmpleado.setEmpleadoActual(empleado);
+						System.out.println("Inicio de sesión exitoso!");
+						return true;
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (rs != null)
+						rs.close();
+					if (ps != null)
+						ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			return false;
+		}
 }

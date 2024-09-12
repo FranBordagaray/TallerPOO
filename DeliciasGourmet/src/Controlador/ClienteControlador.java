@@ -19,6 +19,7 @@ public class ClienteControlador {
 		cx = new Conexion();
 	}
 
+	// Función para crear cuentas de clientes
 	public boolean crearCuenta(Cliente cliente) {
 		PreparedStatement ps = null;
 
@@ -41,12 +42,12 @@ public class ClienteControlador {
 		}
 	}
 	
+	// Función para actualizar cuentas de clientes
 	public void actualizarCliente(Cliente cliente) throws SQLException {
 	    String sql = "UPDATE Cliente SET email = ?, telefono = ? WHERE idCliente = ?";
 	    PreparedStatement stmt = null;
 
 	    try {
-	        // Inicializar la conexión si no ha sido establecida
 	        connection = cx.conectar();
 
 	        stmt = connection.prepareStatement(sql);
@@ -60,7 +61,6 @@ public class ClienteControlador {
 	        e.printStackTrace();
 	        System.out.println("Error al actualizar el cliente.");
 	    } finally {
-	        // Cerrar el PreparedStatement y la conexión
 	        if (stmt != null) stmt.close();
 	        if (connection != null) connection.close();
 	    }

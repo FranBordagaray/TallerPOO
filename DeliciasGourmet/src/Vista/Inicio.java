@@ -22,9 +22,6 @@ public class Inicio extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
-	/**
-	 * Create the frame.
-	 */
 	public Inicio() {
 		// Configuración de la ventana principal
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -67,7 +64,6 @@ public class Inicio extends JFrame {
 		btnInicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(0);
-				MostrarDashboard();
 			}
 		});
 		btnInicio.addMouseListener(new MouseAdapter() {
@@ -126,7 +122,6 @@ public class Inicio extends JFrame {
 		btnHistorial.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(2);
-				MostrarHistorial();
 			}
 		});
 		btnHistorial.addActionListener(new ActionListener() {
@@ -160,7 +155,6 @@ public class Inicio extends JFrame {
 		btnPerfil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(3);
-				MostrarPerfil();
 			}
 		});
 		btnPerfil.addMouseListener(new MouseAdapter() {
@@ -217,15 +211,8 @@ public class Inicio extends JFrame {
 
 		// Panel inicio
 		Dashboard dashboard = new Dashboard();
-		JPanel panelInicio = new JPanel();
-		panelInicio.setBorder(null);
 		tabbedPane.addTab("Inicio", dashboard);
-		panelInicio.setLayout(null);
-
-		JLabel lblPanelInicio = new JLabel("INICIO");
-		lblPanelInicio.setFont(new Font("Roboto Light", Font.BOLD, 25));
-		lblPanelInicio.setBounds(455, 310, 77, 31);
-		panelInicio.add(lblPanelInicio);
+		dashboard.setBorder(null);
 
 		// Panel reservas
 		JPanel panelReservas = new JPanel();
@@ -233,55 +220,20 @@ public class Inicio extends JFrame {
 		tabbedPane.addTab("Reservas", null, panelReservas, null);
 		panelReservas.setLayout(null);
 
-		JLabel lblReservas = new JLabel("RESERVAS");
+		JLabel lblReservas = new JLabel("COMING SOON RESERVAS");
 		lblReservas.setFont(new Font("Roboto Light", Font.BOLD, 25));
 		lblReservas.setBounds(430, 310, 127, 31);
 		panelReservas.add(lblReservas);
 
 		// Panel historial
 		Historial historial = new Historial();
-		JPanel panelHistorial = new JPanel();
-		panelHistorial.setBorder(null);
 		tabbedPane.addTab("Historial", historial);
-		panelHistorial.setLayout(null);
-
-		JLabel lblHistorial = new JLabel("HISTORIAL");
-		lblHistorial.setFont(new Font("Roboto Light", Font.BOLD, 25));
-		lblHistorial.setBounds(428, 310, 131, 31);
-		panelHistorial.add(lblHistorial);
+		historial.setLayout(null);
 
 		// Panel perfil
 		ActualizarPerfil perfil = new ActualizarPerfil();
-		JPanel panelPerfil = new JPanel();
-		panelPerfil.setBorder(null);
 		tabbedPane.addTab("Perfil", perfil);
-		panelPerfil.setLayout(null);
+		perfil.setLayout(null);
 
-		JLabel lblPerfil = new JLabel("PERFIL");
-		lblPerfil.setFont(new Font("Roboto Light", Font.BOLD, 25));
-		lblPerfil.setBounds(451, 310, 84, 31);
-		panelPerfil.add(lblPerfil);
-
-	}
-
-	private void MostrarPerfil() {
-		ActualizarPerfil perfil = new ActualizarPerfil();
-		JFrame perfilFrame = new JFrame("Perfil");
-		perfilFrame.getContentPane().add(perfil);
-		perfilFrame.pack();
-	}
-
-	private void MostrarHistorial() {
-		Historial historial = new Historial();
-		JFrame historialFrame = new JFrame("Historial");
-		historialFrame.getContentPane().add(historial);
-		historialFrame.pack();
-	}
-
-	private void MostrarDashboard() {
-		Dashboard dashboard = new Dashboard();
-		JFrame dashboardFrame = new JFrame("Dashboard");
-		dashboardFrame.getContentPane().add(dashboard);
-		dashboardFrame.pack();
 	}
 }

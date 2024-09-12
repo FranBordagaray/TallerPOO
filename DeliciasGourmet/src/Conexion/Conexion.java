@@ -7,6 +7,7 @@ import java.sql.SQLException;
 public class Conexion {
 	Connection cx = null;
 
+	// Funcion para conectarse a la base de datos
 	public Connection conectar() {
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -17,18 +18,13 @@ public class Conexion {
 		}
 		return cx;
 	}
-
+	
+	// Funcion para desconectarse a la base de datos
 	public void Desconectar() {
 		try {
 			cx.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public static void main(String[] args) {
-		Conexion con = new Conexion();
-
-		con.conectar();
 	}
 }
