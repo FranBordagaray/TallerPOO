@@ -9,13 +9,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
-import javax.swing.ImageIcon;
 
 public class Inicio extends JFrame {
 
@@ -215,15 +214,9 @@ public class Inicio extends JFrame {
 		dashboard.setBorder(null);
 
 		// Panel reservas
-		JPanel panelReservas = new JPanel();
-		panelReservas.setBorder(null);
-		tabbedPane.addTab("Reservas", null, panelReservas, null);
-		panelReservas.setLayout(null);
-
-		JLabel lblReservas = new JLabel("COMING SOON RESERVAS");
-		lblReservas.setFont(new Font("Roboto Light", Font.BOLD, 25));
-		lblReservas.setBounds(430, 310, 127, 31);
-		panelReservas.add(lblReservas);
+		Reserva Reserva = new Reserva();
+		tabbedPane.addTab("Reserva", Reserva);
+		dashboard.setBorder(null);
 
 		// Panel historial
 		Historial historial = new Historial();
