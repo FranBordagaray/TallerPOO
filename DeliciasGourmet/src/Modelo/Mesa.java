@@ -1,69 +1,56 @@
 package Modelo;
 
 public class Mesa {
+	
+	// Variables de clase
     private int idMesa;
-    private int capacidad;
+	private int capacidad;
     private String ubicacion;
     private String estado;
-    private String horaReservada;
 
     // Constructor por defecto
     public Mesa() {}
+    
 
-    // Constructor con parámetros
-    public Mesa(int idMesa, int capacidad, String ubicacion, String estado, String horaReservada) {
-        this.idMesa = idMesa;
-        this.capacidad = capacidad;
-        this.ubicacion = ubicacion;
-        this.estado = estado;
-        this.horaReservada = horaReservada;
-    }
-
-    // Getters y Setters
+    // Getters y Id Mesa
     public int getIdMesa() {
         return idMesa;
     }
 
+    // Setter de Id Mesa
     public void setIdMesa(int idMesa) {
         this.idMesa = idMesa;
     }
 
+    // Getter de Capacidad
     public int getCapacidad() {
         return capacidad;
     }
-
+    
+    // Setter de Capacidad
     public void setCapacidad(int capacidad) {
         this.capacidad = capacidad;
     }
-
+    
+    // Getter de Ubicacion
     public String getUbicacion() {
         return ubicacion;
     }
-
+    
+    // Setter de Ubicacion
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
     }
-
+    
+    // Getter de Estado
     public String getEstado() {
         return estado;
     }
-
+    
+    // Setter de Estado
     public void setEstado(String estado) {
         this.estado = estado;
     }
 
-    public String getHoraReservada() {
-        return horaReservada;
-    }
 
-    public void setHoraReservada(String horaReservada) {
-        this.horaReservada = horaReservada;
-    }
-
-    // Método para mostrar la información de la mesa
-    @Override
-    public String toString() {
-        return "Mesa [idMesa=" + idMesa + ", capacidad=" + capacidad + ", ubicacion=" + ubicacion + 
-               ", estado=" + estado + ", horaReservada=" + horaReservada + "]";
-    }
 }

@@ -1,6 +1,7 @@
 package Modelo;
 
 public class Persona {
+	
 	// Variables de clase
 	private String nombre;
 	private String apellido;

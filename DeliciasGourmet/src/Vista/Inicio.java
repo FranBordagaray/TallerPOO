@@ -214,7 +214,7 @@ public class Inicio extends JFrame {
 		dashboard.setBorder(null);
 
 		// Panel reservas
-		Reserva Reserva = new Reserva();
+		VistaReserva Reserva = new VistaReserva();
 		tabbedPane.addTab("Reserva", Reserva);
 		dashboard.setBorder(null);
 

@@ -18,7 +18,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -27,13 +26,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
-
 import com.toedter.calendar.JCalendar;
-
 import Controlador.MesaControlador;
+import Controlador.ReservaControlador;
 import Modelo.Mesa;
+import Modelo.Reserva;
+import Modelo.Sesion;
 
-public class Reserva extends JPanel {
+public class VistaReserva extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -46,8 +46,10 @@ public class Reserva extends JPanel {
     private JComboBox<String> comboMesa;
     private JComboBox <Integer> comboCapacidad;
     private MesaControlador mesaControlador;
+    private ReservaControlador reservaControlador;
+    private String fechaFormateada;
 
-	public Reserva() {
+	public VistaReserva() {
 		
 		// Configuracion del panel
 		setLayout(null);
@@ -55,7 +57,8 @@ public class Reserva extends JPanel {
 		setBackground(new Color(222, 184, 135));
 		
 		mesaControlador = new MesaControlador();
-			
+		reservaControlador = new ReservaControlador();
+		
 		// Inicializa fechas de restricción
         hoy = LocalDate.now();
         unAnoFuturo = hoy.plusYears(1);
@@ -79,15 +82,6 @@ public class Reserva extends JPanel {
 		// Desplegable Ubicaciones
         String[] ubicaciones = {"COMEDOR PRINCIPAL", "TERRAZA", "BAR", "SALA PRIVADA", "PATIO"};
         comboUbicaciones = new JComboBox<>(ubicaciones);
-        comboUbicaciones.setForeground(Color.BLACK);
-        comboUbicaciones.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        comboUbicaciones.setBackground(Color.WHITE);
-        comboUbicaciones.setBorder(null);
-        comboUbicaciones.setFont(new Font("Roboto Light", Font.PLAIN, 12));
-        comboUbicaciones.setToolTipText("");
-        comboUbicaciones.setBounds(16, 35, 200, 25);
-        pnlVertical.add(comboUbicaciones);
-     
         comboUbicaciones.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -96,6 +90,14 @@ public class Reserva extends JPanel {
                 actualizarMesas();
             }
         });
+        comboUbicaciones.setForeground(Color.BLACK);
+        comboUbicaciones.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        comboUbicaciones.setBackground(Color.WHITE);
+        comboUbicaciones.setBorder(null);
+        comboUbicaciones.setFont(new Font("Roboto Light", Font.PLAIN, 12));
+        comboUbicaciones.setToolTipText("");
+        comboUbicaciones.setBounds(16, 35, 200, 25);
+        pnlVertical.add(comboUbicaciones);
         
         // Etiqueta Fecha
         JLabel lblFecha = new JLabel("Fecha");
@@ -120,16 +122,22 @@ public class Reserva extends JPanel {
         calendario.getDayChooser().getDayPanel().setFont(new Font("Roboto Light", Font.PLAIN, 10));
         calendario.getDayChooser().getDayPanel().setBackground(Color.WHITE);
         calendario.getDayChooser().getDayPanel().setBorder(null);
+        
         calendario.setBounds(11, 95, 210, 150);
         pnlVertical.add(calendario);
         
         calendario.setMinSelectableDate(java.sql.Date.valueOf(hoy));
         calendario.setMaxSelectableDate(java.sql.Date.valueOf(unAnoFuturo));
         calendario.getDayChooser().addPropertyChangeListener("day", evt -> {
-            Date fechaSeleccionadaDate = calendario.getDate();
-            ZonedDateTime zonedDateTime = fechaSeleccionadaDate.toInstant().atZone(ZoneId.systemDefault());
-            LocalDateTime fechaSeleccionada = zonedDateTime.toLocalDateTime();
-            actualizarHorasDisponibles(fechaSeleccionada);
+        Date fechaSeleccionadaDate = calendario.getDate();
+        ZonedDateTime zonedDateTime = fechaSeleccionadaDate.toInstant().atZone(ZoneId.systemDefault());
+        LocalDateTime fechaSeleccionada = zonedDateTime.toLocalDateTime();
+        actualizarHorasDisponibles(fechaSeleccionada);
+            
+        // Formatear la fecha
+        DateTimeFormatter formato =  DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        fechaFormateada = fechaSeleccionada.format(formato);
+            
         });
         
 		// Etiqueta de Hora
@@ -172,7 +180,6 @@ public class Reserva extends JPanel {
 		comboCapacidad.setBackground(Color.WHITE);
 		comboCapacidad.setBounds(41, 340, 150, 25);
 		pnlVertical.add(comboCapacidad);
-		
 		comboCapacidad.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
@@ -200,8 +207,18 @@ public class Reserva extends JPanel {
         comboMesa.setBorder(null);
         comboMesa.setFont(new Font("Roboto Light", Font.PLAIN, 16));
         comboMesa.setBounds(41, 400, 150, 25);
-        pnlVertical.add(comboMesa);
-		
+        pnlVertical.add(comboMesa);	
+        comboMesa.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String seleccionMesa = (String) comboMesa.getSelectedItem();
+                if (seleccionMesa != null && !seleccionMesa.isEmpty()) {
+                    int idMesaSeleccionada = obtenerIdMesa(seleccionMesa);
+                    System.out.println("ID de Mesa Seleccionada: " + idMesaSeleccionada);
+                }
+            }
+        });
+        
 		// Etiqueta Comentario de la Reserva
 		JLabel TituloComentario = new JLabel("Comentario");
 		TituloComentario.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -224,23 +241,48 @@ public class Reserva extends JPanel {
 		
 		// Boton Siguiente Paso
 		JButton btnSiguiente = new JButton("Siguiente");
+		btnSiguiente.addActionListener(new ActionListener() {
+			
+			@SuppressWarnings("static-access")
+			public void actionPerformed(ActionEvent e) {
+				try {
+						String mesaSeleccionada = (String) comboMesa.getSelectedItem();
+						int idMesa = obtenerIdMesa(mesaSeleccionada);
+						Sesion s1 = new Sesion();
+						Reserva reserva= new Reserva();
+						reserva.setFecha(fechaFormateada);
+						reserva.setHora((String) comboHora.getSelectedItem());
+						reserva.setComentario(CampoComentario.getText());
+						reserva.setDispocionMesa(BuscarPath(ubicaciones, (String)comboUbicaciones.getSelectedItem()));
+						reserva.setIdCliente(s1.getClienteActual().getIdCliente());
+						reserva.setIdMesa(idMesa);
+						if (reservaControlador.crearReserva(reserva)) {
+							JOptionPane.showMessageDialog(VistaReserva.this, "Registro exitoso!", "Exito", JOptionPane.INFORMATION_MESSAGE);
+							System.out.println("Registro exitoso!");
+							UsarTarjeta tarjeta = new UsarTarjeta();
+							tarjeta.setVisible(true);
+						} else {
+							JOptionPane.showMessageDialog(VistaReserva.this, "Error al registrar cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+						}
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(VistaReserva.this, "Error inesperado: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					}
+			}
+		});
+		
 		btnSiguiente.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				btnSiguiente.setBackground(new Color(255, 0, 0));
 				btnSiguiente.setForeground(Color.WHITE);
 			}
-
 			@Override
 			public void mouseExited(MouseEvent e) {
 				btnSiguiente.setBackground(Color.WHITE);
 				btnSiguiente.setForeground(Color.BLACK);
 			}
 		});
-		btnSiguiente.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		
 		btnSiguiente.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnSiguiente.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnSiguiente.setBorder(null);
@@ -249,6 +291,7 @@ public class Reserva extends JPanel {
 		btnSiguiente.setFont(new Font("Roboto Light", Font.BOLD, 16));
 		btnSiguiente.setBounds(41, 640, 150, 25);
 		pnlVertical.add(btnSiguiente);
+		
 		
 		// Panel Mapas
         Mapas = new JPanel(new CardLayout());
@@ -400,4 +443,36 @@ public class Reserva extends JPanel {
             }
         }
     }
+ 	
+    //Metodo encontrar el path del mapa de la mesa
+    public String BuscarPath(String[] ubicaciones, String SeleccionarUbicacion) {
+    	switch (SeleccionarUbicacion) {
+			case "COMEDOR PRINCIPAL": 
+				return "/Img/COMEDOR PRINCIPAL.png";
+			case "TERRAZA": 
+				return "/Img/TERRAZA.jpg";
+			case "BAR": 
+				return "/Img/BAR.jpg";
+			case "SALA PRIVADA": 
+				return "/Img/SALA PRIVADA.png";
+			case "PATIO":
+				return "/Img/PATIO.png";	
+			default:
+			throw new IllegalArgumentException("Unexpected value: " + SeleccionarUbicacion);
+		}
+    }
+    
+    //Metodo para obtener la mesa
+    
+    private int obtenerIdMesa(String seleccionMesa) {
+        try {
+            String[] partes = seleccionMesa.split(" ");
+            return Integer.parseInt(partes[1]);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Formato de mesa inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return -1;
+        }
+    }
+    
 }

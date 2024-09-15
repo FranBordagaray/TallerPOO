@@ -37,6 +37,7 @@ public class ActualizarPerfil extends JPanel {
 	/**
 	 * Create the panel.
 	 */
+	@SuppressWarnings("static-access")
 	public ActualizarPerfil() {
 		
 		Sesion s1 = new Sesion();

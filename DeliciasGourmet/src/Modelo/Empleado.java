@@ -1,6 +1,7 @@
 package Modelo;
 
 public class Empleado extends Persona{
+	
 	// Variables de clase
 	private int idEmpleado;
 	private EnumRoles rol;

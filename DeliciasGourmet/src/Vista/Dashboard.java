@@ -20,6 +20,7 @@ public class Dashboard extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("static-access")
 	public Dashboard() {
 		
 		// Configuracion del panel
