@@ -26,7 +26,6 @@ import Modelo.Sesion;
 public class ActualizarPerfil extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private JTextField txtUsuario;
 	private JTextField txtNombre;
 	private JTextField txtApellido;
 	private JTextField txtContrasenia;
@@ -122,20 +121,6 @@ public class ActualizarPerfil extends JPanel {
 		txtEmail.setBounds(141, 498, 298, 39);
 		add(txtEmail);
 
-		// Etiqueta y campo de texto de usuario
-		JLabel lblUsuario = new JLabel("USUARIO: ");
-		lblUsuario.setHorizontalAlignment(SwingConstants.CENTER);
-		lblUsuario.setFont(new Font("Roboto Light", Font.BOLD, 22));
-		lblUsuario.setAlignmentX(1.0f);
-		lblUsuario.setBounds(189, 223, 248, 27);
-		add(lblUsuario);
-		txtUsuario = new JTextField(s1.getClienteActual().getUsuario());
-		txtUsuario.setEditable(false);
-		txtUsuario.setFont(new Font("Roboto Light", Font.PLAIN, 22));
-		txtUsuario.setBounds(382, 217, 227, 39);
-		add(txtUsuario);
-		txtUsuario.setColumns(10);
-
 		// Etiqueta y campo de texto de contrasenia
 		JLabel lblContrasenia = new JLabel("CONTRASEÑA:");
 		lblContrasenia.setHorizontalAlignment(SwingConstants.CENTER);
@@ -151,10 +136,10 @@ public class ActualizarPerfil extends JPanel {
 		add(txtContrasenia);
 		
 		// Imagen Del Jlabel del Perfil
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(ActualizarPerfil.class.getResource("/Img/ImgPerfil (1).jpg")));
-		lblNewLabel.setBounds(405, 38, 160, 176);
-		add(lblNewLabel);
+		JLabel lblImagenPerfil = new JLabel("");
+		lblImagenPerfil.setIcon(new ImageIcon(ActualizarPerfil.class.getResource("/Img/ImgPerfil (1).jpg")));
+		lblImagenPerfil.setBounds(405, 38, 160, 176);
+		add(lblImagenPerfil);
 				
 		// Separador 
 		JSeparator separator = new JSeparator();

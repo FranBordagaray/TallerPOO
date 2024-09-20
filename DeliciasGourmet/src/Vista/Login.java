@@ -26,7 +26,7 @@ public class Login extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtUsuario;
+	private JTextField txtEmail;
 	private JPasswordField txtContrasenia;
 	ClienteControlador controlador = new ClienteControlador();
 	
@@ -71,19 +71,19 @@ public class Login extends JFrame {
 		pnlContenedor.add(lblIniciarSesion);
 
 		// Etiqueta y campo de texto de usuario
-		JLabel lblUsuario = new JLabel("USUARIO: ");
-		lblUsuario.setHorizontalAlignment(SwingConstants.CENTER);
-		lblUsuario.setAlignmentX(Component.CENTER_ALIGNMENT);
-		lblUsuario.setFont(new Font("Roboto Light", Font.PLAIN, 22));
-		lblUsuario.setBounds(53, 250, 248, 30);
-		pnlContenedor.add(lblUsuario);
+		JLabel lblEmail = new JLabel("EMAIL:");
+		lblEmail.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEmail.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblEmail.setFont(new Font("Roboto Light", Font.PLAIN, 22));
+		lblEmail.setBounds(53, 250, 248, 30);
+		pnlContenedor.add(lblEmail);
 
-		txtUsuario = new JTextField();
-		txtUsuario.setFont(new Font("Roboto Light", Font.PLAIN, 20));
-		txtUsuario.setBorder(null);
-		txtUsuario.setBounds(300, 250, 300, 30);
-		pnlContenedor.add(txtUsuario);
-		txtUsuario.setColumns(10);
+		txtEmail = new JTextField();
+		txtEmail.setFont(new Font("Roboto Light", Font.PLAIN, 20));
+		txtEmail.setBorder(null);
+		txtEmail.setBounds(300, 250, 300, 30);
+		pnlContenedor.add(txtEmail);
+		txtEmail.setColumns(10);
 
 		// Etiqueta y campo de texto de contrasenia
 		JLabel lblContrasenia = new JLabel("CONTRASEÑA:");
@@ -107,7 +107,7 @@ public class Login extends JFrame {
 				try {
 					if (verificarCampos()) {
 						return;
-					} else if (controlador.iniciarSesion(txtUsuario.getText(),
+					} else if (controlador.iniciarSesion(txtEmail.getText(),
 							String.valueOf(txtContrasenia.getPassword()))) {
 						JOptionPane.showMessageDialog(Login.this, "Bienvenido", "Exito",
 								JOptionPane.INFORMATION_MESSAGE);
@@ -225,10 +225,10 @@ public class Login extends JFrame {
 
 	// Funcion para verificar campos vacios
 	private boolean verificarCampos() {
-		String usuario = txtUsuario.getText();
+		String email = txtEmail.getText();
 		String contrasenia = String.valueOf(txtContrasenia.getPassword());
 
-		if (usuario.isEmpty() || contrasenia.isEmpty()) {
+		if (email.isEmpty() || contrasenia.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Complete todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
 			return true;
 		}

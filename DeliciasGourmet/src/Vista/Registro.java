@@ -32,7 +32,6 @@ public class Registro extends JFrame {
 	private JTextField txtEmail;
 	private JTextField txtNombre;
 	private JTextField txtApellido;
-	private JTextField txtUsuario;
 	private JPasswordField txtContrasenia;
 	private JPasswordField txtRepetirContrasenia;
 	ClienteControlador controlador = new ClienteControlador();
@@ -155,33 +154,18 @@ public class Registro extends JFrame {
 		txtEmail.setBounds(300, 360, 300, 30);
 		pnlContenedor.add(txtEmail);
 
-		// Etiqueta y campo de texto de usuario
-		JLabel lblUsuario = new JLabel("USUARIO: ");
-		lblUsuario.setHorizontalAlignment(SwingConstants.CENTER);
-		lblUsuario.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		lblUsuario.setFont(new Font("Roboto Light", Font.PLAIN, 22));
-		lblUsuario.setBounds(53, 420, 248, 27);
-		pnlContenedor.add(lblUsuario);
-
-		txtUsuario = new JTextField();
-		txtUsuario.setFont(new Font("Roboto Light", Font.PLAIN, 20));
-		txtUsuario.setColumns(10);
-		txtUsuario.setBorder(null);
-		txtUsuario.setBounds(300, 420, 300, 30);
-		pnlContenedor.add(txtUsuario);
-
 		// Etiqueta y campo de texto de contrasenia
 		JLabel lblContrasenia = new JLabel("CONTRASEÑA:");
 		lblContrasenia.setHorizontalAlignment(SwingConstants.CENTER);
 		lblContrasenia.setAlignmentX(Component.CENTER_ALIGNMENT);
 		lblContrasenia.setFont(new Font("Roboto Light", Font.PLAIN, 22));
-		lblContrasenia.setBounds(53, 480, 248, 27);
+		lblContrasenia.setBounds(53, 426, 248, 27);
 		pnlContenedor.add(lblContrasenia);
 
 		txtContrasenia = new JPasswordField();
 		txtContrasenia.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		txtContrasenia.setBorder(null);
-		txtContrasenia.setBounds(300, 480, 300, 30);
+		txtContrasenia.setBounds(300, 425, 300, 30);
 		pnlContenedor.add(txtContrasenia);
 
 		// Etiqueta y campo de texto de repetir contrasenia
@@ -189,13 +173,13 @@ public class Registro extends JFrame {
 		lblRepetirContrasea.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRepetirContrasea.setFont(new Font("Roboto Light", Font.PLAIN, 22));
 		lblRepetirContrasea.setAlignmentX(0.5f);
-		lblRepetirContrasea.setBounds(53, 540, 248, 27);
+		lblRepetirContrasea.setBounds(53, 492, 248, 27);
 		pnlContenedor.add(lblRepetirContrasea);
 
 		txtRepetirContrasenia = new JPasswordField();
 		txtRepetirContrasenia.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		txtRepetirContrasenia.setBorder(null);
-		txtRepetirContrasenia.setBounds(300, 540, 300, 30);
+		txtRepetirContrasenia.setBounds(300, 491, 300, 30);
 		pnlContenedor.add(txtRepetirContrasenia);
 
 		// Boton para crear cuenta
@@ -207,16 +191,26 @@ public class Registro extends JFrame {
 					if (verificarCampos()) {
 						return;
 					} else {
+						String email = txtEmail.getText();
+
+						// Verificar si el email ya está registrado
+						if (controlador.verificarEmailExistente(email)) {
+							JOptionPane.showMessageDialog(Registro.this, "El email ya está en uso.", "Error",
+									JOptionPane.ERROR_MESSAGE);
+							return; // No se continúa con el registro
+						}
+
+						// Si el email no está registrado, proceder con la creación de la cuenta
 						Cliente cliente = new Cliente();
 						cliente.setNombre(txtNombre.getText());
 						cliente.setApellido(txtApellido.getText());
 						cliente.setDomicilio(txtDomicilio.getText());
 						cliente.setTelefono(txtTelefono.getText());
-						cliente.setEmail(txtEmail.getText());
-						cliente.setUsuario(txtUsuario.getText());
+						cliente.setEmail(email);
 						cliente.setContrasenia(String.valueOf(txtContrasenia.getPassword()));
+
 						if (controlador.crearCuenta(cliente)) {
-							JOptionPane.showMessageDialog(Registro.this, "Registro exitoso!", "Exito",
+							JOptionPane.showMessageDialog(Registro.this, "Registro exitoso!", "Éxito",
 									JOptionPane.INFORMATION_MESSAGE);
 							System.out.println("Registro exitoso!");
 							Login login = new Login();
@@ -264,12 +258,11 @@ public class Registro extends JFrame {
 		String domicilio = txtDomicilio.getText();
 		String telefono = txtTelefono.getText();
 		String mail = txtEmail.getText();
-		String usuario = txtUsuario.getText();
 		String contrasenia = String.valueOf(txtContrasenia.getPassword());
 		String repetirContrasenia = String.valueOf(txtRepetirContrasenia.getPassword());
 
 		if (nombre.isEmpty() || apellido.isEmpty() || domicilio.isEmpty() || telefono.isEmpty() || mail.isEmpty()
-				|| usuario.isEmpty() || contrasenia.isEmpty() || repetirContrasenia.isEmpty()) {
+				|| contrasenia.isEmpty() || repetirContrasenia.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Complete todos los campos", "Advertencia", JOptionPane.ERROR_MESSAGE);
 			return true;
 		} else if (!contrasenia.equals(repetirContrasenia)) {

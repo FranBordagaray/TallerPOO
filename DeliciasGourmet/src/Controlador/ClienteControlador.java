@@ -21,25 +21,52 @@ public class ClienteControlador {
 
 	// Función para crear cuentas de clientes
 	public boolean crearCuenta(Cliente cliente) {
-		PreparedStatement ps = null;
+	    PreparedStatement ps = null;
 
-		try {
-			ps = cx.conectar().prepareStatement("INSERT INTO Cliente VALUES(null, ?,?,?,?,?,?,?)");
-			ps.setString(1, cliente.getNombre());
-			ps.setString(2, cliente.getApellido());
-			ps.setString(3, cliente.getDomicilio());
-			ps.setString(4, cliente.getTelefono());
-			ps.setString(5, cliente.getEmail());
-			ps.setString(6, cliente.getUsuario());
-			ps.setString(7, convertirSHA256(cliente.getContrasenia()));
-			ps.executeUpdate();
-			System.out.println("Cuenta creada con exito!");
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("Error al crear cuenta!");
-			return false;
-		}
+	    try {
+	        ps = cx.conectar().prepareStatement("INSERT INTO Cliente (nombre, apellido, domicilio, telefono, email, contrasenia) VALUES (?, ?, ?, ?, ?, ?)");
+	        ps.setString(1, cliente.getNombre());
+	        ps.setString(2, cliente.getApellido());
+	        ps.setString(3, cliente.getDomicilio());
+	        ps.setString(4, cliente.getTelefono());
+	        ps.setString(5, cliente.getEmail());
+	        ps.setString(6, convertirSHA256(cliente.getContrasenia()));  // El índice es 6, no 7
+	        ps.executeUpdate();
+	        System.out.println("Cuenta creada con éxito!");
+	        return true;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Error al crear cuenta!");
+	        return false;
+	    }
+	}
+	
+	// Función que verifica si un email ya esta en uso
+	public boolean verificarEmailExistente(String email) {
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+
+	    try {
+	        ps = cx.conectar().prepareStatement("SELECT COUNT(*) FROM Cliente WHERE email = ?");
+	        ps.setString(1, email);
+	        rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            int count = rs.getInt(1);
+	            return count > 0;  
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (ps != null) ps.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return false;  // Email no registrado
 	}
 	
 	// Función para actualizar cuentas de clientes
@@ -88,14 +115,14 @@ public class ClienteControlador {
 	}
 
 	// Funcion para iniciar sesion
-	public boolean iniciarSesion(String usuario, String contrasenia) {
+	public boolean iniciarSesion(String email, String contrasenia) {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 
 		try {
 			ps = cx.conectar().prepareStatement(
-					"SELECT idCliente, nombre, apellido, domicilio, telefono, email, usuario, contrasenia FROM Cliente WHERE usuario = ?");
-			ps.setString(1, usuario);
+					"SELECT idCliente, nombre, apellido, domicilio, telefono, email, contrasenia FROM Cliente WHERE email = ?");
+			ps.setString(1, email);
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
@@ -109,7 +136,6 @@ public class ClienteControlador {
 					cliente.setDomicilio(rs.getString("domicilio"));
 					cliente.setTelefono(rs.getString("telefono"));
 					cliente.setEmail(rs.getString("email"));
-					cliente.setUsuario(rs.getString("usuario"));
 					cliente.setContrasenia(contraseniaCifrada);
 
 					Sesion.setClienteActual(cliente);
