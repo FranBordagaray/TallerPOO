@@ -29,8 +29,10 @@ import javax.swing.SwingConstants;
 import com.toedter.calendar.JCalendar;
 import Controlador.MesaControlador;
 import Controlador.ReservaControlador;
+import Controlador.ServiciosControlador;
 import Modelo.Mesa;
 import Modelo.Reserva;
+import Modelo.Servicio;
 import Modelo.Sesion;
 
 public class VistaReserva extends JPanel {
@@ -47,6 +49,7 @@ public class VistaReserva extends JPanel {
     private JComboBox <Integer> comboCapacidad;
     private MesaControlador mesaControlador;
     private ReservaControlador reservaControlador;
+    private ServiciosControlador servicioControlador;
     private String fechaFormateada;
 
 	public VistaReserva() {
@@ -58,6 +61,7 @@ public class VistaReserva extends JPanel {
 		
 		mesaControlador = new MesaControlador();
 		reservaControlador = new ReservaControlador();
+		servicioControlador =  new ServiciosControlador();
 		
 		// Inicializa fechas de restricción
         hoy = LocalDate.now();
@@ -245,28 +249,41 @@ public class VistaReserva extends JPanel {
 			
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
-				try {
-						String mesaSeleccionada = (String) comboMesa.getSelectedItem();
-						int idMesa = obtenerIdMesa(mesaSeleccionada);
-						Sesion s1 = new Sesion();
-						Reserva reserva= new Reserva();
-						reserva.setFecha(fechaFormateada);
-						reserva.setHora((String) comboHora.getSelectedItem());
-						reserva.setComentario(CampoComentario.getText());
-						reserva.setDispocionMesa(BuscarPath(ubicaciones, (String)comboUbicaciones.getSelectedItem()));
-						reserva.setIdCliente(s1.getClienteActual().getIdCliente());
-						reserva.setIdMesa(idMesa);
-						if (reservaControlador.crearReserva(reserva)) {
-							JOptionPane.showMessageDialog(VistaReserva.this, "Registro exitoso!", "Exito", JOptionPane.INFORMATION_MESSAGE);
-							System.out.println("Registro exitoso!");
-							UsarTarjeta tarjeta = new UsarTarjeta();
-							tarjeta.setVisible(true);
-						} else {
-							JOptionPane.showMessageDialog(VistaReserva.this, "Error al registrar cliente.", "Error", JOptionPane.ERROR_MESSAGE);
-						}
-					} catch (Exception e2) {
-						JOptionPane.showMessageDialog(VistaReserva.this, "Error inesperado: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-					}
+			    try {
+			        String mesaSeleccionada = (String) comboMesa.getSelectedItem();
+			        int idMesa = obtenerIdMesa(mesaSeleccionada);
+			        Sesion s1 = new Sesion();
+			        Reserva reserva = new Reserva();
+			        reserva.setFecha(fechaFormateada);
+			        reserva.setHora((String) comboHora.getSelectedItem());
+			        reserva.setComentario(CampoComentario.getText());
+			        reserva.setDispocionMesa(BuscarPath(ubicaciones, (String) comboUbicaciones.getSelectedItem()));
+			        reserva.setIdCliente(s1.getClienteActual().getIdCliente());
+			        reserva.setIdMesa(idMesa);
+
+			        // Crear un objeto Servicio con la misma información
+			        Servicio servicio = new Servicio();
+			        servicio.setIdMesa(idMesa);
+			        servicio.setFecha(fechaFormateada);
+			        servicio.setHora((String) comboHora.getSelectedItem());
+
+			        // Verificar disponibilidad antes de crear la reserva
+			        if (servicioControlador.verificarDisponibilidad(idMesa, fechaFormateada, (String) comboHora.getSelectedItem())) {
+			            JOptionPane.showMessageDialog(VistaReserva.this, "La mesa ya está reservada en esa fecha y hora.", "Mesa no disponible", JOptionPane.WARNING_MESSAGE);
+			        } else {
+			            // Si la mesa está disponible, crear la reserva y también el servicio
+			            if (reservaControlador.crearReserva(reserva) && servicioControlador.crearServicio(servicio)) {
+			                JOptionPane.showMessageDialog(VistaReserva.this, "Registro exitoso!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+			                System.out.println("Registro exitoso!");
+			                UsarTarjeta tarjeta = new UsarTarjeta();
+			                tarjeta.setVisible(true);
+			            } else {
+			                JOptionPane.showMessageDialog(VistaReserva.this, "Error al registrar la reserva.", "Error", JOptionPane.ERROR_MESSAGE);
+			            }
+			        }
+			    } catch (Exception e2) {
+			        JOptionPane.showMessageDialog(VistaReserva.this, "Error inesperado: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			    }
 			}
 		});
 		
@@ -362,47 +379,42 @@ public class VistaReserva extends JPanel {
         cl.show(Mapas, panel);
     }
     
+    
     // Funcion actualiza horas disponibles
     private void actualizarHorasDisponibles(LocalDateTime fechaSeleccionada) {
         comboHora.removeAllItems();
         LocalDate fecha = fechaSeleccionada.toLocalDate();
-        String[] horasDisponibles = obtenerHorasDisponibles(fecha);
+        LocalDate hoy = LocalDate.now();
+        String[] horasDisponibles = new String[]{
+            "08:00 - 10:00", 
+            "10:00 - 12:00", 
+            "12:00 - 14:00", 
+            "20:00 - 22:00", 
+            "22:00 - 00:00", 
+            "00:00 - 02:00"
+        };
 
-        if (fecha.equals(LocalDate.now())) {
+        if (fecha.equals(hoy)) {
             LocalTime ahora = LocalTime.now();
+            boolean horasAgregadas = false;
+
             for (String hora : horasDisponibles) {
-                LocalTime horaDisponible = LocalTime.parse(hora, DateTimeFormatter.ofPattern("HH:mm"));
-                if (horaDisponible.isAfter(ahora) || horaDisponible.equals(ahora)) {
+                String[] partes = hora.split(" - ");
+                LocalTime horaInicio = LocalTime.parse(partes[0], DateTimeFormatter.ofPattern("HH:mm"));
+                if (horaInicio.isAfter(ahora) || horaInicio.equals(ahora)) {
                     comboHora.addItem(hora);
+                    horasAgregadas = true;
                 }
             }
+
+            if (!horasAgregadas) {
+                comboHora.addItem("No hay servicios disponibles hoy.");
+            }
         } else {
+
             for (String hora : horasDisponibles) {
                 comboHora.addItem(hora);
             }
-        }
-    }
-
-    // Método para obtener las horas disponibles según la fecha
-    private String[] obtenerHorasDisponibles(LocalDate fecha) {
-        LocalDate hoy = LocalDate.now();
-        LocalDate diciembre = LocalDate.of(hoy.getYear(), 12, 1);
-        LocalDate marzo = LocalDate.of(hoy.getYear(), 3, 31);
-        LocalDate junio = LocalDate.of(hoy.getYear(), 6, 1);
-        LocalDate septiembre = LocalDate.of(hoy.getYear(), 9, 30);
-
-        if ((fecha.isAfter(diciembre) && fecha.isBefore(marzo)) || fecha.isEqual(diciembre) || fecha.isEqual(marzo)) {
-            return fecha.getDayOfWeek().getValue() <= 5
-                ? new String[]{"12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"}
-                : new String[]{"12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "00:00"};
-        } else if ((fecha.isAfter(junio) && fecha.isBefore(septiembre)) || fecha.isEqual(junio) || fecha.isEqual(septiembre)) {
-            return fecha.getDayOfWeek().getValue() <= 5
-                ? new String[]{"12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"}
-                : new String[]{"12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"};
-        } else {
-            return fecha.getDayOfWeek().getValue() <= 5
-                ? new String[]{"12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:30"}
-                : new String[]{"12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:30", "23:30"};
         }
     }
     

@@ -39,7 +39,7 @@ public class PerfilEmpleado extends JPanel {
         SesionEmpleado sesion = new SesionEmpleado();
 
         // Etiqueta de perfil
-        JLabel lblRegistro = new JLabel("PERFIL");
+        JLabel lblRegistro = new JLabel("PERFIL\r\n");
         lblRegistro.setFont(new Font("Roboto Light", Font.BOLD, 32));
         lblRegistro.setBounds(433, 20, 200, 40);
         add(lblRegistro);

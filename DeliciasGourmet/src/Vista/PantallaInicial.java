@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.ImageIcon;
 
 public class PantallaInicial extends JFrame {
 
@@ -39,7 +40,7 @@ public class PantallaInicial extends JFrame {
 		setTitle("Bienvenido");
 		setLocationByPlatform(true);
 		setResizable(false);
-		setBounds(100, 100, 600, 400);
+		setBounds(100, 100, 667, 353);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -56,17 +57,20 @@ public class PantallaInicial extends JFrame {
 		lblBienvenido.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBienvenido.setAlignmentX(Component.CENTER_ALIGNMENT);
 		lblBienvenido.setFont(new Font("Roboto Light", Font.BOLD, 22));
-		lblBienvenido.setBounds(232, 30, 120, 30);
+		lblBienvenido.setBounds(253, 30, 120, 30);
 		contentPane.add(lblBienvenido);
 		
 		// Leyenda de pantalla
 		JLabel lblLeyenda = new JLabel("Desde aquí puede seleccionar a qué inicio de sesión desea acceder");
 		lblLeyenda.setFont(new Font("Roboto Light", Font.PLAIN, 20));
-		lblLeyenda.setBounds(3, 70, 577, 50);
+		lblLeyenda.setBounds(45, 70, 649, 50);
 		contentPane.add(lblLeyenda);
 		
 		// Boton para acceder al login de cliente
 		JButton btnCliente = new JButton("Cliente");
+		btnCliente.setHorizontalTextPosition(SwingConstants.LEFT);
+		btnCliente.setSelectedIcon(null);
+		btnCliente.setIcon(null);
 		btnCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Login login = new Login();
@@ -85,15 +89,15 @@ public class PantallaInicial extends JFrame {
 			}
 		});
 		btnCliente.setBackground(Color.WHITE);
-		btnCliente.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnCliente.setBorder(null);
 		btnCliente.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnCliente.setFont(new Font("Roboto Light", Font.BOLD, 30));
-		btnCliente.setBounds(50, 180, 200, 150);
+		btnCliente.setBounds(86, 130, 200, 150);
 		contentPane.add(btnCliente);
 		
 		// Boton para acceder al login de empleado
 		JButton btnEmpleado = new JButton("Empleado");
+		btnEmpleado.setIcon(null);
 		btnEmpleado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LoginEmpleado login = new LoginEmpleado();
@@ -113,11 +117,11 @@ public class PantallaInicial extends JFrame {
 		});
 		btnEmpleado.setForeground(Color.BLACK);
 		btnEmpleado.setBackground(Color.WHITE);
-		btnEmpleado.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnEmpleado.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnEmpleado.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnEmpleado.setBorder(null);
 		btnEmpleado.setFont(new Font("Roboto Light", Font.BOLD, 30));
-		btnEmpleado.setBounds(326, 180, 200, 150);
+		btnEmpleado.setBounds(341, 130, 216, 150);
 		contentPane.add(btnEmpleado);
 	}
 }
