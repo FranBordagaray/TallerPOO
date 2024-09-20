@@ -1,72 +1,62 @@
 package Modelo;
 
 public class Tarjeta {
-	private String titular;
-	private String emisor;
-	private String nroTarjeta;
-	private int codVerificacion;
+    private int idTarjeta;
+    private String titular;
+    private String emisor;
+    private String nroTarjeta;
+    private int codVerificacion;
 
-	public Tarjeta() {
-	}
+    public Tarjeta() {
+    }
 
-	// Getter de titular
-	public String getTitular() {
-		return titular;
-	}
+    // Getter de idTaarjeta
+    public int getIdTarjeta() {
+        return idTarjeta;
+    }
 
-	// Setter de titular
-	public void setTitular(String titular) {
-		this.titular = titular;
-	}
+    // Setter de idTarjeta
+    public void setIdTarjeta(int idTarjeta) {
+        this.idTarjeta = idTarjeta;
+    }
 
-	// Getter de emisor
-	public String getEmisor() {
-		return emisor;
-	}
+    // Getter de titular
+    public String getTitular() {
+        return titular;
+    }
 
-	// Setter de emisor
-	public void setEmisor(String emisor) {
-		this.emisor = emisor;
-	}
+    // Setter de titular
+    public void setTitular(String titular) {
+        this.titular = titular;
+    }
 
-	// Getter de nroTarjeta
-	public String getNroTarjeta() {
-		return nroTarjeta;
-	}
+    // Getter de emisor
+    public String getEmisor() {
+        return emisor;
+    }
 
-	// Setter de nroTarjeta
-	public void setNroTarjeta(String nroTarjeta) {
-		this.nroTarjeta = nroTarjeta;
-	}
+    // Setter de emisor
+    public void setEmisor(String emisor) {
+        this.emisor = emisor;
+    }
 
-	// Getter de codVerificacion
-	public int getCodVerificacion() {
-		return codVerificacion;
-	}
+    // Getter de nroTarjeta
+    public String getNroTarjeta() {
+        return nroTarjeta;
+    }
 
-	// Setter de codVerificacion
-	public void setCodVerificacion(int codVerificacion) {
-		this.codVerificacion = codVerificacion;
-	}
+    // Setter de nroTarjeta
+    public void setNroTarjeta(String nroTarjeta) {
+        this.nroTarjeta = nroTarjeta;
+    }
 
-	// Metodo para validar la tarjeta
-	public static boolean ValidarTarjeta(String nroTarjeta) {
-		int cantDigitos = nroTarjeta.length();
-		int suma = 0;
-		boolean alternar = false;
+    // Getter de codVerificacion
+    public int getCodVerificacion() {
+        return codVerificacion;
+    }
 
-		for (int i = cantDigitos - 1; i >= 0; i--) {
-			int nro = Integer.parseInt(nroTarjeta.substring(i, i + 1));
-
-			if (alternar) {
-				nro *= 2;
-				if (nro > 9) {
-					nro -= 9;
-				}
-			}
-			suma += nro;
-			alternar = !alternar;
-		}
-		return (suma % 10 == 0);
-	}
+    // Setter de codVerificacion
+    public void setCodVerificacion(int codVerificacion) {
+        this.codVerificacion = codVerificacion;
+    }
 }

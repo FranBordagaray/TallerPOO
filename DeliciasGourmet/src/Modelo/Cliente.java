@@ -29,14 +29,6 @@ public class Cliente extends Persona {
 		this.tarjeta = tarjeta;
 	}
 
-	// Método para validar la tarjeta del cliente
-	public boolean validarTarjeta() {
-		if (tarjeta != null) {
-			return Tarjeta.ValidarTarjeta(tarjeta.getNroTarjeta());
-		}
-		return false;
-	}
-
 	// ToString de cliente
 	@Override
 	public String toString() {
