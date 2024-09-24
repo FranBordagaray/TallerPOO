@@ -51,6 +51,8 @@ public class LoginEmpleado extends JFrame {
 	public LoginEmpleado() {
 		// Configuración de la ventana principal
 		setTitle("Login empleado");
+		ImageIcon icon = new ImageIcon(getClass().getResource("/Img/icono general.png"));
+        setIconImage(icon.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 712, 679);
 		setLocationRelativeTo(null);

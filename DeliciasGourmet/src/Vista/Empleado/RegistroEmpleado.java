@@ -261,8 +261,51 @@ public class RegistroEmpleado extends JFrame {
 		btnRegistro.setForeground(Color.BLACK);
 		btnRegistro.setBounds(276, 600, 160, 30);
 		pnlContenedor.add(btnRegistro);
+		//Boton cerrar
+		
+		JButton btnCerrar = new JButton("X");
+		btnCerrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+
+		btnCerrar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnCerrar.setBackground(new Color(255, 0, 0));
+				btnCerrar.setForeground(Color.WHITE);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnCerrar.setForeground(Color.BLACK);
+				btnCerrar.setBackground(new Color(195, 155, 107));
+			}
+		});
+		btnCerrar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnCerrar.setBackground(new Color(255, 0, 0));
+				btnCerrar.setForeground(Color.WHITE);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnCerrar.setForeground(Color.BLACK);
+				btnCerrar.setBackground(new Color(195, 155, 107));
+			}
+		});
+		btnCerrar.setBackground(new Color(222, 184, 135));
+		btnCerrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnCerrar.setBorder(null);
+		btnCerrar.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btnCerrar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+		btnCerrar.setBounds(666, 1, 45, 30);
+		pnlContenedor.add(btnCerrar);
 	}
 
+	
 	// Funcion para verificar campos vacios
 	private boolean verificarCampos() {
 		String nombre = txtNombre.getText();

@@ -84,10 +84,27 @@ public class Dashboard extends JPanel {
 		pnlOfertas.setBounds(696, 298, 286, 370);
 		add(Ofertas);
 
-		JCalendar calendar = new JCalendar();
-		calendar.getDayChooser().getDayPanel().setBackground(new Color(195, 155, 107));
-		calendar.setBounds(10, 447, 309, 221);
-		add(calendar);
+		//Panel  Comida
+		ImgOfertas menuComida = new ImgOfertas();
+		menuComida.setBounds(353, 298, 286, 370);
+		add(menuComida);
+		menuComida.setLayout(null);
+		
+		JLabel lblComida = new JLabel("");
+		lblComida.setIcon(new ImageIcon(Dashboard.class.getResource("/Img/MenuComida.png")));
+		lblComida.setBounds(0, 0, 286, 370);
+		menuComida.add(lblComida);
+		//Panel Menu Bebidas
+		ImgOfertas menuBebidas = new ImgOfertas();
+		menuBebidas.setBounds(10, 298, 286, 370);
+		add(menuBebidas);
+		menuBebidas.setLayout(null);
+		
+		JLabel lblBebidas = new JLabel("");
+		lblBebidas.setIcon(new ImageIcon(Dashboard.class.getResource("/Img/MenuBebida.png")));
+		lblBebidas.setBounds(0, 0, 286, 370);
+		menuBebidas.add(lblBebidas);
+		
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBorder(null);
