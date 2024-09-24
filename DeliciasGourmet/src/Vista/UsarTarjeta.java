@@ -189,7 +189,7 @@ public class UsarTarjeta extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 					System.out.print(e2.getMessage());
 				}
-			}
+			} 
 		});
 		btnSiguiente.setBackground(Color.WHITE);
 		btnSiguiente.setBorder(null);

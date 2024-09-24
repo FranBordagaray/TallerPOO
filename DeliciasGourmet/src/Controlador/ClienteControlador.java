@@ -30,7 +30,7 @@ public class ClienteControlador {
 	        ps.setString(3, cliente.getDomicilio());
 	        ps.setString(4, cliente.getTelefono());
 	        ps.setString(5, cliente.getEmail());
-	        ps.setString(6, convertirSHA256(cliente.getContrasenia()));  // El índice es 6, no 7
+	        ps.setString(6, convertirSHA256(cliente.getContrasenia()));
 	        ps.executeUpdate();
 	        System.out.println("Cuenta creada con éxito!");
 	        return true;
@@ -66,7 +66,7 @@ public class ClienteControlador {
 	        }
 	    }
 
-	    return false;  // Email no registrado
+	    return false; 
 	}
 	
 	// Función para actualizar cuentas de clientes

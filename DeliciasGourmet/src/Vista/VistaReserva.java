@@ -28,8 +28,6 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import com.toedter.calendar.JCalendar;
 import Controlador.MesaControlador;
-import Controlador.ReservaControlador;
-import Controlador.ServiciosControlador;
 import Modelo.Mesa;
 import Modelo.Reserva;
 import Modelo.Servicio;
@@ -48,9 +46,16 @@ public class VistaReserva extends JPanel {
     private JComboBox<String> comboMesa;
     private JComboBox <Integer> comboCapacidad;
     private MesaControlador mesaControlador;
-    private ReservaControlador reservaControlador;
-    private ServiciosControlador servicioControlador;
+    private String SeleccionarUbicacion;
+    private int capacidadSeleccionada;
     private String fechaFormateada;
+    private String horaSeleccionada;
+    private JTextArea CampoComentario;
+    private String[] ubicaciones;
+    private String mesaSeleccionada;
+    private Reserva reserva;
+    private Mesa mesa;
+    private Servicio servicio;
 
 	public VistaReserva() {
 		
@@ -60,8 +65,6 @@ public class VistaReserva extends JPanel {
 		setBackground(new Color(222, 184, 135));
 		
 		mesaControlador = new MesaControlador();
-		reservaControlador = new ReservaControlador();
-		servicioControlador =  new ServiciosControlador();
 		
 		// Inicializa fechas de restricción
         hoy = LocalDate.now();
@@ -84,14 +87,16 @@ public class VistaReserva extends JPanel {
         pnlVertical.add(lblUbicacion);
         
 		// Desplegable Ubicaciones
-        String[] ubicaciones = {"COMEDOR PRINCIPAL", "TERRAZA", "BAR", "SALA PRIVADA", "PATIO"};
+        ubicaciones = new String[]{"COMEDOR PRINCIPAL", "TERRAZA", "BAR", "SALA PRIVADA", "PATIO"};
         comboUbicaciones = new JComboBox<>(ubicaciones);
+        comboUbicaciones.setSelectedItem("Comedor Principal");
         comboUbicaciones.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String SeleccionarUbicacion = (String) comboUbicaciones.getSelectedItem();
+                SeleccionarUbicacion = (String) comboUbicaciones.getSelectedItem();
                 cambioPanel(SeleccionarUbicacion);
                 actualizarMesas();
+                System.out.println("UBICACION SELECCIONADA: " + SeleccionarUbicacion);
             }
         });
         comboUbicaciones.setForeground(Color.BLACK);
@@ -162,6 +167,7 @@ public class VistaReserva extends JPanel {
 		comboHora.setBackground(Color.WHITE);
 		comboHora.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 		comboHora.setBounds(41, 280, 150, 25);
+		comboHora.addItem("08:00 - 10:00");
 		pnlVertical.add(comboHora);
 		
 		// Etiqueta de Capacidad
@@ -187,7 +193,7 @@ public class VistaReserva extends JPanel {
 		comboCapacidad.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-	                int capacidadSeleccionada = (int) comboCapacidad.getSelectedItem();
+	                capacidadSeleccionada = (int) comboCapacidad.getSelectedItem();
 	                filtrarCapacidad(capacidadSeleccionada);
 	            }
 	    });
@@ -233,7 +239,7 @@ public class VistaReserva extends JPanel {
 		pnlVertical.add(TituloComentario);
 		
 		// Campo de Texto Comentario de la Reserva
-		JTextArea CampoComentario = new JTextArea();
+		CampoComentario = new JTextArea();
 		CampoComentario.setFont(new Font("Roboto Light", Font.PLAIN, 13));
 		CampoComentario.setForeground(Color.BLACK);
 		CampoComentario.setBorder(null);
@@ -247,43 +253,15 @@ public class VistaReserva extends JPanel {
 		JButton btnSiguiente = new JButton("Siguiente");
 		btnSiguiente.addActionListener(new ActionListener() {
 			
-			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
-			    try {
-			        String mesaSeleccionada = (String) comboMesa.getSelectedItem();
-			        int idMesa = obtenerIdMesa(mesaSeleccionada);
-			        Sesion s1 = new Sesion();
-			        Reserva reserva = new Reserva();
-			        reserva.setFecha(fechaFormateada);
-			        reserva.setHora((String) comboHora.getSelectedItem());
-			        reserva.setComentario(CampoComentario.getText());
-			        reserva.setDispocionMesa(BuscarPath(ubicaciones, (String) comboUbicaciones.getSelectedItem()));
-			        reserva.setIdCliente(s1.getClienteActual().getIdCliente());
-			        reserva.setIdMesa(idMesa);
-
-			        // Crear un objeto Servicio con la misma información
-			        Servicio servicio = new Servicio();
-			        servicio.setIdMesa(idMesa);
-			        servicio.setFecha(fechaFormateada);
-			        servicio.setHora((String) comboHora.getSelectedItem());
-
-			        // Verificar disponibilidad antes de crear la reserva
-			        if (servicioControlador.verificarDisponibilidad(idMesa, fechaFormateada, (String) comboHora.getSelectedItem())) {
-			            JOptionPane.showMessageDialog(VistaReserva.this, "La mesa ya está reservada en esa fecha y hora.", "Mesa no disponible", JOptionPane.WARNING_MESSAGE);
-			        } else {
-			            // Si la mesa está disponible, crear la reserva y también el servicio
-			            if (reservaControlador.crearReserva(reserva) && servicioControlador.crearServicio(servicio)) {
-			                JOptionPane.showMessageDialog(VistaReserva.this, "Registro exitoso!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-			                System.out.println("Registro exitoso!");
-			                UsarTarjeta tarjeta = new UsarTarjeta();
-			                tarjeta.setVisible(true);
-			            } else {
-			                JOptionPane.showMessageDialog(VistaReserva.this, "Error al registrar la reserva.", "Error", JOptionPane.ERROR_MESSAGE);
-			            }
-			        }
-			    } catch (Exception e2) {
-			        JOptionPane.showMessageDialog(VistaReserva.this, "Error inesperado: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-			    }
+				mesa = new Mesa();
+				reserva = new Reserva();
+				servicio = new Servicio();
+				recopilarDatosReserva(reserva);
+				recopilarDatosMesa(mesa);
+				recopilarDatosServicio(servicio);
+			    DetalleReserva detalle = new DetalleReserva(reserva, mesa, servicio);
+			    detalle.setVisible(true);
 			}
 		});
 		
@@ -367,7 +345,8 @@ public class VistaReserva extends JPanel {
         
         // Asegura que se inicie con el panel de "Comedor Principal"
         cambioPanel("COMEDOR PRINCIPAL");
-        
+        // Si no se selecciona ninguna ubicacion setea comedor principal
+        SeleccionarUbicacion = "COMEDOR PRINCIPAL";
         // Llama a la funcion actualizarMesas para actualizar filtros de capacidad
         actualizarMesas();
                
@@ -418,16 +397,16 @@ public class VistaReserva extends JPanel {
         }
     }
     
-    // Funcion para actualizar por Mesas
+    // Funcion para actualizar Mesas
     private void actualizarMesas() {
-        String ubicacionSeleccionada = (String) comboUbicaciones.getSelectedItem();  
+        String ubicacionSeleccionada = (String) comboUbicaciones.getSelectedItem();
         if (ubicacionSeleccionada != null && !ubicacionSeleccionada.equals("Seleccione una ubicación")) {
             try {
                 List<Mesa> mesas = mesaControlador.buscarMesasPorUbicacion(ubicacionSeleccionada);
                 comboMesa.removeAllItems();
                 for (Mesa mesa : mesas) {
-                	String item = "Mesa " + mesa.getIdMesa();
-                    comboMesa.addItem(item);               
+            		String item = "Mesa " + mesa.getIdMesa();
+                    comboMesa.addItem(item);
                 }
             } catch (SQLException ex) {
                 ex.printStackTrace();
@@ -475,7 +454,6 @@ public class VistaReserva extends JPanel {
     }
     
     //Metodo para obtener la mesa
-    
     private int obtenerIdMesa(String seleccionMesa) {
         try {
             String[] partes = seleccionMesa.split(" ");
@@ -487,4 +465,41 @@ public class VistaReserva extends JPanel {
         }
     }
     
+    //Metodo que Almacena los datos seleccionados para el objeto de Reserva
+    @SuppressWarnings("static-access")
+	public Reserva recopilarDatosReserva(Reserva reserva) {
+    	
+    	mesaSeleccionada = (String) comboMesa.getSelectedItem();
+    	Sesion s1 = new Sesion();
+    	reserva.setIdCliente(s1.getClienteActual().getIdCliente());
+	    reserva.setFecha(fechaFormateada);
+	    reserva.setHora((String) comboHora.getSelectedItem());
+	    reserva.setIdMesa(obtenerIdMesa(mesaSeleccionada));
+	    reserva.setComentario(CampoComentario.getText());
+	    reserva.setDispocicionMesa(BuscarPath(ubicaciones, (String) comboUbicaciones.getSelectedItem()));
+	    reserva.setEstado(0);
+	    return reserva;
+    }
+    
+    //Metodo que Almacena los datos seleccionados para el objeto de Servicio
+    public Servicio recopilarDatosServicio(Servicio servicio) {
+    	
+    	horaSeleccionada = (String) comboHora.getSelectedItem();
+    	String[] partes =  horaSeleccionada.split(" - ");
+    	String horaI = partes[0];
+    	String horaF = partes[1];
+    	servicio.setFecha(fechaFormateada);
+    	servicio.setHoraInicio(horaI);
+    	servicio.setHoraFin(horaF);
+    	servicio.setEventoPrivado(0);
+    	return servicio;
+    }
+    
+    //Metodo que Almacena los datos seleccionados para el objeto de Mesa
+    public Mesa  recopilarDatosMesa(Mesa mesa) {
+    	mesa.setUbicacion(SeleccionarUbicacion);
+    	System.out.println("VistaReserva: "+mesa.getUbicacion());
+        mesa.setCapacidad(capacidadSeleccionada);
+       return mesa;
+    }
 }

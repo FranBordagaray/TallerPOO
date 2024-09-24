@@ -24,7 +24,7 @@ public class InicioEmpleado extends JFrame {
 	
 	public InicioEmpleado() {
 		// Configuración de la ventana principal
-		setTitle("Inicio Empleado");
+		setTitle("Empleado");
 		ImageIcon icon = new ImageIcon(getClass().getResource("/Img/Icono pantalla empleado.png"));
         setIconImage(icon.getImage());
 		setLocationByPlatform(true);

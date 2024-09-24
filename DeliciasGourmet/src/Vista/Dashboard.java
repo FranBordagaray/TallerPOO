@@ -3,6 +3,8 @@ package Vista;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.sql.SQLException;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -14,13 +16,17 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JCalendar;
 
+import Controlador.ReservaControlador;
+import Modelo.HistorialReserva;
 import Modelo.Sesion;
+import java.awt.Component;
 
 public class Dashboard extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+	private JTable tblResumenReserva;
 
-	@SuppressWarnings("static-access")
+	@SuppressWarnings({ "static-access", "serial" })
 	public Dashboard() {
 		
 		// Configuracion del panel
@@ -31,17 +37,18 @@ public class Dashboard extends JPanel {
 		// Panel de Bienvenida
 		JPanel pnlBienvenido = new JPanel();
 		pnlBienvenido.setBackground(new Color(195, 155, 107));
-		pnlBienvenido.setBounds(0, 0, 484, 66);
+		pnlBienvenido.setBounds(0, 0, 500, 66);
 		add(pnlBienvenido);
 		pnlBienvenido.setLayout(null);
 
 		// Label de Bienvenida
 		JLabel lblBienvenido = new JLabel("Bienvenido, ");
+		lblBienvenido.setAlignmentX(Component.CENTER_ALIGNMENT);
 		lblBienvenido.setIcon(new ImageIcon(Dashboard.class.getResource("/Img/ImgHome.png")));
 		lblBienvenido.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBienvenido.setForeground(Color.BLACK);
 		lblBienvenido.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		lblBienvenido.setBounds(10, 9, 163, 48);
+		lblBienvenido.setBounds(0, 8, 170, 50);
 		pnlBienvenido.add(lblBienvenido);
 
 		// Label Nombre de Usuario
@@ -49,7 +56,7 @@ public class Dashboard extends JPanel {
 		JLabel lblNombreUsuario = new JLabel(s1.getClienteActual().getNombre() + " " + s1.getClienteActual().getApellido());
 		lblNombreUsuario.setForeground(Color.BLACK);
 		lblNombreUsuario.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		lblNombreUsuario.setBounds(165, 9, 296, 48);
+		lblNombreUsuario.setBounds(170, 8, 330, 50);
 		pnlBienvenido.add(lblNombreUsuario);
 
 		// Panel de Notificaciones
@@ -74,44 +81,15 @@ public class Dashboard extends JPanel {
 		lblTituloNotificaciones.setIcon(new ImageIcon(Dashboard.class.getResource("/Img/ImgNotificacion.png")));
 		pnlHeaderNot.add(lblTituloNotificaciones);
 		lblTituloNotificaciones.setFont(new Font("Roboto Light", Font.BOLD, 12));
-		
-
-		// Panel Mis Reservas
-		JPanel pnlRumenReservas = new JPanel();
-		pnlRumenReservas.setBorder(null);
-		pnlRumenReservas.setBackground(new Color(255, 255, 255));
-		pnlRumenReservas.setBounds(10, 107, 309, 153);
-		add(pnlRumenReservas);
-		pnlRumenReservas.setLayout(null);
 
 		// Label Mis Reservas
 		JLabel lblMisReservas = new JLabel("Mis Reservas");
+		lblMisReservas.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblMisReservas.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMisReservas.setForeground(Color.BLACK);
 		lblMisReservas.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		lblMisReservas.setBounds(109, 76, 107, 19);
+		lblMisReservas.setBounds(165, 75, 150, 25);
 		add(lblMisReservas);
-		
-		
-
-		// ScrollPane Mis Reservas
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBorder(null);
-		scrollPane.setBounds(0, 0, 309, 153);
-		pnlRumenReservas.add(scrollPane);
-
-		String[] columna = { "Mesa", "Fecha", "Hora", "Estado" };
-
-		// Datos
-		Object[][] datos = { 
-				{ "Mesa 5", "15-03-2022", "12:00", "Reservado" },
-				{ "Mesa 3", "17-08-2023", "21:30", "Cancelado" }, 
-				{ "Mesa 7", "25-05-2024", "20:00", "Finalizado" }, };
-
-		DefaultTableModel model = new DefaultTableModel(datos, columna);
-
-		JTable tabla = new JTable(model);
-
-		scrollPane.setViewportView(tabla);
 
 		// Panel Oferta Imagenes
 		ImgOfertas Ofertas = new ImgOfertas();
@@ -125,7 +103,51 @@ public class Dashboard extends JPanel {
 		calendar.getDayChooser().getDayPanel().setBackground(new Color(195, 155, 107));
 		calendar.setBounds(10, 447, 309, 221);
 		add(calendar);
-
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBorder(null);
+		scrollPane.setFont(new Font("Roboto Light", Font.PLAIN, 12));
+		scrollPane.setBounds(10, 110, 490, 150);
+		add(scrollPane);
+		
+		tblResumenReserva = new JTable();
+		tblResumenReserva.setFont(new Font("Roboto Light", Font.PLAIN, 12));
+		tblResumenReserva.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		tblResumenReserva.setBorder(null);
+		tblResumenReserva.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"MESA", "FECHA", "HORA", "UBICACION"
+			}) {
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		});
+		scrollPane.setViewportView(tblResumenReserva);
+		cargarDatos(s1.getClienteActual().getIdCliente());
 	}
+	// Función para cargar tabla con datos almacenados en la base de datos
+		private void cargarDatos(int idCliente) {
+		    ReservaControlador controlador = new ReservaControlador();
+		    List<HistorialReserva> historial;
+			try {
+				historial = controlador.obtenerHistorialPorCliente(idCliente);
+				DefaultTableModel model = (DefaultTableModel) tblResumenReserva.getModel();
+			    model.setRowCount(0);
+
+			    for (HistorialReserva reserva : historial) {
+			        model.addRow(new Object[]{
+			            reserva.getIdMesa(),
+			            reserva.getFecha(),
+			            reserva.getHora(),
+			            reserva.getUbicacion()
+			        });
+			    }
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 }
 

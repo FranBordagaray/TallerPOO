@@ -6,7 +6,8 @@ public class Mesa {
     private int idMesa;
 	private int capacidad;
     private String ubicacion;
-    private String estado;
+    private EnumEstado estado;
+    private int idServicio;
 
     // Constructor por defecto
     public Mesa() {}
@@ -43,14 +44,23 @@ public class Mesa {
     }
     
     // Getter de Estado
-    public String getEstado() {
+    public EnumEstado getEstado() {
         return estado;
     }
     
     // Setter de Estado
-    public void setEstado(String estado) {
+    public void setEstado(EnumEstado estado) {
         this.estado = estado;
     }
-
+    
+    // Getter de idServicio
+    public int getIdServicio() {
+    	return this.idServicio;
+    }
+    
+    // Setter de idServicio
+    public void setIdServicio(int idServicio) {
+    	this.idServicio = idServicio;
+    }
 
 }

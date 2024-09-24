@@ -4,13 +4,14 @@ public class Reserva {
 
 	// Variables de clase
 	private int idReserva;
+	private int idCliente;
 	private String fecha;
 	private String hora;
-	private String comentario;
-	private String dispocionMesa;
-	private int idCliente;
 	private int idMesa;
-
+	private String comentario;
+	private String dispocicionMesa;
+	private int estado;
+	private int idServicio;
 
 	// Constructor de clase
 	public Reserva() {
@@ -57,13 +58,13 @@ public class Reserva {
 	}
 
 	// Getter de DispocionMesa
-	public String getDispocionMesa() {
-		return dispocionMesa;
+	public String getDispocicionMesa() {
+		return dispocicionMesa;
 	}
 
 	// Setter de DisposicionMesa
-	public void setDispocionMesa(String dispocionMesa) {
-		this.dispocionMesa = dispocionMesa;
+	public void setDispocicionMesa(String dispocicionMesa) {
+		this.dispocicionMesa = dispocicionMesa;
 	}
 	
 	// Getter de idCliente
@@ -71,7 +72,7 @@ public class Reserva {
 		return idCliente;
 	}
 	
-	// Setter de DisposicionMesa
+	// Setter de idCliente
 	public void setIdCliente(int idCliente) {
 		this.idCliente = idCliente;
 	}
@@ -81,9 +82,29 @@ public class Reserva {
 		return idMesa;
 	}
 	
-	// Setter de DisposicionMesa
+	// Setter de idMesa
 	public void setIdMesa(int idMesa) {
 		this.idMesa = idMesa;
 	}
+	
+	// Getter de Estado
+		public int getEstado() {
+			return estado;
+		}
+		
+		// Setter de estap
+		public void setEstado(int estado) {
+			this.estado = estado;
+		}
+	
+	// Getter de idServicio
+    public int getIdServicio() {
+    	return this.idServicio;
+    }
+    
+    // Setter de idServicio
+    public void setIdServicio(int idServicio) {
+    	this.idServicio = idServicio;
+    }
 	
 }

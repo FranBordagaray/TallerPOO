@@ -23,6 +23,9 @@ public class Inicio extends JFrame {
 
 	public Inicio() {
 		// Configuración de la ventana principal
+		setTitle("Cliente");
+		ImageIcon icon = new ImageIcon(getClass().getResource("/Img/icono de inicio.png"));
+        setIconImage(icon.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationByPlatform(true);
 		setResizable(false);

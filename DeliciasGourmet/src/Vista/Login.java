@@ -3,6 +3,7 @@ package Vista;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,10 +30,25 @@ public class Login extends JFrame {
 	private JTextField txtEmail;
 	private JPasswordField txtContrasenia;
 	ClienteControlador controlador = new ClienteControlador();
+	//franbordagaray57@gmail.com
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Login frame = new Login();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 	
 	public Login() {
 		// Configuración de la ventana principal
 		setTitle("Delicias Gourmet");
+		ImageIcon icon = new ImageIcon(getClass().getResource("/Img/icono general.png"));
+        setIconImage(icon.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1280, 720);
 		setLocationRelativeTo(null);

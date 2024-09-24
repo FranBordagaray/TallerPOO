@@ -3,62 +3,62 @@ package Modelo;
 public class Servicio {
 
     private int idServicio;
-    private int idMesa;
     private String fecha;
-    private String hora;
+    private String horaInicio;
+    private String horaFin;
+    private int eventoPrivado;
 
     // Constructor vacío
     public Servicio() {}
 
-    // Constructor con todos los campos
-    public Servicio(int idServicio, int idMesa, String fecha, String hora) {
-        this.idServicio = idServicio;
-        this.idMesa = idMesa;
-        this.fecha = fecha;
-        this.hora = hora;
-    }
-
-    // Getters y Setters
+    // Getter de idServico
     public int getIdServicio() {
         return idServicio;
     }
-
+    
+    // Setter de  idServicio
     public void setIdServicio(int idServicio) {
         this.idServicio = idServicio;
     }
-
-    public int getIdMesa() {
-        return idMesa;
-    }
-
-    public void setIdMesa(int idMesa) {
-        this.idMesa = idMesa;
-    }
-
+    
+    // Getter de Fecha
     public String getFecha() {
         return fecha;
     }
-
+    
+    // Setter de Fecha
     public void setFecha(String fecha) {
         this.fecha = fecha;
     }
-
-    public String getHora() {
-        return hora;
+    
+    // Getter de HoraInicio
+    public String getHoraInicio() {
+        return horaInicio;
     }
-
-    public void setHora(String hora) {
-        this.hora = hora;
+    
+ 	// Setter de  HoraInicio
+    public void setHoraInicio(String horaInicio) {
+        this.horaInicio = horaInicio;
     }
-
-    // Método toString
-    @Override
-    public String toString() {
-        return "Servicio{" +
-                "idServicio=" + idServicio +
-                ", idMesa=" + idMesa +
-                ", fecha='" + fecha + '\'' +
-                ", hora='" + hora + '\'' +
-                '}';
+    
+    // Getter de HoraFin
+    public String getHoraFin() {
+        return horaFin;
     }
+    
+ 	// Setter de  HoraFin
+    public void setHoraFin(String horaFin) {
+        this.horaFin = horaFin;
+    }
+    
+    // Getter de Evento Privado
+    public int getEventoPrivado() {
+        return eventoPrivado;
+    }
+    
+ 	// Setter de Evento Privado
+    public void setEventoPrivado(int eventoPrivado) {
+        this.eventoPrivado = eventoPrivado;
+    }
+    
 }
