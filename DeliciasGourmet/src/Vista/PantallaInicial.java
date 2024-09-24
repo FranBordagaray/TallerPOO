@@ -17,6 +17,10 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import Vista.Cliente.LoginCliente;
+import Vista.Empleado.LoginEmpleado;
+import javax.swing.ImageIcon;
+
 public class PantallaInicial extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -37,6 +41,8 @@ public class PantallaInicial extends JFrame {
 	
 	public PantallaInicial() {
 		setTitle("Bienvenido");
+		ImageIcon icon = new ImageIcon(getClass().getResource("/Img/icono de inicio.png"));
+        setIconImage(icon.getImage());
 		setLocationByPlatform(true);
 		setResizable(false);
 		setBounds(100, 100, 667, 353);
@@ -68,11 +74,11 @@ public class PantallaInicial extends JFrame {
 		// Boton para acceder al login de cliente
 		JButton btnCliente = new JButton("Cliente");
 		btnCliente.setHorizontalTextPosition(SwingConstants.LEFT);
-		btnCliente.setSelectedIcon(null);
-		btnCliente.setIcon(null);
+		btnCliente.setSelectedIcon(new ImageIcon(PantallaInicial.class.getResource("/Img/Imagen Inicio Cliente.png")));
+		btnCliente.setIcon(new ImageIcon(PantallaInicial.class.getResource("/Img/Imagen Inicio Cliente.png")));
 		btnCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Login login = new Login();
+				LoginCliente login = new LoginCliente();
 				login.setVisible(true);
 				PantallaInicial.this.setVisible(false);
 			}
@@ -96,7 +102,8 @@ public class PantallaInicial extends JFrame {
 		
 		// Boton para acceder al login de empleado
 		JButton btnEmpleado = new JButton("Empleado");
-		btnEmpleado.setIcon(null);
+		btnEmpleado.setSelectedIcon(new ImageIcon(PantallaInicial.class.getResource("/Img/imagen Inicio Empleado.png")));
+		btnEmpleado.setIcon(new ImageIcon(PantallaInicial.class.getResource("/Img/imagen Inicio Empleado.png")));
 		btnEmpleado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LoginEmpleado login = new LoginEmpleado();

@@ -1,4 +1,4 @@
-package Vista;
+package Vista.Cliente;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -74,7 +74,7 @@ public class RecuperarCuenta extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// envia el correo con la clave del usuario
 				JOptionPane.showMessageDialog(RecuperarCuenta.this, "Revise su correo electronico", "Recuperar", JOptionPane.INFORMATION_MESSAGE);
-				Login login = new Login();
+				LoginCliente login = new LoginCliente();
 				login.setVisible(true);
 				RecuperarCuenta.this.setVisible(false);
 			}
@@ -104,7 +104,7 @@ public class RecuperarCuenta extends JFrame {
 		JButton btnCerrar = new JButton("X");
 		btnCerrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Login login = new Login();
+				LoginCliente login = new LoginCliente();
 				login.setVisible(true);
 				RecuperarCuenta.this.setVisible(false);
 			}

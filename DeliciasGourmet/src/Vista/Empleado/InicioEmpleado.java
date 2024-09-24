@@ -1,4 +1,4 @@
-package Vista;
+package Vista.Empleado;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -22,7 +22,8 @@ public class InicioEmpleado extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	
-	public InicioEmpleado() {
+	public InicioEmpleado(String rol) {
+		
 		// Configuración de la ventana principal
 		setTitle("Empleado");
 		ImageIcon icon = new ImageIcon(getClass().getResource("/Img/Icono pantalla empleado.png"));
@@ -205,7 +206,7 @@ public class InicioEmpleado extends JFrame {
 		btnReportes.setAlignmentX(0.5f);
 		btnReportes.setBounds(0, 300, 271, 35);
 		panelMenu.add(btnReportes);
-
+		
 		// Boton para ver pantalla perfil
 		JButton btnPerfil = new JButton("PERFIL");
 		btnPerfil.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de perfil.png")));
@@ -266,6 +267,19 @@ public class InicioEmpleado extends JFrame {
 		btnCerrarSesion.setBounds(0, 600, 271, 35);
 		panelMenu.add(btnCerrarSesion);
 		
+		// Deshabilitar botones según el rol
+	    if (rol.equals("RECEPCIONISTA")) {
+	        btnGestionEmpleados.setEnabled(false);
+	        btnReportes.setEnabled(false);
+	    } else if (rol.equals("MESERO")) {
+	        btnGestionEmpleados.setEnabled(false);
+	        btnEventosEspeciales.setEnabled(false);
+	        btnReportes.setEnabled(false);
+	    } else if (rol.equals("MAITRE")) {
+	        btnGestionEmpleados.setEnabled(false);
+	        btnReportes.setEnabled(false);
+	    }
+	    
 		// Panel para inicio
 		JPanel inicio = new JPanel();
 		inicio.setBorder(null);

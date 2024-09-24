@@ -1,4 +1,4 @@
-package Vista;
+package Vista.Cliente;
 
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -33,6 +33,7 @@ import Modelo.Reserva;
 import Modelo.Servicio;
 import Modelo.Sesion;
 
+
 public class VistaReserva extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -56,6 +57,7 @@ public class VistaReserva extends JPanel {
     private Reserva reserva;
     private Mesa mesa;
     private Servicio servicio;
+    private DetalleReserva detalle;
 
 	public VistaReserva() {
 		
@@ -260,7 +262,7 @@ public class VistaReserva extends JPanel {
 				recopilarDatosReserva(reserva);
 				recopilarDatosMesa(mesa);
 				recopilarDatosServicio(servicio);
-			    DetalleReserva detalle = new DetalleReserva(reserva, mesa, servicio);
+			    detalle = new DetalleReserva(reserva, mesa, servicio);
 			    detalle.setVisible(true);
 			}
 		});

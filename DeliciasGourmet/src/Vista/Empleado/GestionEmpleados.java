@@ -1,4 +1,4 @@
-package Vista;
+package Vista.Empleado;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -148,7 +148,7 @@ public class GestionEmpleados extends JPanel {
         btnAgregarEmpleado.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RegistroEmpleado registro = new RegistroEmpleado();
-                registro.setVisible(true);
+                registro.setVisible(true);              
             }
         });
         btnAgregarEmpleado.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -172,6 +172,34 @@ public class GestionEmpleados extends JPanel {
         btnAgregarEmpleado.setAlignmentX(0.5f);
         btnAgregarEmpleado.setBounds(889, 95, 93, 25);
         add(btnAgregarEmpleado);
+        
+        // Botón para eliminar un empleado
+        JButton btnEliminar = new JButton("ELIMINAR");
+        btnEliminar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = tblEmpleados.getSelectedRow(); 
+                if (selectedRow != -1) { 
+                    String usuario = (String) model.getValueAt(selectedRow, 6); 
+                    EmpleadoControlador controlador = new EmpleadoControlador();
+                    boolean eliminado = controlador.eliminarEmpleado(usuario); 
+
+                    if (eliminado) {
+                        cargarDatos(); 
+                    } else {                      
+                        System.out.println("Error al eliminar el empleado.");
+                    }
+                } else {                   
+                    System.out.println("Por favor, selecciona un empleado para eliminar.");
+                }
+            }
+        });
+        btnEliminar.setForeground(Color.BLACK);
+        btnEliminar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        btnEliminar.setBorder(null);
+        btnEliminar.setBackground(Color.WHITE);
+        btnEliminar.setAlignmentX(0.5f);
+        btnEliminar.setBounds(776, 95, 93, 25);
+        add(btnEliminar);
         
     }
     
@@ -240,5 +268,4 @@ public class GestionEmpleados extends JPanel {
             }
         }
     }
-
 }

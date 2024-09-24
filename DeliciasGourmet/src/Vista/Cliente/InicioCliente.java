@@ -1,4 +1,4 @@
-package Vista;
+package Vista.Cliente;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -16,12 +16,15 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
-public class Inicio extends JFrame {
+
+
+public class InicioCliente extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private Historial historial;
 
-	public Inicio() {
+	public InicioCliente() {
 		// Configuración de la ventana principal
 		setTitle("Cliente");
 		ImageIcon icon = new ImageIcon(getClass().getResource("/Img/icono de inicio.png"));
@@ -62,7 +65,7 @@ public class Inicio extends JFrame {
 
 		// Boton para ver pantalla inicio
 		JButton btnInicio = new JButton("INICIO");
-		btnInicio.setIcon(new ImageIcon(Inicio.class.getResource("/Img/icono de inicio.png")));
+		btnInicio.setIcon(new ImageIcon(InicioCliente.class.getResource("/Img/icono de inicio.png")));
 		btnInicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(0);
@@ -91,7 +94,7 @@ public class Inicio extends JFrame {
 
 		// Boton para ver pantalla reservas
 		JButton btnReservas = new JButton("RESERVAS");
-		btnReservas.setIcon(new ImageIcon(Inicio.class.getResource("/Img/icono de reservas.png")));
+		btnReservas.setIcon(new ImageIcon(InicioCliente.class.getResource("/Img/icono de reservas.png")));
 		btnReservas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(1);
@@ -120,7 +123,7 @@ public class Inicio extends JFrame {
 
 		// Boton para ver pantalla historial
 		JButton btnHistorial = new JButton("HISTORIAL");
-		btnHistorial.setIcon(new ImageIcon(Inicio.class.getResource("/Img/icono de historial.png")));
+		btnHistorial.setIcon(new ImageIcon(InicioCliente.class.getResource("/Img/icono de historial.png")));
 		btnHistorial.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(2);
@@ -153,7 +156,7 @@ public class Inicio extends JFrame {
 
 		// Boton para ver pantalla perfil
 		JButton btnPerfil = new JButton("PERFIL");
-		btnPerfil.setIcon(new ImageIcon(Inicio.class.getResource("/Img/icono de perfil.png")));
+		btnPerfil.setIcon(new ImageIcon(InicioCliente.class.getResource("/Img/icono de perfil.png")));
 		btnPerfil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(3);
@@ -182,12 +185,12 @@ public class Inicio extends JFrame {
 
 		// Boton para cerrar sesion
 		JButton btnCerrarSesion = new JButton("CERRAR SESION");
-		btnCerrarSesion.setIcon(new ImageIcon(Inicio.class.getResource("/Img/icono de cerrar sesion.png")));
+		btnCerrarSesion.setIcon(new ImageIcon(InicioCliente.class.getResource("/Img/icono de cerrar sesion.png")));
 		btnCerrarSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Login login = new Login();
+				LoginCliente login = new LoginCliente();
 				login.setVisible(true);
-				Inicio.this.setVisible(false);
+				InicioCliente.this.setVisible(false);
 			}
 		});
 		btnCerrarSesion.addMouseListener(new MouseAdapter() {
@@ -221,8 +224,8 @@ public class Inicio extends JFrame {
 		tabbedPane.addTab("Reserva", Reserva);
 		dashboard.setBorder(null);
 
-		// Panel historial
-		Historial historial = new Historial();
+		// Panel Historial
+		historial = new Historial();
 		tabbedPane.addTab("Historial", historial);
 		historial.setLayout(null);
 

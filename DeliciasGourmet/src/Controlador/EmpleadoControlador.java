@@ -19,7 +19,7 @@ public class EmpleadoControlador {
 	public EmpleadoControlador() {
 		cx = new Conexion();
 	}
-	
+
 	// Funcion para crear cuentas a empleados
 	public boolean crearCuenta(Empleado empleado) {
 		PreparedStatement ps = null;
@@ -42,98 +42,159 @@ public class EmpleadoControlador {
 			return false;
 		}
 	}
-	
+
 	// Funcion para cifrar contraseñas
-		public String convertirSHA256(String contrasenia) {
-			MessageDigest md = null;
-			try {
-				md = MessageDigest.getInstance("SHA-256");
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-				return null;
-			}
-			byte[] hash = md.digest(contrasenia.getBytes());
-			StringBuffer sb = new StringBuffer();
-
-			for (byte b : hash) {
-				sb.append(String.format("%02x", b));
-			}
-			return sb.toString();
+	public String convertirSHA256(String contrasenia) {
+		MessageDigest md = null;
+		try {
+			md = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return null;
 		}
-		
-		// Funcion para obtener todos los empleados
-	    public List<Empleado> obtenerEmpleados() {
-	        List<Empleado> empleados = new ArrayList<>();
-	        PreparedStatement ps = null;
-	        ResultSet rs = null;
-	        
-	        try {
-	            ps = cx.conectar().prepareStatement("SELECT * FROM Empleado");
-	            rs = ps.executeQuery();
-	            
-	            while (rs.next()) {
-	                Empleado empleado = new Empleado();
-	                empleado.setIdEmpleado(rs.getInt("idEmpleado"));
-	                empleado.setRol(EnumRoles.valueOf(rs.getString("rol")));
-	                empleado.setNombre(rs.getString("nombre"));
-	                empleado.setApellido(rs.getString("apellido"));
-	                empleado.setDomicilio(rs.getString("domicilio"));
-	                empleado.setTelefono(rs.getString("telefono"));
-	                empleado.setEmail(rs.getString("email"));
-	                empleado.setUsuario(rs.getString("usuario"));
-	                empleado.setContrasenia(rs.getString("contrasenia"));
-	                
-	                empleados.add(empleado);
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	            System.out.println("Error al obtener empleados!");
-	        } 
-	        return empleados;
-	    }
-	    
-	    // Funcion para iniciar sesion
-		public boolean iniciarSesion(String usuario, String contrasenia) {
-			PreparedStatement ps = null;
-			ResultSet rs = null;
+		byte[] hash = md.digest(contrasenia.getBytes());
+		StringBuffer sb = new StringBuffer();
 
-			try {
-				ps = cx.conectar().prepareStatement("SELECT idEmpleado, Rol, nombre, apellido, domicilio, telefono, email, usuario, contrasenia FROM Empleado WHERE usuario = ?");
-				ps.setString(1, usuario);
-				rs = ps.executeQuery();
+		for (byte b : hash) {
+			sb.append(String.format("%02x", b));
+		}
+		return sb.toString();
+	}
 
-				if (rs.next()) {
-					String contraseniaCifrada = rs.getString("contrasenia");
-					String contraseniaIngresada = convertirSHA256(contrasenia);
-					if (contraseniaCifrada.equals(contraseniaIngresada)) {
-						Empleado empleado = new Empleado();
-						empleado.setIdEmpleado(rs.getInt("idEmpleado"));
-						empleado.setRol(EnumRoles.valueOf(rs.getString("Rol")));
-						empleado.setNombre(rs.getString("nombre"));
-						empleado.setApellido(rs.getString("apellido"));
-						empleado.setDomicilio(rs.getString("domicilio"));
-						empleado.setTelefono(rs.getString("telefono"));
-						empleado.setEmail(rs.getString("email"));
-						empleado.setUsuario(rs.getString("usuario"));
-						empleado.setContrasenia(contraseniaCifrada);
+	// Funcion para obtener todos los empleados
+	public List<Empleado> obtenerEmpleados() {
+		List<Empleado> empleados = new ArrayList<>();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-						SesionEmpleado.setEmpleadoActual(empleado);
-						System.out.println("Inicio de sesión exitoso!");
-						return true;
-					}
+		try {
+			ps = cx.conectar().prepareStatement("SELECT * FROM Empleado");
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				Empleado empleado = new Empleado();
+				empleado.setIdEmpleado(rs.getInt("idEmpleado"));
+				empleado.setRol(EnumRoles.valueOf(rs.getString("rol")));
+				empleado.setNombre(rs.getString("nombre"));
+				empleado.setApellido(rs.getString("apellido"));
+				empleado.setDomicilio(rs.getString("domicilio"));
+				empleado.setTelefono(rs.getString("telefono"));
+				empleado.setEmail(rs.getString("email"));
+				empleado.setUsuario(rs.getString("usuario"));
+				empleado.setContrasenia(rs.getString("contrasenia"));
+
+				empleados.add(empleado);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Error al obtener empleados!");
+		}
+		return empleados;
+	}
+
+	// Funcion para iniciar sesion
+	public boolean iniciarSesion(String usuario, String contrasenia) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			ps = cx.conectar().prepareStatement(
+					"SELECT idEmpleado, Rol, nombre, apellido, domicilio, telefono, email, usuario, contrasenia FROM Empleado WHERE usuario = ?");
+			ps.setString(1, usuario);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				String contraseniaCifrada = rs.getString("contrasenia");
+				String contraseniaIngresada = convertirSHA256(contrasenia);
+				if (contraseniaCifrada.equals(contraseniaIngresada)) {
+					Empleado empleado = new Empleado();
+					empleado.setIdEmpleado(rs.getInt("idEmpleado"));
+					empleado.setRol(EnumRoles.valueOf(rs.getString("Rol")));
+					empleado.setNombre(rs.getString("nombre"));
+					empleado.setApellido(rs.getString("apellido"));
+					empleado.setDomicilio(rs.getString("domicilio"));
+					empleado.setTelefono(rs.getString("telefono"));
+					empleado.setEmail(rs.getString("email"));
+					empleado.setUsuario(rs.getString("usuario"));
+					empleado.setContrasenia(contraseniaCifrada);
+
+					SesionEmpleado.setEmpleadoActual(empleado);
+					System.out.println("Inicio de sesión exitoso!");
+					return true;
 				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (ps != null)
+					ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-			} finally {
-				try {
-					if (rs != null)
-						rs.close();
-					if (ps != null)
-						ps.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
 			}
-			return false;
 		}
+		return false;
+	}
+
+	// Método para eliminar un empleado por su usuario
+	public boolean eliminarEmpleado(String usuario) {
+		PreparedStatement ps = null;
+		try {
+			ps = cx.conectar().prepareStatement("DELETE FROM Empleado WHERE usuario = ?");
+			ps.setString(1, usuario);
+			int filasEliminadas = ps.executeUpdate();
+
+			if (filasEliminadas > 0) {
+				System.out.println("Empleado eliminado con éxito.");
+				return true;
+			} else {
+				System.out.println("No se encontró un empleado con ese usuario.");
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Error al eliminar empleado!");
+			return false;
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	// Método para obtener el rol de un empleado según su usuario
+	public String obtenerRol(String usuario) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String rol = null;
+
+		try {
+			ps = cx.conectar().prepareStatement("SELECT rol FROM Empleado WHERE usuario = ?");
+			ps.setString(1, usuario);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				rol = rs.getString("rol");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Error al obtener el rol del empleado!");
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (ps != null)
+					ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return rol;
+	}
+
 }

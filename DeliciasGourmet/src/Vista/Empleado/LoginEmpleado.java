@@ -1,4 +1,4 @@
-package Vista;
+package Vista.Empleado;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -48,9 +48,6 @@ public class LoginEmpleado extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public LoginEmpleado() {
 		// Configuración de la ventana principal
 		setTitle("Login empleado");
@@ -122,15 +119,25 @@ public class LoginEmpleado extends JFrame {
 						return;
 					} else if (controlador.iniciarSesion(txtUsuario.getText(),
 							String.valueOf(txtContrasenia.getPassword()))) {
-						JOptionPane.showMessageDialog(LoginEmpleado.this, "Bienvenido", "Exito", JOptionPane.INFORMATION_MESSAGE);
-						InicioEmpleado inicio = new InicioEmpleado();
+
+						String rol = controlador.obtenerRol(txtUsuario.getText());
+
+						JOptionPane.showMessageDialog(LoginEmpleado.this, "Bienvenido", "Exito",
+								JOptionPane.INFORMATION_MESSAGE);
+
+						InicioEmpleado inicio = new InicioEmpleado(rol);
+
 						inicio.setVisible(true);
+
 						LoginEmpleado.this.setVisible(false);
 					} else {
-						JOptionPane.showMessageDialog(LoginEmpleado.this, "Error al iniciar sesion, verifique sus datos", "Error", JOptionPane.ERROR_MESSAGE);
+
+						JOptionPane.showMessageDialog(LoginEmpleado.this,
+								"Error al iniciar sesion, verifique sus datos", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(LoginEmpleado.this, "Error inesperado: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(LoginEmpleado.this, "Error inesperado: " + e2.getMessage(), "Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});

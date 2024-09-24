@@ -1,4 +1,4 @@
-package Vista;
+package Vista.Cliente;
 
 import java.awt.Color;
 import java.awt.Dimension;

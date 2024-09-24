@@ -1,4 +1,4 @@
-package Vista;
+package Vista.Cliente;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -23,7 +23,7 @@ import javax.swing.border.EmptyBorder;
 
 import Controlador.ClienteControlador;
 
-public class Login extends JFrame {
+public class LoginCliente extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -35,7 +35,7 @@ public class Login extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Login frame = new Login();
+					LoginCliente frame = new LoginCliente();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,7 +44,7 @@ public class Login extends JFrame {
 		});
 	}
 	
-	public Login() {
+	public LoginCliente() {
 		// Configuración de la ventana principal
 		setTitle("Delicias Gourmet");
 		ImageIcon icon = new ImageIcon(getClass().getResource("/Img/icono general.png"));
@@ -69,7 +69,7 @@ public class Login extends JFrame {
 
 		// Imagen de fondo
 		JLabel lblFondo = new JLabel("");
-		lblFondo.setIcon(new ImageIcon(Login.class.getResource("/Img/ImgFondo.png")));
+		lblFondo.setIcon(new ImageIcon(LoginCliente.class.getResource("/Img/ImgFondo.png")));
 		lblFondo.setBounds(0, 0, 550, 679);
 		pnlFondo.add(lblFondo);
 
@@ -117,7 +117,7 @@ public class Login extends JFrame {
 
 		// Boton para iniciar sesion
 		JButton btnLogin = new JButton("Iniciar sesión");
-		btnLogin.setIcon(new ImageIcon(Login.class.getResource("/Img/icono de inicio de sesion.png")));
+		btnLogin.setIcon(new ImageIcon(LoginCliente.class.getResource("/Img/icono de inicio de sesion.png")));
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -125,17 +125,17 @@ public class Login extends JFrame {
 						return;
 					} else if (controlador.iniciarSesion(txtEmail.getText(),
 							String.valueOf(txtContrasenia.getPassword()))) {
-						JOptionPane.showMessageDialog(Login.this, "Bienvenido", "Exito",
+						JOptionPane.showMessageDialog(LoginCliente.this, "Bienvenido", "Exito",
 								JOptionPane.INFORMATION_MESSAGE);
-						Inicio inicio = new Inicio();
+						InicioCliente inicio = new InicioCliente();
 						inicio.setVisible(true);
-						Login.this.setVisible(false);
+						LoginCliente.this.setVisible(false);
 					} else {
-						JOptionPane.showMessageDialog(Login.this, "Error al iniciar sesion, verifique sus datos",
+						JOptionPane.showMessageDialog(LoginCliente.this, "Error al iniciar sesion, verifique sus datos",
 								"Error", JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(Login.this, "Error inesperado: " + e2.getMessage(), "Error",
+					JOptionPane.showMessageDialog(LoginCliente.this, "Error inesperado: " + e2.getMessage(), "Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -170,12 +170,12 @@ public class Login extends JFrame {
 
 		// Boton para registrarse
 		JButton btnRegistro = new JButton("Registrarse");
-		btnRegistro.setIcon(new ImageIcon(Login.class.getResource("/Img/icono de registrarse.png")));
+		btnRegistro.setIcon(new ImageIcon(LoginCliente.class.getResource("/Img/icono de registrarse.png")));
 		btnRegistro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Registro registro = new Registro();
 				registro.setVisible(true);
-				Login.this.setVisible(false);
+				LoginCliente.this.setVisible(false);
 			}
 		});
 		btnRegistro.addMouseListener(new MouseAdapter() {
@@ -208,12 +208,12 @@ public class Login extends JFrame {
 
 		// Boton para recuperar clave
 		JButton btnRecuperarClave = new JButton("Recuperar");
-		btnRecuperarClave.setIcon(new ImageIcon(Login.class.getResource("/Img/icono de recuperar cuenta.png")));
+		btnRecuperarClave.setIcon(new ImageIcon(LoginCliente.class.getResource("/Img/icono de recuperar cuenta.png")));
 		btnRecuperarClave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RecuperarCuenta recuperar = new RecuperarCuenta();
 				recuperar.setVisible(true);
-				Login.this.setVisible(false);
+				LoginCliente.this.setVisible(false);
 			}
 		});
 		btnRecuperarClave.addMouseListener(new MouseAdapter() {
