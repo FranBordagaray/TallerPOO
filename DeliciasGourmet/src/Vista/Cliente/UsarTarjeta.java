@@ -3,7 +3,6 @@ package Vista.Cliente;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,20 +30,11 @@ public class UsarTarjeta extends JFrame {
 	TarjetaControlador controlador = new TarjetaControlador();
 	Tarjeta tarjeta = new Tarjeta();
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UsarTarjeta frame = new UsarTarjeta();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+
 
 	public UsarTarjeta() {
+		
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 350);
 		setUndecorated(true);
@@ -148,24 +138,24 @@ public class UsarTarjeta extends JFrame {
 		lblCodVerificacion.setBounds(45, 230, 120, 25);
 		panelContenedor.add(lblCodVerificacion);
 		
-		// Boton Siguiente
-		JButton btnSiguiente = new JButton("Siguiente");
-		btnSiguiente.addMouseListener(new MouseAdapter() {
+		// Boton Confirmar
+		JButton btnConfirmar = new JButton("Confirmar");
+		btnConfirmar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				btnSiguiente.setBackground(new Color(126, 211, 33));
-				btnSiguiente.setForeground(Color.WHITE);
+				btnConfirmar.setBackground(new Color(126, 211, 33));
+				btnConfirmar.setForeground(Color.WHITE);
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				btnSiguiente.setBackground(Color.WHITE);
-				btnSiguiente.setForeground(Color.BLACK);
+				btnConfirmar.setBackground(Color.WHITE);
+				btnConfirmar.setForeground(Color.BLACK);
 			}
 		});
-		btnSiguiente.setForeground(Color.BLACK);
-		btnSiguiente.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnSiguiente.addActionListener(new ActionListener() {
+		btnConfirmar.setForeground(Color.BLACK);
+		btnConfirmar.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					if(verificarCampos()) {
@@ -176,9 +166,9 @@ public class UsarTarjeta extends JFrame {
 						tarjeta.setNroTarjeta(txtNroTarjeta.getText());
 						tarjeta.setCodVerificacion(Integer.parseInt(txtCodVerificacion.getText()));
 						if (controlador.ingresarTarjeta(tarjeta)) {
-							JOptionPane.showMessageDialog(UsarTarjeta.this, "Tarjeta ingresada con exito!", "Exito",
-									JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(UsarTarjeta.this, "Tarjeta ingresada con exito!", "Exito",JOptionPane.INFORMATION_MESSAGE);
 							System.out.println("Tarjeta ingresada con exito!");
+							dispose();
 						} else {
 							JOptionPane.showMessageDialog(UsarTarjeta.this, "Error al ingresar", "Error",
 									JOptionPane.INFORMATION_MESSAGE);
@@ -191,13 +181,13 @@ public class UsarTarjeta extends JFrame {
 				}
 			} 
 		});
-		btnSiguiente.setBackground(Color.WHITE);
-		btnSiguiente.setBorder(null);
-		btnSiguiente.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnSiguiente.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnSiguiente.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		btnSiguiente.setBounds(250, 300, 150, 25);
-		panelContenedor.add(btnSiguiente);
+		btnConfirmar.setBackground(Color.WHITE);
+		btnConfirmar.setBorder(null);
+		btnConfirmar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnConfirmar.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btnConfirmar.setFont(new Font("Roboto Light", Font.BOLD, 16));
+		btnConfirmar.setBounds(250, 300, 150, 25);
+		panelContenedor.add(btnConfirmar);
 		
 		// Boton para volver a la pantalla reservas
 		JButton btnAtras = new JButton("Volver");

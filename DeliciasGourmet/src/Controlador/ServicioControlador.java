@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import Conexion.Conexion;
+import Modelo.Reserva;
 import Modelo.Servicio;
 
 public class ServicioControlador { 
@@ -41,7 +42,7 @@ public class ServicioControlador {
 
         try {
             connection = cx.conectar();
-            ps = connection.prepareStatement("INSERT INTO Servicio (fecha, horaInicio, horaFin) VALUES (?, ?, ?)");
+            ps = connection.prepareStatement("INSERT INTO Servicio VALUES (null, ?, ?, ?, ?)");
             ps.setString(1, servicio.getFecha());
             ps.setString(2, servicio.getHoraInicio());
             ps.setString(3, servicio.getHoraFin());
@@ -107,4 +108,42 @@ public class ServicioControlador {
             }
         }
     }
+    
+    // Método para buscar un servicio basado en una reserva
+    public int buscarServicioPorReserva(Reserva reserva) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int idServicio = -1;
+
+        try {
+            connection = cx.conectar();
+            ps = connection.prepareStatement("SELECT idServicio FROM Servicio WHERE fecha = ? AND horaInicio = ?");
+            ps.setString(1, reserva.getFecha()); 
+            String horaInicio = reserva.getHora().split(" - ")[0];
+            ps.setString(2, horaInicio); 
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                idServicio = rs.getInt("idServicio"); 
+            } else {
+                System.out.println("No se encontró ningún servicio para la reserva dada.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al buscar el servicio para la reserva.");
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return idServicio;
+    }
+
+    
+
 }

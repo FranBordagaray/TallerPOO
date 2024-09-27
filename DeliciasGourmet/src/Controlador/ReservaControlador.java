@@ -26,7 +26,7 @@ public class ReservaControlador {
 
 		try {
 			connection = cx.conectar();
-			ps = connection.prepareStatement("INSERT INTO Reserva VALUES(null,?,?,?,?,?,?,?)");
+			ps = connection.prepareStatement("INSERT INTO Reserva VALUES(null,?,?,?,?,?,?,?,?)");
 			ps.setInt(1, reserva.getIdCliente()); 
 			ps.setString(2, reserva.getFecha());
 			ps.setString(3, reserva.getHora());

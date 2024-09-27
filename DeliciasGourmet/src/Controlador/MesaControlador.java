@@ -11,6 +11,7 @@ import java.util.List;
 import Conexion.Conexion;
 import Modelo.Mesa;
 
+
 public class MesaControlador {
     Conexion cx;
     private Connection connection;
@@ -24,11 +25,12 @@ public class MesaControlador {
     	PreparedStatement ps = null;
         try {
         	connection = cx.conectar();
-        	ps = connection.prepareStatement("INSERT INTO Mesa  VALUES (null, ?, ?, ?, ?)");
-            ps.setInt(1, mesa.getCapacidad());
-            ps.setString(2, mesa.getUbicacion());
-            ps.setString(3, mesa.getEstado().name());
-            ps.setInt(4, mesa.getIdServicio());
+        	ps = connection.prepareStatement("INSERT INTO Mesa  VALUES (?, ?, ?, ?, ?)");
+        	ps.setInt(1, mesa.getIdMesa());
+            ps.setInt(2, mesa.getCapacidad());
+            ps.setString(3, mesa.getUbicacion());
+            ps.setString(4, mesa.getEstado().name());
+            ps.setInt(5, mesa.getIdServicio());
             ps.executeUpdate();
             System.out.println("Servicio registrado con éxito!");
             return true;
@@ -41,7 +43,7 @@ public class MesaControlador {
     
     // Funcion para buscar mesas por Ubicacion
     public List<Mesa> buscarMesasPorUbicacion(String ubicacion) throws SQLException {
-        List<Mesa> mesas = new ArrayList<>();
+        List<Mesa> mesasP = new ArrayList<>();
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
@@ -54,7 +56,7 @@ public class MesaControlador {
             	mesa.setIdMesa(rs.getInt("idMesa"));
             	mesa.setCapacidad(rs.getInt("capacidad"));
             	mesa.setUbicacion(rs.getString("ubicacion"));
-                mesas.add(mesa);
+                mesasP.add(mesa);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -63,6 +65,58 @@ public class MesaControlador {
             if (ps != null) ps.close();
             if (connection != null) connection.close();
         }
-        return mesas;
+        return mesasP;
     }
+    
+    // Funcion busca mesas con estado "Ocupado" en una fecha y hora
+    	public List<Integer> buscarMesasOcupadasPorServicio(String fecha, String hora) {
+    	    List<Integer> mesasOcupadasIds = new ArrayList<>();
+    	    PreparedStatement ps = null;
+    	    ResultSet rs = null;
+    	    try {
+    	        connection = cx.conectar();
+    	        ps = connection.prepareStatement("SELECT idMesa FROM Reserva WHERE fecha=? AND hora=? AND estado=1");
+    	      
+    	        ps.setString(1,fecha);
+    	        ps.setString(2,hora);
+    	        
+    	        rs = ps.executeQuery();
+
+    	        while (rs.next()) {
+    	        	mesasOcupadasIds.add(rs.getInt("idMesa"));
+    	        }
+
+    	    } catch (SQLException e) {
+    	        e.printStackTrace();
+    	    } finally {
+    	        try {
+    	            if (rs != null) rs.close();
+    	            if (ps != null) ps.close();
+    	            if (connection != null) connection.close();
+    	        } catch (SQLException e) {
+    	            e.printStackTrace();
+    	        }
+    	    }
+
+    	    return mesasOcupadasIds; 
+    	}
+    	
+        // Funcion para buscar mesas por Ubicacion
+        public int filtrarCapacidad(int idMesa) {
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            int capacidad = 0;
+            try {
+                ps = cx.conectar().prepareStatement("SELECT capacidad FROM MesaPrecargada WHERE idMesa = ?");
+                ps.setInt(1, idMesa);
+                
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                	capacidad = rs.getInt("capacidad");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+             return capacidad;
+      } 
 }

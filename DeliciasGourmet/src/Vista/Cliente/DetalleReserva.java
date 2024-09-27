@@ -22,6 +22,7 @@ import javax.swing.border.EmptyBorder;
 import Controlador.MesaControlador;
 import Controlador.ReservaControlador;
 import Controlador.ServicioControlador;
+import Modelo.EnumEstado;
 import Modelo.Mesa;
 import Modelo.Reserva;
 import Modelo.Servicio;
@@ -37,14 +38,15 @@ public class DetalleReserva extends JFrame {
 	private ServicioControlador servicioControlador;
 	private ReservaControlador reservaControlador;
 	private MesaControlador mesaControlador;
-	
+
 	public DetalleReserva(Reserva reserva, Mesa mesa, Servicio servicio) {
 		this.reserva = reserva;
 		this.mesa = mesa;
 		this.servicio = servicio;
 		this.servicioControlador = new ServicioControlador();
 		this.reservaControlador = new ReservaControlador();
-		 
+		this.mesaControlador = new MesaControlador();
+
 		// Configuración de la ventana principal
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 562);
@@ -129,7 +131,7 @@ public class DetalleReserva extends JFrame {
 		lblComentario.setAlignmentX(1.0f);
 		lblComentario.setBounds(0, 380, 200, 25);
 		pnlContenedor.add(lblComentario);
-		
+
 		JLabel lblUbiSeleccionada = new JLabel(mesa.getUbicacion());
 		lblUbiSeleccionada.setForeground(Color.BLACK);
 		lblUbiSeleccionada.setHorizontalAlignment(SwingConstants.CENTER);
@@ -137,7 +139,7 @@ public class DetalleReserva extends JFrame {
 		lblUbiSeleccionada.setBackground(new Color(222, 184, 135));
 		lblUbiSeleccionada.setBounds(200, 80, 250, 25);
 		pnlContenedor.add(lblUbiSeleccionada);
-		
+
 		JLabel lblFecSeleccionada = new JLabel(reserva.getFecha());
 		lblFecSeleccionada.setForeground(Color.BLACK);
 		lblFecSeleccionada.setHorizontalAlignment(SwingConstants.CENTER);
@@ -145,7 +147,7 @@ public class DetalleReserva extends JFrame {
 		lblFecSeleccionada.setBackground(new Color(222, 184, 135));
 		lblFecSeleccionada.setBounds(200, 140, 250, 25);
 		pnlContenedor.add(lblFecSeleccionada);
-		
+
 		JLabel lblHoraSeleccionada = new JLabel(reserva.getHora());
 		lblHoraSeleccionada.setForeground(Color.BLACK);
 		lblHoraSeleccionada.setHorizontalAlignment(SwingConstants.CENTER);
@@ -153,7 +155,7 @@ public class DetalleReserva extends JFrame {
 		lblHoraSeleccionada.setBackground(new Color(222, 184, 135));
 		lblHoraSeleccionada.setBounds(200, 200, 250, 25);
 		pnlContenedor.add(lblHoraSeleccionada);
-		
+
 		JLabel lblCapaSeleccionada = new JLabel(String.valueOf(mesa.getCapacidad()));
 		lblCapaSeleccionada.setForeground(Color.BLACK);
 		lblCapaSeleccionada.setHorizontalAlignment(SwingConstants.CENTER);
@@ -161,7 +163,7 @@ public class DetalleReserva extends JFrame {
 		lblCapaSeleccionada.setBackground(new Color(222, 184, 135));
 		lblCapaSeleccionada.setBounds(200, 260, 250, 25);
 		pnlContenedor.add(lblCapaSeleccionada);
-					
+
 		JLabel lblMesaSeleccionada = new JLabel(String.valueOf(reserva.getIdMesa()));
 		lblMesaSeleccionada.setForeground(Color.BLACK);
 		lblMesaSeleccionada.setHorizontalAlignment(SwingConstants.CENTER);
@@ -169,7 +171,7 @@ public class DetalleReserva extends JFrame {
 		lblMesaSeleccionada.setBackground(new Color(222, 184, 135));
 		lblMesaSeleccionada.setBounds(200, 320, 250, 25);
 		pnlContenedor.add(lblMesaSeleccionada);
-		
+
 		JTextArea textArea = new JTextArea(reserva.getComentario());
 		textArea.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		textArea.setBorder(null);
@@ -184,32 +186,52 @@ public class DetalleReserva extends JFrame {
 		// Boton de Confirmar
 		JButton btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        try {
-		            if (servicioControlador.verficarServicio(servicio)) {
-		                JOptionPane.showMessageDialog(DetalleReserva.this, "Ya existe un servicio en ese horario", "Error", JOptionPane.WARNING_MESSAGE);
-		            } else {
-		                int idServicio = servicioControlador.crearServicio(servicio);
-		                if (idServicio != -1) {
-		                    System.out.println("Servicio ingresado con éxito");
-		                    reserva.setIdServicio(idServicio);
-		                    if (reservaControlador.crearReserva(reserva)) {
-		                        JOptionPane.showMessageDialog(DetalleReserva.this, "Reserva registrada", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-		                        dispose();
-		                    } else {
-		                        JOptionPane.showMessageDialog(DetalleReserva.this, "Ocurrió un error al registrar su reserva", "Error", JOptionPane.ERROR_MESSAGE);
-		                    }
-		                } else {
-		                    JOptionPane.showMessageDialog(DetalleReserva.this, "Error al registrar el servicio", "Error", JOptionPane.ERROR_MESSAGE);
-		                }
-		            }
-		        } catch (Exception e2) {
-		            JOptionPane.showMessageDialog(DetalleReserva.this, "Error inesperado: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-		            System.out.print(e2.getMessage());
-		        }
-		    }
-		});
+			public void actionPerformed(ActionEvent e) {
+				int idServicio;
 
+				try {
+					if (servicioControlador.verficarServicio(servicio)) {
+						idServicio = servicioControlador.buscarServicioPorReserva(reserva);
+						System.out.println("El servicio ya existe, ID: " + idServicio);
+					} else {
+						idServicio = servicioControlador.crearServicio(servicio);
+						if (idServicio != -1) {
+							System.out.println("Servicio ingresado con éxito, ID: " + idServicio);
+						} else {
+							JOptionPane.showMessageDialog(DetalleReserva.this, "Error al registrar el servicio",
+									"Error", JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+					}
+
+					reserva.setIdServicio(idServicio);
+					reserva.setEstado(1);
+					mesa.setIdServicio(idServicio);
+					mesa.setEstado(EnumEstado.OCUPADA);
+
+					if (mesaControlador.crearMesa(mesa)) {
+						System.out.println("Mesa registrada con éxito.");
+
+						if (reservaControlador.crearReserva(reserva)) {
+							JOptionPane.showMessageDialog(DetalleReserva.this, "Reserva registrada con éxito", "Éxito",
+									JOptionPane.INFORMATION_MESSAGE);
+							dispose();
+						} else {
+							JOptionPane.showMessageDialog(DetalleReserva.this,
+									"Ocurrió un error al registrar la reserva", "Error", JOptionPane.ERROR_MESSAGE);
+						}
+					} else {
+						JOptionPane.showMessageDialog(DetalleReserva.this, "Ocurrió un error al registrar la mesa",
+								"Error", JOptionPane.ERROR_MESSAGE);
+					}
+
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(DetalleReserva.this, "Error inesperado: " + e2.getMessage(), "Error",
+							JOptionPane.ERROR_MESSAGE);
+					e2.printStackTrace();
+				}
+			}
+		});
 
 		btnConfirmar.addMouseListener(new MouseAdapter() {
 			@Override
@@ -235,19 +257,15 @@ public class DetalleReserva extends JFrame {
 
 		// Boton para Cancelar
 		JButton btnCancelar = new JButton("Cancelar");
-
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				VistaReserva reserva = new VistaReserva();
 				reserva.setVisible(true);
 				DetalleReserva.this.dispose();
-				
+
 			}
-			
-
 		});
-
 		btnCancelar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -269,10 +287,6 @@ public class DetalleReserva extends JFrame {
 		btnCancelar.setForeground(Color.BLACK);
 		btnCancelar.setBounds(50, 500, 120, 30);
 		pnlContenedor.add(btnCancelar);
-		
-
-		
 
 	}
-}	
-    
+}
