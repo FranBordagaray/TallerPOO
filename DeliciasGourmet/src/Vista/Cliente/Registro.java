@@ -36,12 +36,11 @@ public class Registro extends JFrame {
 	private JPasswordField txtRepetirContrasenia;
 	ClienteControlador controlador = new ClienteControlador();
 
-	/**
-	 * Create the frame.
-	 */
 	public Registro() {
 		// Configuración de la ventana principal
-		setTitle("Delicias Gourmet");
+		setTitle("Registro");
+		ImageIcon icon = new ImageIcon(getClass().getResource("/Img/icono general.png"));
+        setIconImage(icon.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1280, 720);
 		setLocationRelativeTo(null);

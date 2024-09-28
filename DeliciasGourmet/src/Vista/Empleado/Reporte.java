@@ -11,12 +11,9 @@ import javax.swing.JButton;
 import java.awt.Cursor;
 import java.awt.Component;
 import javax.swing.SwingConstants;
-import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import com.toedter.calendar.JDateChooser;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class Reporte extends JPanel {
 

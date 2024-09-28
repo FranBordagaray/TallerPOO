@@ -1,8 +1,11 @@
 package Modelo;
 
+import java.util.Random;
+
 public class Cliente extends Persona {
 	// Variables de clase
 	private int idCliente;
+	private String codRecuperacion;
 	private Tarjeta tarjeta;
 
 	// Constructor de clase
@@ -18,6 +21,18 @@ public class Cliente extends Persona {
 	public void setIdCliente(int idCliente) {
 		this.idCliente = idCliente;
 	}
+	
+	// Getter codRecuperacion
+	public String getCodRecuperacion() {
+		return codRecuperacion;
+	}
+
+	// Genera un codigo aleatorio para recuperar su clave
+	public String generarCodigoRecuperacion() {
+	    Random random = new Random();
+	    int codigo = 100000 + random.nextInt(900000);
+	    return String.valueOf(codigo);
+	}
 
 	// Getter de tarjeta
 	public Tarjeta getTarjeta() {
@@ -27,13 +42,5 @@ public class Cliente extends Persona {
 	// Setter de tarjeta
 	public void setTarjeta(Tarjeta tarjeta) {
 		this.tarjeta = tarjeta;
-	}
-
-	// ToString de cliente
-	@Override
-	public String toString() {
-		return "Cliente{ID: " + getIdCliente() + ", NOMBRE: " + getNombre() + ", APELLIDO: " + getApellido()
-				+ ", DOMICILIO: " + getDomicilio() + ", TELEFONO: " + getTelefono() + ", MAIL: " + getEmail()
-				+ ", USUARIO: " + getUsuario() + ", CONTRASENIA: " + getContrasenia() + "}{" + getTarjeta() + "}";
 	}
 }

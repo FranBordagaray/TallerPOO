@@ -14,8 +14,6 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
-import com.toedter.calendar.JCalendar;
-
 import Controlador.ReservaControlador;
 import Modelo.HistorialReserva;
 import Modelo.Sesion;
@@ -37,7 +35,7 @@ public class Dashboard extends JPanel {
 		// Panel de Bienvenida
 		JPanel pnlBienvenido = new JPanel();
 		pnlBienvenido.setBackground(new Color(195, 155, 107));
-		pnlBienvenido.setBounds(0, 0, 500, 66);
+		pnlBienvenido.setBounds(0, 0, 992, 50);
 		add(pnlBienvenido);
 		pnlBienvenido.setLayout(null);
 
@@ -48,22 +46,29 @@ public class Dashboard extends JPanel {
 		lblBienvenido.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBienvenido.setForeground(Color.BLACK);
 		lblBienvenido.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		lblBienvenido.setBounds(0, 8, 170, 50);
+		lblBienvenido.setBounds(0, 0, 170, 50);
 		pnlBienvenido.add(lblBienvenido);
 
 		// Label Nombre de Usuario
 		Sesion s1 = new Sesion();
-		JLabel lblNombreUsuario = new JLabel(
-		s1.getClienteActual().getNombre() + " " + s1.getClienteActual().getApellido());
+		JLabel lblNombreUsuario = new JLabel(s1.getClienteActual().getNombre() + " " + s1.getClienteActual().getApellido());
 		lblNombreUsuario.setForeground(Color.BLACK);
 		lblNombreUsuario.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		lblNombreUsuario.setBounds(170, 8, 330, 50);
+		lblNombreUsuario.setBounds(170, 0, 330, 50);
 		pnlBienvenido.add(lblNombreUsuario);
+		
+		JLabel lblNewLabel = new JLabel("ACA VA LA HORA Y FECHA");
+		lblNewLabel.setBorder(null);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setForeground(Color.BLACK);
+		lblNewLabel.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+		lblNewLabel.setBounds(782, 12, 200, 25);
+		pnlBienvenido.add(lblNewLabel);
 
 		// Panel de Notificaciones
 		JPanel pnlNotificaciones = new JPanel();
 		pnlNotificaciones.setBorder(null);
-		pnlNotificaciones.setBounds(549, 58, 433, 150);
+		pnlNotificaciones.setBounds(549, 110, 433, 150);
 		pnlNotificaciones.setLayout(null);
 		add(pnlNotificaciones);
 
@@ -127,7 +132,7 @@ public class Dashboard extends JPanel {
 
 		// Panel Header Notificaciones
 		JPanel pnlHeaderNot = new JPanel();
-		pnlHeaderNot.setBounds(549, 10, 433, 47);
+		pnlHeaderNot.setBounds(549, 63, 433, 47);
 		add(pnlHeaderNot);
 		pnlHeaderNot.setBorder(null);
 		pnlHeaderNot.setBackground(new Color(195, 155, 107));

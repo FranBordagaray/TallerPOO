@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -33,9 +32,6 @@ public class ActualizarPerfil extends JPanel {
 	private JTextField txtEmail;
 	private JTextField txtTelefono;
 
-	/**
-	 * Create the panel.
-	 */
 	@SuppressWarnings("static-access")
 	public ActualizarPerfil() {
 		
@@ -165,22 +161,15 @@ public class ActualizarPerfil extends JPanel {
 				});
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Obtener el cliente actual de la sesión
 		        Cliente clienteActual = s1.getClienteActual();
-
-		        // Actualizar los datos del cliente con los valores del formulario
 		        clienteActual.setEmail(txtEmail.getText());
 		        clienteActual.setTelefono(txtTelefono.getText());
-
-		        // Crear una instancia del controlador
 		        ClienteControlador controlador = new ClienteControlador();
-
-		        // Llamar al método actualizarCliente para guardar los cambios en la base de datos
 		        try {
 		            controlador.actualizarCliente(clienteActual);
 		            JOptionPane.showMessageDialog(null, "Cambios realizados con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-		        } catch (SQLException ex) {
-		            ex.printStackTrace();
+		        } catch (Exception e2) {
+		            e2.printStackTrace();
 		            System.out.println("Error al actualizar los datos del cliente.");
 		        }
 

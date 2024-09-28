@@ -19,10 +19,16 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
+import Controlador.ClienteControlador;
+import Modelo.RecuperarClave;
+
 public class RecuperarCuenta extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private ClienteControlador controlador;
+	private JTextField txtEmail;
+	private String email;
 
 	public RecuperarCuenta() {
 		// Configuración de la ventana principal
@@ -63,6 +69,7 @@ public class RecuperarCuenta extends JFrame {
 		contentPane.add(lblEmail);
 
 		JTextField txtEmail = new JTextField();
+		txtEmail.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 		txtEmail.setBorder(null);
 		txtEmail.setBounds(125, 190, 350, 30);
 		contentPane.add(txtEmail);
@@ -72,11 +79,27 @@ public class RecuperarCuenta extends JFrame {
 		btnEnviar.setIcon(new ImageIcon(RecuperarCuenta.class.getResource("/Img/icono enviar.png")));
 		btnEnviar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// envia el correo con la clave del usuario
-				JOptionPane.showMessageDialog(RecuperarCuenta.this, "Revise su correo electronico", "Recuperar", JOptionPane.INFORMATION_MESSAGE);
-				LoginCliente login = new LoginCliente();
-				login.setVisible(true);
-				RecuperarCuenta.this.setVisible(false);
+				try {
+					if (verificarCampos()) {
+						return;
+					} else {
+						email = txtEmail.getText();
+						if (controlador.verificarEmailExistente(email)) {
+							String destinatario = email;
+							String asunto = "Codigo de recuperación";
+						    String cuerpo = "Ingrese en la ventana emergente el siguiente codigo: " + controlador.obtenerCodigoRecuperacion(email);
+						    RecuperarClave.enviarCorreo(destinatario, asunto, cuerpo);
+							JOptionPane.showMessageDialog(RecuperarCuenta.this, "Por favor, revise su correo electronico", "Recuperar", JOptionPane.INFORMATION_MESSAGE);
+							IngresoCodVerificacion verificar = new IngresoCodVerificacion(email);
+							verificar.setVisible(true);
+							dispose();
+						} else {
+							JOptionPane.showMessageDialog(RecuperarCuenta.this, "No existe cliente con ese mail", "Error", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(RecuperarCuenta.this, "Error inesperado: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		btnEnviar.addMouseListener(new MouseAdapter() {
@@ -85,7 +108,6 @@ public class RecuperarCuenta extends JFrame {
 				btnEnviar.setBackground(new Color(255, 0, 0));
 				btnEnviar.setForeground(Color.WHITE);
 			}
-
 			@Override
 			public void mouseExited(MouseEvent e) {
 				btnEnviar.setBackground(Color.WHITE);
@@ -101,6 +123,7 @@ public class RecuperarCuenta extends JFrame {
 		btnEnviar.setBounds(220, 277, 160, 30);
 		contentPane.add(btnEnviar);
 
+		// Boton x para cerrar el frame
 		JButton btnCerrar = new JButton("X");
 		btnCerrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -115,7 +138,6 @@ public class RecuperarCuenta extends JFrame {
 				btnCerrar.setBackground(new Color(255, 0, 0));
 				btnCerrar.setForeground(Color.WHITE);
 			}
-
 			@Override
 			public void mouseExited(MouseEvent e) {
 				btnCerrar.setForeground(Color.BLACK);
@@ -129,5 +151,15 @@ public class RecuperarCuenta extends JFrame {
 		btnCerrar.setFont(new Font("Roboto Light", Font.BOLD, 16));
 		btnCerrar.setBounds(555, 0, 45, 30);
 		contentPane.add(btnCerrar);
+	}
+	
+	// Funcion para verificar campos vacios
+	private boolean verificarCampos() {
+		String mail = txtEmail.getText();
+		if (mail.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Ingrese un mail para recuperar su contraseña", "Advertencia", JOptionPane.ERROR_MESSAGE);
+			return true;
+		}
+		return false;
 	}
 }

@@ -25,8 +25,6 @@ import javax.swing.border.LineBorder;
 import Controlador.EmpleadoControlador;
 import Modelo.Empleado;
 import Modelo.EnumRoles;
-import Vista.Cliente.LoginCliente;
-import Vista.Cliente.RecuperarCuenta;
 
 public class RegistroEmpleado extends JFrame {
 

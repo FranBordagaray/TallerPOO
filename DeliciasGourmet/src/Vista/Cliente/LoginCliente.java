@@ -30,7 +30,7 @@ public class LoginCliente extends JFrame {
 	private JTextField txtEmail;
 	private JPasswordField txtContrasenia;
 	ClienteControlador controlador = new ClienteControlador();
-	//franbordagaray57@gmail.com
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
