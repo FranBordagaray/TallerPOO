@@ -31,6 +31,7 @@ public class RecuperarCuenta extends JFrame {
 	private String email;
 
 	public RecuperarCuenta() {
+		controlador = new ClienteControlador();
 		// Configuración de la ventana principal
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationByPlatform(true);
@@ -68,7 +69,7 @@ public class RecuperarCuenta extends JFrame {
 		lblEmail.setBounds(255, 150, 90, 30);
 		contentPane.add(lblEmail);
 
-		JTextField txtEmail = new JTextField();
+		txtEmail = new JTextField();
 		txtEmail.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 		txtEmail.setBorder(null);
 		txtEmail.setBounds(125, 190, 350, 30);
