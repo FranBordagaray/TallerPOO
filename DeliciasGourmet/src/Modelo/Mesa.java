@@ -11,7 +11,6 @@ public class Mesa {
 
     // Constructor por defecto
     public Mesa() {}
-    
 
     // Getters y Id Mesa
     public int getIdMesa() {
@@ -62,5 +61,4 @@ public class Mesa {
     public void setIdServicio(int idServicio) {
     	this.idServicio = idServicio;
     }
-
 }

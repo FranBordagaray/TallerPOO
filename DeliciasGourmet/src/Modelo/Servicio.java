@@ -2,6 +2,7 @@ package Modelo;
 
 public class Servicio {
 
+	// Variables de clase
     private int idServicio;
     private String fecha;
     private String horaInicio;
@@ -60,5 +61,4 @@ public class Servicio {
     public void setEventoPrivado(int eventoPrivado) {
         this.eventoPrivado = eventoPrivado;
     }
-    
 }

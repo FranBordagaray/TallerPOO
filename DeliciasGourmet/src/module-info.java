@@ -4,4 +4,5 @@ module DeliciasGourmet {
 	requires java.sql;
 	requires jcalendar;
 	requires mail;
+	requires itext5.itextpdf;
 }

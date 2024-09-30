@@ -3,8 +3,9 @@ package Vista.Cliente;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.sql.SQLException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -12,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import Controlador.ReservaControlador;
@@ -25,6 +27,7 @@ public class Dashboard extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tblResumenReserva;
+	private JLabel lblFechaHora;
 
 	@SuppressWarnings({ "static-access", "serial" })
 	public Dashboard() {
@@ -59,21 +62,14 @@ public class Dashboard extends JPanel {
 		lblNombreUsuario.setBounds(170, 0, 330, 50);
 		pnlBienvenido.add(lblNombreUsuario);
 		
-		JLabel lblNewLabel = new JLabel();
-		lblNewLabel.setBorder(null);
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setForeground(Color.BLACK);
-		lblNewLabel.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-		lblNewLabel.setBounds(782, 12, 200, 25);
-		pnlBienvenido.add(lblNewLabel);
-
-		//Fecha y hora actual
-		LocalDateTime fechaHoraActual = LocalDateTime.now();
-		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss");
-		String fechaHoraFormateada = fechaHoraActual.format(formato);
-
-		
-		lblNewLabel.setText(fechaHoraFormateada);
+		// Etiqueta fecha y hora
+        lblFechaHora = new JLabel();
+        lblFechaHora.setBorder(null);
+        lblFechaHora.setHorizontalAlignment(SwingConstants.CENTER);
+        lblFechaHora.setForeground(Color.BLACK);
+        lblFechaHora.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        lblFechaHora.setBounds(792, 12, 200, 25);
+        pnlBienvenido.add(lblFechaHora);
 
 		// Panel de Notificaciones
 		JPanel pnlNotificaciones = new JPanel();
@@ -156,6 +152,15 @@ public class Dashboard extends JPanel {
 		pnlHeaderNot.add(lblTituloNotificaciones);
 		lblTituloNotificaciones.setFont(new Font("Roboto Light", Font.BOLD, 12));
 		cargarDatos(s1.getClienteActual().getIdCliente());
+		
+		// Iniciar el Timer para actualizar la fecha y hora
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                actualizarFechaHora();
+            }
+        }, 0, 1000);
 	}
 
 	// Función para cargar tabla con datos almacenados en la base de datos
@@ -171,8 +176,16 @@ public class Dashboard extends JPanel {
 				model.addRow(new Object[] { reserva.getIdMesa(), reserva.getFecha(), reserva.getHora(),
 						reserva.getUbicacion() });
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	// Método para actualizar la fecha y hora
+    private void actualizarFechaHora() {
+        LocalDateTime fechaHoraActual = LocalDateTime.now();
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        String fechaHoraFormateada = fechaHoraActual.format(formato);
+        SwingUtilities.invokeLater(() -> lblFechaHora.setText(fechaHoraFormateada));
+    }
 }

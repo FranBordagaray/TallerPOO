@@ -21,26 +21,26 @@ public class InicioEmpleado extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	
+
 	public InicioEmpleado(String rol) {
-		
+
 		// Configuración de la ventana principal
 		setTitle("Empleado");
 		ImageIcon icon = new ImageIcon(getClass().getResource("/Img/Icono pantalla empleado.png"));
-        setIconImage(icon.getImage());
+		setIconImage(icon.getImage());
 		setLocationByPlatform(true);
 		setResizable(false);
 		setBounds(100, 100, 1280, 720);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		// Creación del panel
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(1, 1, 1, 1));
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
-		
+
 		// Panel para menu de opciones
 		JPanel panelMenu = new JPanel();
 		panelMenu.setBackground(new Color(195, 155, 107));
@@ -119,7 +119,7 @@ public class InicioEmpleado extends JFrame {
 		btnGestionEmpleados.setAlignmentX(0.5f);
 		btnGestionEmpleados.setBounds(0, 150, 271, 35);
 		panelMenu.add(btnGestionEmpleados);
-		
+
 		// Boton para ver pantalla gestion de mesas
 		JButton btnGestionDeMesas = new JButton("GESTION DE MESAS");
 		btnGestionDeMesas.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de mesas.png")));
@@ -148,10 +148,11 @@ public class InicioEmpleado extends JFrame {
 		btnGestionDeMesas.setAlignmentX(0.5f);
 		btnGestionDeMesas.setBounds(0, 200, 271, 35);
 		panelMenu.add(btnGestionDeMesas);
-		
+
 		// Boton para ver pantalla eventos especiales
 		JButton btnEventosEspeciales = new JButton("EVENTOS ESPECIALES");
-		btnEventosEspeciales.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de eventos especiales.png")));
+		btnEventosEspeciales
+				.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de eventos especiales.png")));
 		btnEventosEspeciales.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(3);
@@ -177,7 +178,7 @@ public class InicioEmpleado extends JFrame {
 		btnEventosEspeciales.setAlignmentX(0.5f);
 		btnEventosEspeciales.setBounds(0, 250, 271, 35);
 		panelMenu.add(btnEventosEspeciales);
-		
+
 		// Boton para pantalla reportes
 		JButton btnReportes = new JButton("REPORTES");
 		btnReportes.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de reportes.png")));
@@ -206,7 +207,7 @@ public class InicioEmpleado extends JFrame {
 		btnReportes.setAlignmentX(0.5f);
 		btnReportes.setBounds(0, 300, 271, 35);
 		panelMenu.add(btnReportes);
-		
+
 		// Boton para ver pantalla perfil
 		JButton btnPerfil = new JButton("PERFIL");
 		btnPerfil.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de perfil.png")));
@@ -266,61 +267,55 @@ public class InicioEmpleado extends JFrame {
 		btnCerrarSesion.setAlignmentX(0.5f);
 		btnCerrarSesion.setBounds(0, 600, 271, 35);
 		panelMenu.add(btnCerrarSesion);
-		
+
 		// Deshabilitar botones según el rol
-	    if (rol.equals("RECEPCIONISTA")) {
-	        btnGestionEmpleados.setEnabled(false);
-	        btnReportes.setEnabled(false);
-	    } else if (rol.equals("MESERO")) {
-	        btnGestionEmpleados.setEnabled(false);
-	        btnEventosEspeciales.setEnabled(false);
-	        btnReportes.setEnabled(false);
-	    } else if (rol.equals("MAITRE")) {
-	        btnGestionEmpleados.setEnabled(false);
-	        btnReportes.setEnabled(false);
-	    }
-	    
+		if (rol.equals("RECEPCIONISTA")) {
+			btnGestionEmpleados.setEnabled(false);
+			btnReportes.setEnabled(false);
+		} else if (rol.equals("MESERO")) {
+			btnGestionEmpleados.setEnabled(false);
+			btnEventosEspeciales.setEnabled(false);
+			btnReportes.setEnabled(false);
+		} else if (rol.equals("MAITRE")) {
+			btnGestionEmpleados.setEnabled(false);
+			btnReportes.setEnabled(false);
+		}
+
 		// Panel para inicio
-		JPanel inicio = new JPanel();
-		inicio.setBorder(null);
-		tabbedPane.addTab("INICIO", inicio);
-		inicio.setLayout(null);
-		
-		JLabel lblComingSoonInicio = new JLabel("COMING SOON INICIO");
-		lblComingSoonInicio.setBounds(340, 302, 307, 36);
-		lblComingSoonInicio.setFont(new Font("Roboto Light", Font.BOLD, 30));
-		inicio.add(lblComingSoonInicio);
-		
+		DashboardEmpleado dashboard = new DashboardEmpleado();
+		tabbedPane.addTab("INICIO", dashboard);
+		dashboard.setLayout(null);
+
 		// Panel para gestion de empleados
 		GestionEmpleados gestionEmpleado = new GestionEmpleados();
 		tabbedPane.addTab("EMPLEADOS", gestionEmpleado);
 		gestionEmpleado.setLayout(null);
-		
+
 		// Panel para gestion de mesas
 		JPanel gestionMesas = new JPanel();
 		tabbedPane.addTab("MESAS", gestionMesas);
 		gestionMesas.setLayout(null);
-		
+
 		JLabel lblComingSoonGestionMesas = new JLabel("COMING SOON GESTION MESAS");
 		lblComingSoonGestionMesas.setFont(new Font("Roboto Light", Font.BOLD, 30));
 		lblComingSoonGestionMesas.setBounds(265, 302, 457, 36);
 		gestionMesas.add(lblComingSoonGestionMesas);
-		
+
 		// Panel para eventos especiales
 		JPanel eventosEspeciales = new JPanel();
 		tabbedPane.addTab("EVENTOS ESPECIALES", eventosEspeciales);
 		eventosEspeciales.setLayout(null);
-		
+
 		JLabel lblComingSoonEventEspecial = new JLabel("COMING SOON EVENTO ESPECIAL");
 		lblComingSoonEventEspecial.setFont(new Font("Roboto Light", Font.BOLD, 30));
 		lblComingSoonEventEspecial.setBounds(252, 302, 482, 36);
 		eventosEspeciales.add(lblComingSoonEventEspecial);
-		
+
 		// Panel para reportes
 		Reporte reporte = new Reporte();
-		tabbedPane.addTab("REPORTES",reporte);
+		tabbedPane.addTab("REPORTES", reporte);
 		reporte.setLayout(null);
-		
+
 		// Panel para perfil
 		PerfilEmpleado perfil = new PerfilEmpleado();
 		tabbedPane.addTab("PERFIL", perfil);

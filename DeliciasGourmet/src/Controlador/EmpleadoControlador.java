@@ -2,6 +2,7 @@ package Controlador;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,16 +16,18 @@ import Modelo.SesionEmpleado;
 
 public class EmpleadoControlador {
 	Conexion cx;
+	private Connection connection;
 
 	public EmpleadoControlador() {
 		cx = new Conexion();
+		connection = cx.conectar();
 	}
 
 	// Funcion para crear cuentas a empleados
 	public boolean crearCuenta(Empleado empleado) {
 		PreparedStatement ps = null;
 		try {
-			ps = cx.conectar().prepareStatement("INSERT INTO Empleado VALUES(null, ?,?,?,?,?,?,?,?)");
+			ps = connection.prepareStatement("INSERT INTO Empleado VALUES(null, ?,?,?,?,?,?,?,?)");
 			ps.setString(1, empleado.getRol().name());
 			ps.setString(2, empleado.getNombre());
 			ps.setString(3, empleado.getApellido());
@@ -40,7 +43,15 @@ public class EmpleadoControlador {
 			e.printStackTrace();
 			System.out.println("Error al crear cuenta!");
 			return false;
-		}
+		} finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 	}
 
 	// Funcion para cifrar contraseñas
@@ -66,11 +77,9 @@ public class EmpleadoControlador {
 		List<Empleado> empleados = new ArrayList<>();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-
 		try {
-			ps = cx.conectar().prepareStatement("SELECT * FROM Empleado");
+			ps = connection.prepareStatement("SELECT * FROM Empleado");
 			rs = ps.executeQuery();
-
 			while (rs.next()) {
 				Empleado empleado = new Empleado();
 				empleado.setIdEmpleado(rs.getInt("idEmpleado"));
@@ -82,13 +91,20 @@ public class EmpleadoControlador {
 				empleado.setEmail(rs.getString("email"));
 				empleado.setUsuario(rs.getString("usuario"));
 				empleado.setContrasenia(rs.getString("contrasenia"));
-
 				empleados.add(empleado);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("Error al obtener empleados!");
-		}
+		} finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 		return empleados;
 	}
 
@@ -96,13 +112,10 @@ public class EmpleadoControlador {
 	public boolean iniciarSesion(String usuario, String contrasenia) {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-
 		try {
-			ps = cx.conectar().prepareStatement(
-					"SELECT idEmpleado, Rol, nombre, apellido, domicilio, telefono, email, usuario, contrasenia FROM Empleado WHERE usuario = ?");
+			ps = connection.prepareStatement("SELECT idEmpleado, Rol, nombre, apellido, domicilio, telefono, email, usuario, contrasenia FROM Empleado WHERE usuario = ?");
 			ps.setString(1, usuario);
 			rs = ps.executeQuery();
-
 			if (rs.next()) {
 				String contraseniaCifrada = rs.getString("contrasenia");
 				String contraseniaIngresada = convertirSHA256(contrasenia);
@@ -117,7 +130,6 @@ public class EmpleadoControlador {
 					empleado.setEmail(rs.getString("email"));
 					empleado.setUsuario(rs.getString("usuario"));
 					empleado.setContrasenia(contraseniaCifrada);
-
 					SesionEmpleado.setEmpleadoActual(empleado);
 					System.out.println("Inicio de sesión exitoso!");
 					return true;
@@ -126,15 +138,14 @@ public class EmpleadoControlador {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (ps != null)
-					ps.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 		return false;
 	}
 
@@ -142,7 +153,7 @@ public class EmpleadoControlador {
 	public boolean eliminarEmpleado(String usuario) {
 		PreparedStatement ps = null;
 		try {
-			ps = cx.conectar().prepareStatement("DELETE FROM Empleado WHERE usuario = ?");
+			ps = connection.prepareStatement("DELETE FROM Empleado WHERE usuario = ?");
 			ps.setString(1, usuario);
 			int filasEliminadas = ps.executeUpdate();
 
@@ -158,13 +169,14 @@ public class EmpleadoControlador {
 			System.out.println("Error al eliminar empleado!");
 			return false;
 		} finally {
-			try {
-				if (ps != null)
-					ps.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 	}
 
 	// Método para obtener el rol de un empleado según su usuario
@@ -172,12 +184,10 @@ public class EmpleadoControlador {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		String rol = null;
-
 		try {
-			ps = cx.conectar().prepareStatement("SELECT rol FROM Empleado WHERE usuario = ?");
+			ps = connection.prepareStatement("SELECT rol FROM Empleado WHERE usuario = ?");
 			ps.setString(1, usuario);
 			rs = ps.executeQuery();
-
 			if (rs.next()) {
 				rol = rs.getString("rol");
 			}
@@ -185,16 +195,14 @@ public class EmpleadoControlador {
 			e.printStackTrace();
 			System.out.println("Error al obtener el rol del empleado!");
 		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (ps != null)
-					ps.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 		return rol;
 	}
-
 }

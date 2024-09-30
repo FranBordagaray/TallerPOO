@@ -20,7 +20,6 @@ import javax.swing.SwingConstants;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.ImageIcon;
 import javax.imageio.ImageIO;
 import java.awt.Image;
 
@@ -166,7 +165,24 @@ public class ActualizarPerfil extends JPanel {
 		        }
 		    }
 		});
+		btnCargarFoto.addMouseListener(new MouseAdapter() {
+		@Override
+		public void mouseEntered(MouseEvent e) {
+				btnCargarFoto.setBackground(new Color(255, 0, 0));
+				btnCargarFoto.setForeground(Color.WHITE);
+			}
+		@Override
+		public void mouseExited(MouseEvent e) {
+				btnCargarFoto.setBackground(Color.WHITE);
+				btnCargarFoto.setForeground(Color.BLACK);
+			}
+		});
 		btnCargarFoto.setBounds(405, 220, 160, 30);
+		btnCargarFoto.setForeground(Color.BLACK);
+		btnCargarFoto.setFont(new Font("Roboto Light", Font.BOLD, 16));
+		btnCargarFoto.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnCargarFoto.setBorder(null);
+		btnCargarFoto.setBackground(Color.WHITE);
 		add(btnCargarFoto);
 				
 		// Separador 
@@ -183,14 +199,12 @@ public class ActualizarPerfil extends JPanel {
 			btnGuardar.setBackground(new Color(255, 0, 0));
 			btnGuardar.setForeground(Color.WHITE);
 					}
-
 			@Override
 		public void mouseExited(MouseEvent e) {
 			btnGuardar.setBackground(Color.WHITE);
 			btnGuardar.setForeground(Color.BLACK);
 				   }
-
-				});
+		});
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 		        Cliente clienteActual = s1.getClienteActual();

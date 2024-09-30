@@ -88,14 +88,14 @@ public class Reserva {
 	}
 	
 	// Getter de Estado
-		public int getEstado() {
-			return estado;
-		}
-		
-		// Setter de estap
-		public void setEstado(int estado) {
-			this.estado = estado;
-		}
+	public int getEstado() {
+		return estado;
+	}
+	
+	// Setter de estap
+	public void setEstado(int estado) {
+		this.estado = estado;
+	}
 	
 	// Getter de idServicio
     public int getIdServicio() {
@@ -105,6 +105,5 @@ public class Reserva {
     // Setter de idServicio
     public void setIdServicio(int idServicio) {
     	this.idServicio = idServicio;
-    }
-	
+    }	
 }
