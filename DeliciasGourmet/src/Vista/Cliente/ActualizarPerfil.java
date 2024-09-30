@@ -17,10 +17,17 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.ImageIcon;
+import javax.imageio.ImageIO;
+import java.awt.Image;
 
 import Controlador.ClienteControlador;
 import Modelo.Cliente;
 import Modelo.Sesion;
+
 
 public class ActualizarPerfil extends JPanel {
 
@@ -131,11 +138,36 @@ public class ActualizarPerfil extends JPanel {
 		txtContrasenia.setBounds(687, 301, 295, 39);
 		add(txtContrasenia);
 		
-		// Imagen Del Jlabel del Perfil
-		JLabel lblImagenPerfil = new JLabel("");
-		lblImagenPerfil.setIcon(new ImageIcon(ActualizarPerfil.class.getResource("/Img/ImgPerfil (1).jpg")));
-		lblImagenPerfil.setBounds(405, 38, 160, 176);
-		add(lblImagenPerfil);
+		// Imagen del perfil
+		JLabel lblFotoPerfil = new JLabel("");
+		lblFotoPerfil.setIcon(new ImageIcon(ActualizarPerfil.class.getResource("/Img/ImgPerfil (1).jpg")));
+		lblFotoPerfil.setBounds(405, 38, 160, 176);
+		add(lblFotoPerfil);
+
+		// Botón para subir la foto
+		JButton btnCargarFoto = new JButton("Cargar foto");
+		btnCargarFoto.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        JFileChooser selectorArchivos = new JFileChooser();
+		        FileNameExtensionFilter filtroImagenes = new FileNameExtensionFilter("Imágenes", "jpg", "png", "jpeg");
+		        selectorArchivos.setFileFilter(filtroImagenes);
+		        
+		        int seleccion = selectorArchivos.showOpenDialog(null);
+		        if (seleccion == JFileChooser.APPROVE_OPTION) {
+		            File archivoSeleccionado = selectorArchivos.getSelectedFile();
+		            try {
+		                Image imagen = ImageIO.read(archivoSeleccionado);
+		                Image imagenRedimensionada = imagen.getScaledInstance(lblFotoPerfil.getWidth(), lblFotoPerfil.getHeight(), Image.SCALE_SMOOTH);
+		                lblFotoPerfil.setIcon(new ImageIcon(imagenRedimensionada));
+		            } catch (Exception ex) {
+		                JOptionPane.showMessageDialog(null, "Error al cargar la imagen", "Error", JOptionPane.ERROR_MESSAGE);
+		                ex.printStackTrace();
+		            }
+		        }
+		    }
+		});
+		btnCargarFoto.setBounds(405, 220, 160, 30);
+		add(btnCargarFoto);
 				
 		// Separador 
 		JSeparator separator = new JSeparator();

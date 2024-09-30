@@ -18,6 +18,8 @@ import Controlador.ReservaControlador;
 import Modelo.HistorialReserva;
 import Modelo.Sesion;
 import java.awt.Component;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Dashboard extends JPanel {
 
@@ -57,13 +59,21 @@ public class Dashboard extends JPanel {
 		lblNombreUsuario.setBounds(170, 0, 330, 50);
 		pnlBienvenido.add(lblNombreUsuario);
 		
-		JLabel lblNewLabel = new JLabel("ACA VA LA HORA Y FECHA");
+		JLabel lblNewLabel = new JLabel();
 		lblNewLabel.setBorder(null);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setForeground(Color.BLACK);
 		lblNewLabel.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 		lblNewLabel.setBounds(782, 12, 200, 25);
 		pnlBienvenido.add(lblNewLabel);
+
+		//Fecha y hora actual
+		LocalDateTime fechaHoraActual = LocalDateTime.now();
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss");
+		String fechaHoraFormateada = fechaHoraActual.format(formato);
+
+		
+		lblNewLabel.setText(fechaHoraFormateada);
 
 		// Panel de Notificaciones
 		JPanel pnlNotificaciones = new JPanel();
