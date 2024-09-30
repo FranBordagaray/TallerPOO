@@ -25,7 +25,7 @@ public ReservaControlador() {
 	public boolean crearReserva(Reserva reserva){
 		PreparedStatement ps = null;
 		try {
-			ps = connection.prepareStatement("INSERT INTO Reserva VALUES(null,?,?,?,?,?,?,?,?)");
+			ps = connection.prepareStatement("INSERT INTO Reserva VALUES(null,?,?,?,?,?,?,?,?,?)");
 			ps.setInt(1, reserva.getIdCliente()); 
 			ps.setString(2, reserva.getFecha());
 			ps.setString(3, reserva.getHora());
@@ -34,6 +34,7 @@ public ReservaControlador() {
 			ps.setString(6, reserva.getDispocicionMesa());
 			ps.setInt(7, reserva.getEstado());
 			ps.setInt(8, reserva.getIdServicio());
+			ps.setString(9, reserva.getTemporada());
 			
 			ps.executeUpdate();
 			System.out.println("Reserva realizada con exito!");
@@ -202,25 +203,22 @@ public ReservaControlador() {
         }
         return reporte;
     }
-    /*
+    
     // Función para obtener el historial de comensales por temporada
-    public List<Reportes> obtenerHistorialComensalesPorTemporada(String dateDesde, String dateHasta){
+    public List<Reportes> obtenerHistorialComensalesPorTemporada(String Temporada){
         PreparedStatement ps = null;
         ResultSet rs = null;
         List<Reportes> reporte = new ArrayList<>();
         try {
             ps = connection.prepareStatement("SELECT count(DISTINCT idReserva) AS totalReservas , sum(m.capacidad) AS totalCapacidad "
-                + "FROM Reserva r JOIN MesaPrecargada m ON r.idMesa = m.idMesa WHERE fecha BETWEEN ? AND ?");
-            ps.setString(1, dateDesde);
-            ps.setString(2, dateHasta);
+                + "FROM Reserva r JOIN MesaPrecargada m ON r.idMesa = m.idMesa WHERE Temporada = ?");
+            ps.setString(1, Temporada);
             rs = ps.executeQuery();
             while (rs.next()) {
             	Reportes reportes = new Reportes(
                         rs.getInt("totalReservas"),
                         rs.getInt("totalCapacidad") 
                 );
-            	System.out.println(rs.getInt("totalReservas"));
-            	System.out.println(rs.getInt("totalCapacidad"));
                 reporte.add(reportes);
             }
         } catch (SQLException e) {
@@ -229,5 +227,5 @@ public ReservaControlador() {
         }
         return reporte;
     }
-	*/
+	
 }

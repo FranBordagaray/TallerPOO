@@ -511,6 +511,7 @@ public class VistaReserva extends JPanel {
         reserva.setComentario(CampoComentario.getText());
         reserva.setDispocicionMesa(BuscarPath(ubicaciones, (String) comboUbicaciones.getSelectedItem()));
         reserva.setEstado(0);
+        reserva.asignarTemporada();
         return reserva;
     }
 

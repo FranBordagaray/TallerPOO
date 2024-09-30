@@ -1,5 +1,9 @@
 package Modelo;
 
+import java.time.LocalDate;
+import java.time.MonthDay;
+import java.time.format.DateTimeFormatter;
+
 public class Reserva {
 
 	// Variables de clase
@@ -12,6 +16,7 @@ public class Reserva {
 	private String dispocicionMesa;
 	private int estado;
 	private int idServicio;
+	private String temporada;
 
 	// Constructor de clase
 	public Reserva() {
@@ -106,4 +111,60 @@ public class Reserva {
     public void setIdServicio(int idServicio) {
     	this.idServicio = idServicio;
     }	
+    
+    // Getter de Temporada
+    public String getTemporada() {
+        return temporada;
+    }
+
+    // Setter de Temporada
+    public void setTemporada(String temporada) {
+        this.temporada = temporada;
+    }
+    
+    // Método para asignar temporada en base a la fecha recibida
+    public void asignarTemporada() {
+        if (this.fecha == null || this.fecha.isEmpty()) {
+            this.temporada = "FECHA NO VÁLIDA";
+            return;
+        }
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            LocalDate fechaActual = LocalDate.parse(this.fecha, formatter);
+            
+            MonthDay diaMesActual = MonthDay.from(fechaActual);
+            MonthDay inicioPrimavera = MonthDay.of(9, 21);
+            MonthDay finPrimavera = MonthDay.of(12, 20);
+            MonthDay inicioVerano = MonthDay.of(12, 21);
+            MonthDay finVerano = MonthDay.of(3, 20);
+            MonthDay inicioOtono = MonthDay.of(3, 21);
+            MonthDay finOtono = MonthDay.of(6, 20);
+            MonthDay inicioInvierno = MonthDay.of(6, 21);
+            MonthDay finInvierno = MonthDay.of(9, 20);
+            
+            if (estaDentroDeRango(diaMesActual, inicioPrimavera, finPrimavera)) {
+                this.temporada = "PRIMAVERA";
+            } else if (estaDentroDeRango(diaMesActual, inicioVerano, finVerano)) {
+                this.temporada = "VERANO";
+            } else if (estaDentroDeRango(diaMesActual, inicioOtono, finOtono)) {
+                this.temporada = "OTOÑO";
+            } else if (estaDentroDeRango(diaMesActual, inicioInvierno, finInvierno)) {
+                this.temporada = "INVIERNO";
+            } else {
+                this.temporada = "FECHA NO VÁLIDA";
+            }
+        } catch (Exception e) {
+            this.temporada = "FECHA NO VÁLIDA";
+        }
+    }
+
+    // Método para verificar si la fecha está dentro del rango
+    private boolean estaDentroDeRango(MonthDay fecha, MonthDay inicio, MonthDay fin) {
+        if (!inicio.isAfter(fin)) {
+            return (fecha.equals(inicio) || fecha.isAfter(inicio)) && (fecha.equals(fin) || fecha.isBefore(fin));
+        }
+        else {
+            return fecha.equals(inicio) || fecha.isAfter(inicio) || fecha.equals(fin) || fecha.isBefore(fin);
+        }
+    }
 }
