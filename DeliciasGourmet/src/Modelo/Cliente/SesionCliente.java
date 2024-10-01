@@ -1,6 +1,6 @@
-package Modelo;
+package Modelo.Cliente;
 
-public class Sesion {
+public class SesionCliente {
 	
 	//Variable de clase
 	private static Cliente clienteActual;

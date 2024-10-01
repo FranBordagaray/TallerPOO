@@ -24,8 +24,8 @@ import javax.imageio.ImageIO;
 import java.awt.Image;
 
 import Controlador.ClienteControlador;
-import Modelo.Cliente;
-import Modelo.Sesion;
+import Modelo.Cliente.SesionCliente;
+import Modelo.Cliente.Cliente;
 
 
 public class ActualizarPerfil extends JPanel {
@@ -41,7 +41,7 @@ public class ActualizarPerfil extends JPanel {
 	@SuppressWarnings("static-access")
 	public ActualizarPerfil() {
 		
-		Sesion s1 = new Sesion();
+		SesionCliente s1 = new SesionCliente();
 		
 		// Configuracion del panel
 		setLayout(null);

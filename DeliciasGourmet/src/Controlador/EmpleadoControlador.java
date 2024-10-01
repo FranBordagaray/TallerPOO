@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Conexion.Conexion;
-import Modelo.Empleado;
-import Modelo.EnumRoles;
-import Modelo.SesionEmpleado;
+import Modelo.Empleado.Empleado;
+import Modelo.Empleado.EnumRoles;
+import Modelo.Empleado.SesionEmpleado;
 
 public class EmpleadoControlador {
 	Conexion cx;

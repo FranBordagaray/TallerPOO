@@ -21,7 +21,7 @@ public class InicioEmpleado extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
+	
 	public InicioEmpleado(String rol) {
 
 		// Configuración de la ventana principal

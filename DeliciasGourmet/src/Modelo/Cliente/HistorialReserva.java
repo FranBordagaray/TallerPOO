@@ -1,4 +1,4 @@
-package Modelo;
+package Modelo.Cliente;
 
 public class HistorialReserva {
     private String fecha;

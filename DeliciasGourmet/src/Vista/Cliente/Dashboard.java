@@ -17,8 +17,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import Controlador.ReservaControlador;
-import Modelo.HistorialReserva;
-import Modelo.Sesion;
+import Modelo.Cliente.SesionCliente;
+import Modelo.Cliente.HistorialReserva;
+
 import java.awt.Component;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -55,7 +56,7 @@ public class Dashboard extends JPanel {
 		pnlBienvenido.add(lblBienvenido);
 
 		// Label Nombre de Usuario
-		Sesion s1 = new Sesion();
+		SesionCliente s1 = new SesionCliente();
 		JLabel lblNombreUsuario = new JLabel(s1.getClienteActual().getNombre() + " " + s1.getClienteActual().getApellido());
 		lblNombreUsuario.setForeground(Color.BLACK);
 		lblNombreUsuario.setFont(new Font("Roboto Light", Font.BOLD, 16));

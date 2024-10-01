@@ -15,11 +15,13 @@ import javax.swing.SwingUtilities;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import Modelo.SesionEmpleado;
 import Vista.Cliente.Dashboard;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import Modelo.Empleado.SesionEmpleado;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Cursor;

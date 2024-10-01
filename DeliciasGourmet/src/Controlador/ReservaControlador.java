@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Conexion.Conexion;
-import Modelo.HistorialReserva;
-import Modelo.Reportes;
-import Modelo.Reserva;
+import Modelo.Cliente.HistorialReserva;
+import Modelo.Complementos.Reserva;
+import Modelo.Empleado.Reportes;
 
 public class ReservaControlador {
 	

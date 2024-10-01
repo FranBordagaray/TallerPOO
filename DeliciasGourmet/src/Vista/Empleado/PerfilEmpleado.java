@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import Modelo.SesionEmpleado;
+import Modelo.Empleado.SesionEmpleado;
 
 public class PerfilEmpleado extends JPanel {
     private JTextField txtUsuario;

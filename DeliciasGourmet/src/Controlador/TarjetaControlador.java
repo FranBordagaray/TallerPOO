@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import Conexion.Conexion;
-import Modelo.Tarjeta;
+import Modelo.Cliente.Tarjeta;
 
 public class TarjetaControlador {
     Conexion cx;

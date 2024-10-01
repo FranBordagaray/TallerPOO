@@ -1,4 +1,4 @@
-package Modelo;
+package Modelo.Cliente;
 
 import java.util.Properties;
 

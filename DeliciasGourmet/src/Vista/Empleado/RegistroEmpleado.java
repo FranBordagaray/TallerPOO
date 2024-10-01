@@ -23,8 +23,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import Controlador.EmpleadoControlador;
-import Modelo.Empleado;
-import Modelo.EnumRoles;
+import Modelo.Empleado.Empleado;
+import Modelo.Empleado.EnumRoles;
 
 public class RegistroEmpleado extends JFrame {
 

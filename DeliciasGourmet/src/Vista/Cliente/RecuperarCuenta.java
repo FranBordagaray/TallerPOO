@@ -20,7 +20,7 @@ import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
 import Controlador.ClienteControlador;
-import Modelo.RecuperarClave;
+import Modelo.Cliente.RecuperarClave;
 
 public class RecuperarCuenta extends JFrame {
 

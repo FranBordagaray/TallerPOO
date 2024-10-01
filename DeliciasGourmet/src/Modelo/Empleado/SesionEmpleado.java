@@ -1,4 +1,4 @@
-package Modelo;
+package Modelo.Empleado;
 
 public class SesionEmpleado {
 	//Variable de clase

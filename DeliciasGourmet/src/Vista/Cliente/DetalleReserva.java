@@ -22,10 +22,10 @@ import javax.swing.border.EmptyBorder;
 import Controlador.MesaControlador;
 import Controlador.ReservaControlador;
 import Controlador.ServicioControlador;
-import Modelo.EnumEstado;
-import Modelo.Mesa;
-import Modelo.Reserva;
-import Modelo.Servicio;
+import Modelo.Complementos.EnumEstado;
+import Modelo.Complementos.Mesa;
+import Modelo.Complementos.Reserva;
+import Modelo.Complementos.Servicio;
 
 @SuppressWarnings("unused")
 public class DetalleReserva extends JFrame {

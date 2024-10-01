@@ -8,8 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import Conexion.Conexion;
-import Modelo.Cliente;
-import Modelo.Sesion;
+import Modelo.Cliente.SesionCliente;
+import Modelo.Cliente.Cliente;
 
 public class ClienteControlador {
 	Conexion cx;
@@ -140,7 +140,7 @@ public class ClienteControlador {
 					cliente.setTelefono(rs.getString("telefono"));
 					cliente.setEmail(rs.getString("email"));
 					cliente.setContrasenia(contraseniaCifrada);
-					Sesion.setClienteActual(cliente);
+					SesionCliente.setClienteActual(cliente);
 					return true;
 				}
 			}

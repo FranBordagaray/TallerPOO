@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Conexion.Conexion;
-import Modelo.Mesa;
+import Modelo.Complementos.Mesa;
 
 public class MesaControlador {
     Conexion cx;

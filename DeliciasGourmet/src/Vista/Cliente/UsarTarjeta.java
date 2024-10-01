@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import Controlador.TarjetaControlador;
-import Modelo.Tarjeta;
+import Modelo.Cliente.Tarjeta;
 
 public class UsarTarjeta extends JFrame {
 

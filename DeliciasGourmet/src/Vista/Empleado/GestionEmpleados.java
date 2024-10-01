@@ -23,7 +23,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import Controlador.EmpleadoControlador;
-import Modelo.Empleado;
+import Modelo.Empleado.Empleado;
 
 public class GestionEmpleados extends JPanel {
 

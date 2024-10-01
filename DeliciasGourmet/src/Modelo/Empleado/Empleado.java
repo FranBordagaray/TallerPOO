@@ -1,4 +1,6 @@
-package Modelo;
+package Modelo.Empleado;
+
+import Modelo.Complementos.Persona;
 
 public class Empleado extends Persona{
 	

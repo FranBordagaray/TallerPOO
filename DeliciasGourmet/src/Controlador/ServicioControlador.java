@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import Conexion.Conexion;
-import Modelo.Reserva;
-import Modelo.Servicio;
+import Modelo.Complementos.Reserva;
+import Modelo.Complementos.Servicio;
 
 public class ServicioControlador { 
     Conexion cx;

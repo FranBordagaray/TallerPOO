@@ -27,10 +27,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import Controlador.MesaControlador;
-import Modelo.Mesa;
-import Modelo.Reserva;
-import Modelo.Servicio;
-import Modelo.Sesion;
+import Modelo.Cliente.SesionCliente;
+import Modelo.Complementos.Mesa;
+import Modelo.Complementos.Reserva;
+import Modelo.Complementos.Servicio;
+
 import com.toedter.calendar.JDateChooser;
 
 public class VistaReserva extends JPanel {
@@ -503,7 +504,7 @@ public class VistaReserva extends JPanel {
     @SuppressWarnings("static-access")
     public Reserva recopilarDatosReserva(Reserva reserva) {
 
-        Sesion s1 = new Sesion();
+        SesionCliente s1 = new SesionCliente();
         reserva.setIdCliente(s1.getClienteActual().getIdCliente());
         reserva.setFecha(fechaFormateada);
         reserva.setHora((String) comboHora.getSelectedItem());

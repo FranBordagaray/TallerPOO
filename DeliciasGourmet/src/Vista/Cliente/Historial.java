@@ -17,8 +17,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import Controlador.ReservaControlador;
-import Modelo.HistorialReserva;
-import Modelo.Sesion;
+import Modelo.Cliente.SesionCliente;
+import Modelo.Cliente.HistorialReserva;
 
 @SuppressWarnings("static-access")
 public class Historial extends JPanel {
@@ -27,12 +27,12 @@ public class Historial extends JPanel {
 	private JComboBox<String> comboBoxEstado;
 	private JComboBox<String> comboBoxMesa;
 	private JTable tblBHistorial;
-	private Sesion s;
+	private SesionCliente s;
 	private ReservaControlador controlador;
 
 	@SuppressWarnings("serial")
 	public Historial() {
-		s = new Sesion();
+		s = new SesionCliente();
 		controlador = new ReservaControlador();
 		// Configuracion del panel historial
 		setBorder(null);

@@ -1,6 +1,8 @@
-package Modelo;
+package Modelo.Cliente;
 
 import java.util.Random;
+
+import Modelo.Complementos.Persona;
 
 public class Cliente extends Persona {
 	// Variables de clase

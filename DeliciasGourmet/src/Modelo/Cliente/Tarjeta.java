@@ -1,4 +1,4 @@
-package Modelo;
+package Modelo.Cliente;
 
 public class Tarjeta {
     private int idTarjeta;

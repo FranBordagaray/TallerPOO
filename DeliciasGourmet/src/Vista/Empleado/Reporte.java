@@ -33,7 +33,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.toedter.calendar.JDateChooser;
 
 import Controlador.ReservaControlador;
-import Modelo.Reportes;
+import Modelo.Empleado.Reportes;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -44,7 +44,6 @@ public class Reporte extends JPanel {
     private ReservaControlador controlador;
 
     private static final long serialVersionUID = 1L;
-
     public Reporte() {
         controlador = new ReservaControlador();
         // Configuración del panel
@@ -258,46 +257,7 @@ public class Reporte extends JPanel {
 		btnPrimavera.addActionListener(new ActionListener() {
 			@SuppressWarnings("unused")
 			public void actionPerformed(ActionEvent e) {
-				String temporada = "PRIMAVERA";
-				List<Reportes> reporteReservas = controlador.obtenerHistorialComensalesPorTemporada(temporada);
-
-				Document documento = new Document();
-				String ruta = System.getProperty("user.home") + "\\Desktop\\Concurrencia_primavera.pdf";
-				File archivo = new File(ruta);
-				if (archivo.exists()) {
-					String nuevoNombre = "Concurrencia_primavera_" + System.currentTimeMillis() + ".pdf";
-					ruta = System.getProperty("user.home") + "\\Desktop\\" + nuevoNombre;
-				}
-				try {
-					PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(ruta));
-					documento.open();
-					documento.add(new Paragraph("Reporte de Reservas por Temporada", FontFactory.getFont("Roboto Light", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD)));
-					documento.add(new Paragraph("Temporada: PRIMAVERA "));
-					documento.add(new Paragraph(" "));
-
-					List<Reportes> reservasEntreFechas = controlador.obtenerHistorialComensalesPorTemporada(temporada);
-
-					PdfPTable table = new PdfPTable(2);
-					table.setWidthPercentage(100);
-					table.addCell("Total de reservas");
-					table.addCell("Cantidad de comensales");
-
-					for (Reportes reserva : reservasEntreFechas) {
-						table.addCell(String.valueOf(reserva.getTotalReservas()));
-						System.out.println(String.valueOf(reserva.getTotalReservas()));
-						table.addCell(String.valueOf(reserva.getTotalCapacidad()));
-						System.out.println(String.valueOf(reserva.getTotalCapacidad()));
-					}
-					documento.add(table);
-					JOptionPane.showMessageDialog(null, "PDF generado con éxito en el escritorio: " + ruta);
-				} catch (DocumentException | IOException ex) {
-					ex.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + ex.getMessage());
-				} finally {
-					if (documento.isOpen()) {
-						documento.close();
-					}
-				}
+				generarReportePorTemporada("PRIMAVERA");
 			}
 		});
 		btnPrimavera.addMouseListener(new MouseAdapter() {
@@ -320,50 +280,12 @@ public class Reporte extends JPanel {
 		btnPrimavera.setBounds(78, 640, 150, 30);
 		add(btnPrimavera);
 
+		// Boton para temporada verano
         JButton btnVerano = new JButton("VERANO");
         btnVerano.addActionListener(new ActionListener() {
 			@SuppressWarnings("unused")
 			public void actionPerformed(ActionEvent e) {
-				String temporada = "VERANO";
-				List<Reportes> reporteReservas = controlador.obtenerHistorialComensalesPorTemporada(temporada);
-
-				Document documento = new Document();
-				String ruta = System.getProperty("user.home") + "\\Desktop\\Concurrencia_verano.pdf";
-				File archivo = new File(ruta);
-				if (archivo.exists()) {
-					String nuevoNombre = "Concurrencia_verano_" + System.currentTimeMillis() + ".pdf";
-					ruta = System.getProperty("user.home") + "\\Desktop\\" + nuevoNombre;
-				}
-				try {
-					PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(ruta));
-					documento.open();
-					documento.add(new Paragraph("Reporte de Reservas por Temporada", FontFactory.getFont("Roboto Light", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD)));
-					documento.add(new Paragraph("Temporada: VERANO "));
-					documento.add(new Paragraph(" "));
-
-					List<Reportes> reservasEntreFechas = controlador.obtenerHistorialComensalesPorTemporada(temporada);
-
-					PdfPTable table = new PdfPTable(2);
-					table.setWidthPercentage(100);
-					table.addCell("Total de reservas");
-					table.addCell("Cantidad de comensales");
-
-					for (Reportes reserva : reservasEntreFechas) {
-						table.addCell(String.valueOf(reserva.getTotalReservas()));
-						System.out.println(String.valueOf(reserva.getTotalReservas()));
-						table.addCell(String.valueOf(reserva.getTotalCapacidad()));
-						System.out.println(String.valueOf(reserva.getTotalCapacidad()));
-					}
-					documento.add(table);
-					JOptionPane.showMessageDialog(null, "PDF generado con éxito en el escritorio: " + ruta);
-				} catch (DocumentException | IOException ex) {
-					ex.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + ex.getMessage());
-				} finally {
-					if (documento.isOpen()) {
-						documento.close();
-					}
-				}
+				generarReportePorTemporada("VERANO");
 			}
 		});
         btnVerano.addActionListener(new ActionListener() {
@@ -391,50 +313,12 @@ public class Reporte extends JPanel {
         btnVerano.setBounds(306, 640, 150, 30);
         add(btnVerano);
 
+        // Boton para temporada otoño
         JButton btnOtonio = new JButton("OTOÑO");
         btnOtonio.addActionListener(new ActionListener() {
 			@SuppressWarnings("unused")
 			public void actionPerformed(ActionEvent e) {
-				String temporada = "OTOÑO";
-				List<Reportes> reporteReservas = controlador.obtenerHistorialComensalesPorTemporada(temporada);
-
-				Document documento = new Document();
-				String ruta = System.getProperty("user.home") + "\\Desktop\\Concurrencia_otoño_.pdf";
-				File archivo = new File(ruta);
-				if (archivo.exists()) {
-					String nuevoNombre = "Concurrencia_otoño_" + System.currentTimeMillis() + ".pdf";
-					ruta = System.getProperty("user.home") + "\\Desktop\\" + nuevoNombre;
-				}
-				try {
-					PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(ruta));
-					documento.open();
-					documento.add(new Paragraph("Reporte de Reservas por Temporada", FontFactory.getFont("Roboto Light", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD)));
-					documento.add(new Paragraph("Temporada: OTOÑO "));
-					documento.add(new Paragraph(" "));
-
-					List<Reportes> reservasEntreFechas = controlador.obtenerHistorialComensalesPorTemporada(temporada);
-
-					PdfPTable table = new PdfPTable(2);
-					table.setWidthPercentage(100);
-					table.addCell("Total de reservas");
-					table.addCell("Cantidad de comensales");
-
-					for (Reportes reserva : reservasEntreFechas) {
-						table.addCell(String.valueOf(reserva.getTotalReservas()));
-						System.out.println(String.valueOf(reserva.getTotalReservas()));
-						table.addCell(String.valueOf(reserva.getTotalCapacidad()));
-						System.out.println(String.valueOf(reserva.getTotalCapacidad()));
-					}
-					documento.add(table);
-					JOptionPane.showMessageDialog(null, "PDF generado con éxito en el escritorio: " + ruta);
-				} catch (DocumentException | IOException ex) {
-					ex.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + ex.getMessage());
-				} finally {
-					if (documento.isOpen()) {
-						documento.close();
-					}
-				}
+				generarReportePorTemporada("OTOÑO");
 			}
 		});
         btnOtonio.addActionListener(new ActionListener() {
@@ -462,50 +346,12 @@ public class Reporte extends JPanel {
         btnOtonio.setBounds(534, 640, 150, 30);
         add(btnOtonio);
 
+     // Boton para temporada invierno
         JButton btnInvierno = new JButton("INVIERNO");
         btnInvierno.addActionListener(new ActionListener() {
 			@SuppressWarnings("unused")
 			public void actionPerformed(ActionEvent e) {
-				String temporada = "INVIERNO";
-				List<Reportes> reporteReservas = controlador.obtenerHistorialComensalesPorTemporada(temporada);
-
-				Document documento = new Document();
-				String ruta = System.getProperty("user.home") + "\\Desktop\\Concurrencia_invierno.pdf";
-				File archivo = new File(ruta);
-				if (archivo.exists()) {
-					String nuevoNombre = "Concurrencia_invierno_" + System.currentTimeMillis() + ".pdf";
-					ruta = System.getProperty("user.home") + "\\Desktop\\" + nuevoNombre;
-				}
-				try {
-					PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(ruta));
-					documento.open();
-					documento.add(new Paragraph("Reporte de Reservas por Temporada", FontFactory.getFont("Roboto Light", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD)));
-					documento.add(new Paragraph("Temporada: INVIERNO "));
-					documento.add(new Paragraph(" "));
-
-					List<Reportes> reservasEntreFechas = controlador.obtenerHistorialComensalesPorTemporada(temporada);
-
-					PdfPTable table = new PdfPTable(2);
-					table.setWidthPercentage(100);
-					table.addCell("Total de reservas");
-					table.addCell("Cantidad de comensales");
-
-					for (Reportes reserva : reservasEntreFechas) {
-						table.addCell(String.valueOf(reserva.getTotalReservas()));
-						System.out.println(String.valueOf(reserva.getTotalReservas()));
-						table.addCell(String.valueOf(reserva.getTotalCapacidad()));
-						System.out.println(String.valueOf(reserva.getTotalCapacidad()));
-					}
-					documento.add(table);
-					JOptionPane.showMessageDialog(null, "PDF generado con éxito en el escritorio: " + ruta);
-				} catch (DocumentException | IOException ex) {
-					ex.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + ex.getMessage());
-				} finally {
-					if (documento.isOpen()) {
-						documento.close();
-					}
-				}
+				generarReportePorTemporada("INVIERNO");
 			}
 		});
         btnInvierno.addActionListener(new ActionListener() {
@@ -533,5 +379,46 @@ public class Reporte extends JPanel {
         btnInvierno.setBounds(762, 640, 150, 30);
         add(btnInvierno);
 
+    }
+    
+    //Metodo para generar los reportes por temporada
+    private void generarReportePorTemporada(String temporada) {
+        List<Reportes> reporteReservas = controlador.obtenerHistorialComensalesPorTemporada(temporada);
+
+        Document documento = new Document();
+        String ruta = System.getProperty("user.home") + "\\Desktop\\Concurrencia_" + temporada.toLowerCase() + ".pdf";
+        File archivo = new File(ruta);
+        if (archivo.exists()) {
+            String nuevoNombre = "Concurrencia_" + temporada.toLowerCase() + "_" + System.currentTimeMillis() + ".pdf";
+            ruta = System.getProperty("user.home") + "\\Desktop\\" + nuevoNombre;
+        }
+
+        try {
+            PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(ruta));
+            documento.open();
+            documento.add(new Paragraph("Reporte de Reservas por Temporada", FontFactory.getFont("Roboto Light", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD)));
+            documento.add(new Paragraph("Temporada: " + temporada));
+            documento.add(new Paragraph(" "));
+
+            PdfPTable table = new PdfPTable(2);
+            table.setWidthPercentage(100);
+            table.addCell("Total de reservas");
+            table.addCell("Cantidad de comensales");
+
+            for (Reportes reserva : reporteReservas) {
+                table.addCell(String.valueOf(reserva.getTotalReservas()));
+                table.addCell(String.valueOf(reserva.getTotalCapacidad()));
+            }
+
+            documento.add(table);
+            JOptionPane.showMessageDialog(null, "PDF generado con éxito en el escritorio: " + ruta);
+        } catch (DocumentException | IOException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + ex.getMessage());
+        } finally {
+            if (documento.isOpen()) {
+                documento.close();
+            }
+        }
     }
 }

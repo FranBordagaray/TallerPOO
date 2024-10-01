@@ -21,7 +21,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import Controlador.ClienteControlador;
-import Modelo.Cliente;
+import Modelo.Cliente.Cliente;
 
 public class Registro extends JFrame {
 
