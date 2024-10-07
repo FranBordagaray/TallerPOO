@@ -255,7 +255,6 @@ public class Reporte extends JPanel {
         // Boton para temporada primavera
 		JButton btnPrimavera = new JButton("PRIMAVERA");
 		btnPrimavera.addActionListener(new ActionListener() {
-			@SuppressWarnings("unused")
 			public void actionPerformed(ActionEvent e) {
 				generarReportePorTemporada("PRIMAVERA");
 			}
@@ -283,7 +282,6 @@ public class Reporte extends JPanel {
 		// Boton para temporada verano
         JButton btnVerano = new JButton("VERANO");
         btnVerano.addActionListener(new ActionListener() {
-			@SuppressWarnings("unused")
 			public void actionPerformed(ActionEvent e) {
 				generarReportePorTemporada("VERANO");
 			}
@@ -316,7 +314,6 @@ public class Reporte extends JPanel {
         // Boton para temporada otoño
         JButton btnOtonio = new JButton("OTOÑO");
         btnOtonio.addActionListener(new ActionListener() {
-			@SuppressWarnings("unused")
 			public void actionPerformed(ActionEvent e) {
 				generarReportePorTemporada("OTOÑO");
 			}
@@ -349,7 +346,6 @@ public class Reporte extends JPanel {
      // Boton para temporada invierno
         JButton btnInvierno = new JButton("INVIERNO");
         btnInvierno.addActionListener(new ActionListener() {
-			@SuppressWarnings("unused")
 			public void actionPerformed(ActionEvent e) {
 				generarReportePorTemporada("INVIERNO");
 			}
@@ -382,7 +378,8 @@ public class Reporte extends JPanel {
     }
     
     //Metodo para generar los reportes por temporada
-    private void generarReportePorTemporada(String temporada) {
+    @SuppressWarnings("unused")
+	private void generarReportePorTemporada(String temporada) {
         List<Reportes> reporteReservas = controlador.obtenerHistorialComensalesPorTemporada(temporada);
 
         Document documento = new Document();
