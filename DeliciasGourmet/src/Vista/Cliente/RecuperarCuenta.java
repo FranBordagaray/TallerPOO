@@ -20,7 +20,7 @@ import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
 import Controlador.ClienteControlador;
-import Modelo.Cliente.RecuperarClave;
+import Modelo.Cliente.EnviarMail;
 
 public class RecuperarCuenta extends JFrame {
 
@@ -89,7 +89,7 @@ public class RecuperarCuenta extends JFrame {
 							String destinatario = email;
 							String asunto = "Codigo de recuperación";
 						    String cuerpo = "Ingrese en la ventana emergente el siguiente codigo: " + controlador.obtenerCodigoRecuperacion(email);
-						    RecuperarClave.enviarCorreo(destinatario, asunto, cuerpo);
+						    EnviarMail.enviarCorreo(destinatario, asunto, cuerpo);
 							JOptionPane.showMessageDialog(RecuperarCuenta.this, "Por favor, revise su correo electronico", "Recuperar", JOptionPane.INFORMATION_MESSAGE);
 							IngresoCodVerificacion verificar = new IngresoCodVerificacion(email);
 							verificar.setVisible(true);

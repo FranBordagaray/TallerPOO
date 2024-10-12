@@ -28,6 +28,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import Controlador.MesaControlador;
 import Modelo.Cliente.SesionCliente;
+import Modelo.Complementos.Comprobante;
 import Modelo.Complementos.Mesa;
 import Modelo.Complementos.Reserva;
 import Modelo.Complementos.Servicio;
@@ -56,6 +57,7 @@ public class VistaReserva extends JPanel {
     private String[] ubicaciones;
     private Reserva reserva;
     private Mesa mesa;
+    private Comprobante comprobante;
     private int idMesaSeleccionada;
     private Servicio servicio;
     private DetalleReserva detalle;
@@ -249,7 +251,7 @@ public class VistaReserva extends JPanel {
         btnAgregarTarjeta.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                UsarTarjeta tarjeta = new UsarTarjeta();
+                UsarTarjeta tarjeta = new UsarTarjeta(VistaReserva.this);
                 tarjeta.setVisible(true);
 
             }
@@ -276,18 +278,20 @@ public class VistaReserva extends JPanel {
         btnAgregarTarjeta.setBounds(41, 590, 150, 25);
         pnlVertical.add(btnAgregarTarjeta);
 
-        // Boton Siguiente Paso
+        // Boton Siguiente P
         btnSiguiente = new JButton("Siguiente");
         btnSiguiente.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
+            	
+            	comprobante = new Comprobante();
                 mesa = new Mesa();
                 reserva = new Reserva();
                 servicio = new Servicio();
                 recopilarDatosReserva(reserva);
                 recopilarDatosMesa(mesa);
                 recopilarDatosServicio(servicio);
-                detalle = new DetalleReserva(reserva, mesa, servicio);
+                recopilarDatosComprobante(comprobante);
+                detalle = new DetalleReserva(reserva, mesa, servicio, comprobante);
                 detalle.setVisible(true);
             }
         });
@@ -305,7 +309,7 @@ public class VistaReserva extends JPanel {
                 btnSiguiente.setForeground(Color.BLACK);
             }
         });
-        // btnSiguiente.setEnabled(false);
+        btnSiguiente.setEnabled(false);
         btnSiguiente.setHorizontalTextPosition(SwingConstants.CENTER);
         btnSiguiente.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnSiguiente.setBorder(null);
@@ -529,12 +533,27 @@ public class VistaReserva extends JPanel {
         servicio.setEventoPrivado(0);
         return servicio;
     }
+    
+    // Metodo que Almacena los datos seleccionados para el objeto de Comprobante
+    public Comprobante recopilarDatosComprobante(Comprobante comprobante) {
+    	LocalDate fechaActual = LocalDate.now();
+    	DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    	String fechaActualFormateada = fechaActual.format(formatoFecha);
+    	LocalTime horaActual = LocalTime.now();
+    	DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String horaActualFormateada = horaActual.format(formatoHora);
+        
+        comprobante.setFecha(fechaActualFormateada);
+        comprobante.setHora(horaActualFormateada);
+        comprobante.setImporte(500);
+        return comprobante;
+    }
 
     // Metodo que Almacena los datos seleccionados para el objeto de Mesa
     public Mesa recopilarDatosMesa(Mesa mesa) {
-
         mesa.setIdMesa(idMesaSeleccionada);
         mesa.setUbicacion(SeleccionarUbicacion);
+        
         if (capacidadSeleccionada == 0) {
             mesa.setCapacidad(mesaControlador.filtrarCapacidad(idMesaSeleccionada));
         } else {
@@ -542,5 +561,10 @@ public class VistaReserva extends JPanel {
         }
         return mesa;
     }
-
+    
+    // Metodo que habilita el boton siguiente depues de confirmar la tarjeta
+    public void habilitarBoton() {
+    	btnSiguiente.setEnabled(true); 
+    }
+    
 }

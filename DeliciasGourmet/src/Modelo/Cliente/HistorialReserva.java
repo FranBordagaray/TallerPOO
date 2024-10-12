@@ -1,6 +1,7 @@
 package Modelo.Cliente;
 
 public class HistorialReserva {
+	private int idReserva;
     private String fecha;
     private String hora;
     private int idMesa;
@@ -10,8 +11,9 @@ public class HistorialReserva {
     private int estado;
 
 	// Constructor
-    public HistorialReserva(String fecha, String hora, int idMesa, int capacidad, String ubicacion, String comentario, int estado) {
-        this.fecha = fecha;
+    public HistorialReserva(int idReserva, String fecha, String hora, int idMesa, int capacidad, String ubicacion, String comentario, int estado) {
+        this.idReserva = idReserva;
+    	this.fecha = fecha;
         this.hora = hora;
         this.idMesa = idMesa;
         this.capacidad = capacidad;
@@ -20,6 +22,10 @@ public class HistorialReserva {
         this.estado = estado;
     }
 
+    // Get de idReserva
+    public int getIdReserva() {
+    	return idReserva;
+    }
     // Get de fecha
     public String getFecha() {
         return fecha;

@@ -2,6 +2,7 @@ package Controlador;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import Conexion.Conexion;
@@ -15,7 +16,7 @@ public class TarjetaControlador {
         cx = new Conexion();
         connection = cx.conectar();
     }
-
+    
     // Funcion para ingresar tarjetas para completar una reserva
     public boolean ingresarTarjeta(Tarjeta tarjeta) {
         PreparedStatement ps = null;
@@ -41,5 +42,32 @@ public class TarjetaControlador {
                 }
             }
         }
+    }
+    
+    //Funcion que te retorna el id de la ultima tarjeta ingresada
+    public int obtenerUltimoIdTarjeta() {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int idTarjeta = -1; 
+        try {
+            ps = connection.prepareStatement("SELECT MAX(idTarjeta) FROM Tarjeta");
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                idTarjeta = rs.getInt(1);
+            }
+            System.out.println("Último ID de tarjeta obtenido con éxito: " + idTarjeta);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al obtener el último ID de tarjeta!");
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return idTarjeta;
     }
 }

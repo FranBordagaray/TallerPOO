@@ -32,7 +32,7 @@ public class UsarTarjeta extends JFrame {
 
 
 
-	public UsarTarjeta() {
+	public UsarTarjeta(VistaReserva vistareserva) {
 		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -167,6 +167,7 @@ public class UsarTarjeta extends JFrame {
 						tarjeta.setCodVerificacion(Integer.parseInt(txtCodVerificacion.getText()));
 						if (controlador.ingresarTarjeta(tarjeta)) {
 							JOptionPane.showMessageDialog(UsarTarjeta.this, "Tarjeta ingresada con exito!", "Exito",JOptionPane.INFORMATION_MESSAGE);
+							vistareserva.habilitarBoton();
 							System.out.println("Tarjeta ingresada con exito!");
 							dispose();
 						} else {

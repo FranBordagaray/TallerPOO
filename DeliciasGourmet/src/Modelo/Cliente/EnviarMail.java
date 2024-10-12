@@ -9,7 +9,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class RecuperarClave {
+public class EnviarMail {
 	public static void enviarCorreo(String destinatario, String asunto, String cuerpo) {
         // Mail y clave de aplicacion del restaurant
         final String remitente = "deliciasgourmet.recuperar@gmail.com";

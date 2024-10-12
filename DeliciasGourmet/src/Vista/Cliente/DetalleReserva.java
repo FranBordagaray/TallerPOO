@@ -21,7 +21,13 @@ import javax.swing.border.EmptyBorder;
 
 import Controlador.MesaControlador;
 import Controlador.ReservaControlador;
+import Controlador.ClienteControlador;
+import Controlador.ComprobanteControlador;
 import Controlador.ServicioControlador;
+import Controlador.TarjetaControlador;
+import Modelo.Cliente.EnviarMail;
+import Modelo.Cliente.SesionCliente;
+import Modelo.Complementos.Comprobante;
 import Modelo.Complementos.EnumEstado;
 import Modelo.Complementos.Mesa;
 import Modelo.Complementos.Reserva;
@@ -34,18 +40,27 @@ public class DetalleReserva extends JFrame {
 	private JPanel contentPane;
 	private Reserva reserva;
 	private Mesa mesa;
+	private Comprobante comprobante;
 	private Servicio servicio;
 	private ServicioControlador servicioControlador;
 	private ReservaControlador reservaControlador;
 	private MesaControlador mesaControlador;
+	private ComprobanteControlador comprobanteControlador;
+	private TarjetaControlador tarjetaControlador;
+	private SesionCliente s;
 
-	public DetalleReserva(Reserva reserva, Mesa mesa, Servicio servicio) {
+	public DetalleReserva(Reserva reserva, Mesa mesa, Servicio servicio, Comprobante comprobante) {
 		this.reserva = reserva;
 		this.mesa = mesa;
 		this.servicio = servicio;
+		this.comprobante = comprobante;
+		
 		this.servicioControlador = new ServicioControlador();
 		this.reservaControlador = new ReservaControlador();
 		this.mesaControlador = new MesaControlador();
+		this.comprobanteControlador = new ComprobanteControlador();
+		this.tarjetaControlador = new TarjetaControlador();
+		
 
 		// Configuración de la ventana principal
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -188,7 +203,7 @@ public class DetalleReserva extends JFrame {
 		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int idServicio;
-
+				int idReserva;
 				try {
 					if (servicioControlador.verficarServicio(servicio)) {
 						idServicio = servicioControlador.buscarServicioPorReserva(reserva);
@@ -213,26 +228,36 @@ public class DetalleReserva extends JFrame {
 						System.out.println("Mesa registrada con éxito.");
 
 						if (reservaControlador.crearReserva(reserva)) {
-							JOptionPane.showMessageDialog(DetalleReserva.this, "Reserva registrada con éxito", "Éxito",
-									JOptionPane.INFORMATION_MESSAGE);
-							dispose();
+							JOptionPane.showMessageDialog(DetalleReserva.this, "Reserva registrada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+							idReserva = reservaControlador.buscarIdReserva(reserva);
+							comprobante.setIdTarjeta(tarjetaControlador.obtenerUltimoIdTarjeta());
+							comprobante.setIdReserva(idReserva);
+							
+							if (comprobanteControlador.crearComprobante(comprobante)) {
+								System.out.print("Comprobante cargado con éxito");
+								if (reservaControlador.actualizarComprobante(idReserva, comprobanteControlador.obtenerUltimoIdComprobante())) {
+									System.out.print("Reserva se actualizo con éxito");
+									enviarDetalles();
+									dispose();
+									
+								} else {
+									System.out.print("Ocurrió un error al actualizar la reserva");
+								}
+							} else {
+								System.out.print("Ocurrió un error al registrar el comprobante");
+							}
 						} else {
-							JOptionPane.showMessageDialog(DetalleReserva.this,
-									"Ocurrió un error al registrar la reserva", "Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(DetalleReserva.this, "Ocurrió un error al registrar la reserva", "Error", JOptionPane.ERROR_MESSAGE);
 						}
 					} else {
-						JOptionPane.showMessageDialog(DetalleReserva.this, "Ocurrió un error al registrar la mesa",
-								"Error", JOptionPane.ERROR_MESSAGE);
+						System.out.print("Ocurrió un error al registrar la mesa");
 					}
-
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(DetalleReserva.this, "Error inesperado: " + e2.getMessage(), "Error",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(DetalleReserva.this, "Error inesperado: " + e2.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
 					e2.printStackTrace();
 				}
 			}
 		});
-
 		btnConfirmar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -288,5 +313,34 @@ public class DetalleReserva extends JFrame {
 		btnCancelar.setBounds(50, 500, 120, 30);
 		pnlContenedor.add(btnCancelar);
 
+	}
+	
+	// Metodo para enviar mail
+	@SuppressWarnings("static-access")
+	public void enviarDetalles() {
+		s = new SesionCliente();
+		String destinatario = s.getClienteActual().getEmail();
+		String asunto = "Confirmacion de reserva - Delicias Gourmet";
+		String mensaje = String.format(
+			    "Estimado/a cliente,\n\n" +
+			    "Nos complace confirmar su reserva en nuestro restaurante con los siguientes detalles:\n\n" +
+			    "   - Número de Mesa: %d\n" +
+			    "   - Ubicación: %s\n" +
+			    "   - Capacidad de la Mesa: %d personas\n" +
+			    "   - Fecha de la Reserva: %s\n" +
+			    "   - Hora de la Reserva: %s\n" +
+			    "   - Comentarios adicionales: %s\n\n" +
+			    "Agradecemos su preferencia y le recordamos que estaremos encantados de recibirle.\n\n" +
+			    "Saludos cordiales,\n" +
+			    "Restaurante %s",
+			    mesa.getIdMesa(),
+			    mesa.getUbicacion(),
+			    mesa.getCapacidad(),
+			    reserva.getFecha(),
+			    reserva.getHora(),
+			    reserva.getComentario(),
+			    "Delicias Gourmet"
+			);
+		 EnviarMail.enviarCorreo(destinatario, asunto, mensaje);
 	}
 }

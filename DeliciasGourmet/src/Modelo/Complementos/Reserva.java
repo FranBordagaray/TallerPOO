@@ -16,6 +16,7 @@ public class Reserva {
 	private String dispocicionMesa;
 	private int estado;
 	private int idServicio;
+	private int idComprobante;
 	private String temporada;
 
 	// Constructor de clase
@@ -110,7 +111,17 @@ public class Reserva {
     // Setter de idServicio
     public void setIdServicio(int idServicio) {
     	this.idServicio = idServicio;
-    }	
+    }
+    
+    // Getter de idComprobante
+    public int getIdComprobante() {
+    	return this.idComprobante;
+    }
+    
+    // Setter de idComprobante
+    public void setIdComprobante(int idComprobante) {
+    	this.idComprobante = idComprobante;
+    }
     
     // Getter de Temporada
     public String getTemporada() {

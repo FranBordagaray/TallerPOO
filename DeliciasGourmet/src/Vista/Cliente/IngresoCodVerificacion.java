@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import Controlador.ClienteControlador;
-import Modelo.Cliente.RecuperarClave;
+import Modelo.Cliente.EnviarMail;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;

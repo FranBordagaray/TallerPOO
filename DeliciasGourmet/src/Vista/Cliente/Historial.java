@@ -10,8 +10,11 @@ import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -19,6 +22,10 @@ import javax.swing.table.DefaultTableModel;
 import Controlador.ReservaControlador;
 import Modelo.Cliente.SesionCliente;
 import Modelo.Cliente.HistorialReserva;
+import javax.swing.JButton;
+import java.awt.Cursor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 @SuppressWarnings("static-access")
 public class Historial extends JPanel {
@@ -29,6 +36,7 @@ public class Historial extends JPanel {
 	private JTable tblBHistorial;
 	private SesionCliente s;
 	private ReservaControlador controlador;
+	private int idReservaSeleccionada; 
 
 	@SuppressWarnings("serial")
 	public Historial() {
@@ -118,14 +126,62 @@ public class Historial extends JPanel {
 				new Object[][] {
 				},
 				new String[] {
-						"FECHA", "HORA", "MESA", "COMENSALES", "UBICACION", "COMENTARIO", "ESTADO"
+						"RESEERVA N°", "FECHA", "HORA", "MESA", "COMENSALES", "UBICACION", "COMENTARIO", "ESTADO"
 				}) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		});
+		tblBHistorial.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		    public void valueChanged(ListSelectionEvent event) {
+		        if (!event.getValueIsAdjusting()) {
+		            int selectedRow = tblBHistorial.getSelectedRow();
+		            if (selectedRow != -1) {
+		                idReservaSeleccionada = Integer.parseInt(tblBHistorial.getValueAt(selectedRow, 0).toString());
+		                System.out.println("ID seleccionado: " + idReservaSeleccionada);
+		            } else {
+		                System.out.println("No se ha seleccionado ninguna fila.");
+		            }
+		        }
+		    }
+		});
 		scrollPane.setViewportView(tblBHistorial);
+		
+		// Boton cancelar reserva
+		JButton btnCancelar = new JButton("CANCELAR");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		       
+		        
+		        try {
+		            controlador.cancelarReserva(idReservaSeleccionada);
+		            controlador.eliminarMesa(idReservaSeleccionada);
+		            JOptionPane.showMessageDialog(null, "Cambios realizados con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		        } catch (Exception e2) {
+		            e2.printStackTrace();
+		            System.out.println("Error al actualizar los datos del cliente.");
+		        }
+
+					}
+				});
+		btnCancelar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
+		btnCancelar.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnCancelar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnCancelar.setBorder(null);
+		btnCancelar.setBackground(Color.WHITE);
+		btnCancelar.setForeground(Color.BLACK);
+		btnCancelar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+		btnCancelar.setBounds(826, 115, 150, 25);
+		add(btnCancelar);
+		
 		// Utiliza la funcion para llenar la tabla con historial de reservas
 		cargarDatos(s.getClienteActual().getIdCliente());
 		// Utiliza la funcion para llenar el combo con mesas unicamente reservadas por
@@ -144,6 +200,7 @@ public class Historial extends JPanel {
 
 			for (HistorialReserva reserva : historial) {
 				model.addRow(new Object[] {
+						reserva.getIdReserva(),
 						reserva.getFecha(),
 						reserva.getHora(),
 						reserva.getIdMesa(),
@@ -168,6 +225,7 @@ public class Historial extends JPanel {
 			if (filtro == null || filtro.equals("Todas")) {
 				for (HistorialReserva reserva : historial) {
 					model.addRow(new Object[] {
+							reserva.getIdReserva(),
 							reserva.getFecha(),
 							reserva.getHora(),
 							reserva.getIdMesa(),
@@ -181,6 +239,7 @@ public class Historial extends JPanel {
 				for (HistorialReserva reserva : historial) {
 					if (("Mesa " + reserva.getIdMesa()).equals(filtro)) {
 						model.addRow(new Object[] {
+								reserva.getIdReserva(),
 								reserva.getFecha(),
 								reserva.getHora(),
 								reserva.getIdMesa(),
@@ -228,6 +287,7 @@ public class Historial extends JPanel {
 				String estado = reserva.getEstado() == 1 ? "VIGENTE" : "CANCELADA";
 				if (filtroEstado == null || reserva.getEstado() == filtroEstado) {
 					model.addRow(new Object[] {
+							reserva.getIdReserva(),
 							reserva.getFecha(),
 							reserva.getHora(),
 							reserva.getIdMesa(),
