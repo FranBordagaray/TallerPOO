@@ -25,6 +25,7 @@ import javax.swing.border.LineBorder;
 import Controlador.EmpleadoControlador;
 import Modelo.Empleado.Empleado;
 import Modelo.Empleado.EnumRoles;
+import Vista.Cliente.Registro;
 
 public class RegistroEmpleado extends JFrame {
 
@@ -202,42 +203,56 @@ public class RegistroEmpleado extends JFrame {
 		txtRepetirContrasenia.setBounds(300, 540, 300, 30);
 		pnlContenedor.add(txtRepetirContrasenia);
 
-		// Boton para crear cuenta
+		// Botón para crear cuenta
 		JButton btnRegistro = new JButton("Crear cuenta");
 		btnRegistro.setIcon(new ImageIcon(RegistroEmpleado.class.getResource("/Img/icono de crear cuenta.png")));
 		btnRegistro.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					if (verificarCampos()) {
-						return;
-					} else {
-						Empleado empleado = new Empleado();
-						empleado.setRol((EnumRoles) roles.getSelectedItem());
-						empleado.setNombre(txtNombre.getText());
-						empleado.setApellido(txtApellido.getText());
-						empleado.setDomicilio(txtDomicilio.getText());
-						empleado.setTelefono(txtTelefono.getText());
-						empleado.setEmail(txtEmail.getText());
-						empleado.setUsuario(txtUsuario.getText());
-						empleado.setContrasenia(String.valueOf(txtContrasenia.getPassword()));
-						if (controlador.crearCuenta(empleado)) {
-							JOptionPane.showMessageDialog(RegistroEmpleado.this, "Registro exitoso!", "Exito", 
-									JOptionPane.INFORMATION_MESSAGE);
-							System.out.println("Registro exitoso!");
-							GestionEmpleados gestion = new GestionEmpleados();
-							gestion.setVisible(true);
-							RegistroEmpleado.this.dispose();
-						} else {
-							JOptionPane.showMessageDialog(RegistroEmpleado.this, "Error al registrar cliente.", "Error", 
-									JOptionPane.ERROR_MESSAGE);
-						}
-					}
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(RegistroEmpleado.this, "Error inesperado: " + e2.getMessage(), "Error", 
-							JOptionPane.ERROR_MESSAGE);
-				}
-			}
+		    public void actionPerformed(ActionEvent e) {
+		        try {
+		             if (verificarCampos()) {
+		                return;
+		            } else {
+		                
+		                String email = txtEmail.getText();
+
+		                // Verificar si el email ya está en uso
+		                if (controlador.emailEnUso(email)) {
+		                    JOptionPane.showMessageDialog(RegistroEmpleado.this, "El email ya está en uso.Por favor utilice  otro.", "Error", 
+		                            JOptionPane.ERROR_MESSAGE);
+		                    return; 
+		                }
+
+		                // Crear el empleado
+		                Empleado empleado = new Empleado();
+		                empleado.setRol((EnumRoles) roles.getSelectedItem());
+		                empleado.setNombre(txtNombre.getText());
+		                empleado.setApellido(txtApellido.getText());
+		                empleado.setDomicilio(txtDomicilio.getText());
+		                empleado.setTelefono(txtTelefono.getText());
+		                empleado.setEmail(email); // Usar el email verificado
+		                empleado.setUsuario(txtUsuario.getText());
+		                empleado.setContrasenia(String.valueOf(txtContrasenia.getPassword()));
+
+		                // Intentar registrar al empleado
+		                if (controlador.crearCuenta(empleado)) {
+		                    JOptionPane.showMessageDialog(RegistroEmpleado.this, "Registro exitoso!", "Exito", 
+		                            JOptionPane.INFORMATION_MESSAGE);
+		                    System.out.println("Registro exitoso!");
+		                    GestionEmpleados gestion = new GestionEmpleados();
+		                    gestion.setVisible(true);
+		                    RegistroEmpleado.this.dispose();
+		                } else {
+		                    JOptionPane.showMessageDialog(RegistroEmpleado.this, "Error al registrar empleado.", "Error", 
+		                            JOptionPane.ERROR_MESSAGE);
+		                }
+		            }
+		        } catch (Exception e2) {
+		            JOptionPane.showMessageDialog(RegistroEmpleado.this, "Error inesperado: " + e2.getMessage(), "Error", 
+		                    JOptionPane.ERROR_MESSAGE);
+		        }
+		    }
 		});
+
 		btnRegistro.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {

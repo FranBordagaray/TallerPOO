@@ -53,7 +53,39 @@ public class EmpleadoControlador {
             }
         }
 	}
-
+	// Método para verificar si el email ya está en uso
+	public boolean emailEnUso(String email) {
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+	    boolean emailExiste = false;
+	    
+	    try {
+	        ps = connection.prepareStatement("SELECT COUNT(*) FROM Empleado WHERE email = ?");
+	        ps.setString(1, email);
+	        rs = ps.executeQuery();
+	        
+	        if (rs.next()) {
+	            int count = rs.getInt(1);
+	            if (count > 0) {
+	                emailExiste = true;
+	                System.out.println("El email ya está en uso.");
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Error al verificar el email!");
+	    } finally {
+	        if (ps != null) {
+	            try {
+	                ps.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	    
+	    return emailExiste;
+	}
 	// Funcion para cifrar contraseñas
 	public String convertirSHA256(String contrasenia) {
 		MessageDigest md = null;
