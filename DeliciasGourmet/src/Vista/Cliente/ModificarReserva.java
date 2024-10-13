@@ -3,6 +3,8 @@ package Vista.Cliente;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
@@ -13,6 +15,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+
+import Controlador.ReservaControlador;
+import Modelo.Complementos.Reserva;
 
 public class ModificarReserva extends JFrame {
 
@@ -25,7 +30,12 @@ public class ModificarReserva extends JFrame {
 	private JTextField txtMesa;
 	private JTextArea txtComentario;
 
-	public ModificarReserva() {
+	private ReservaControlador reservaControlador;
+	private Reserva reserva; // Objeto para almacenar la reserva que se va a modificar
+
+	public ModificarReserva(Reserva reserva) {
+		this.reserva = reserva; // Inicializar la reserva con la que se va a modificar
+		reservaControlador = new ReservaControlador();
 
 		// Configuración de la ventana principal
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -59,153 +69,113 @@ public class ModificarReserva extends JFrame {
 
 		// Etiqueta Ubicacion
 		JLabel lblUbicacion = new JLabel("UBICACION: ");
-		lblUbicacion.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblUbicacion.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblUbicacion.setFont(new Font("Roboto Light", Font.PLAIN, 18));
-		lblUbicacion.setAlignmentX(1.0f);
-		lblUbicacion.setBounds(0, 80, 200, 25);
+		lblUbicacion.setFont(new Font("Roboto Light", Font.BOLD, 11));
+		lblUbicacion.setBounds(32, 70, 100, 20);
 		pnlContenedor.add(lblUbicacion);
 
-		// Campo Ubicacion (dinámico)
+		// Campo de texto para la ubicación
 		txtUbicacion = new JTextField();
-		txtUbicacion.setForeground(Color.BLACK);
-		txtUbicacion.setHorizontalAlignment(SwingConstants.CENTER);
-		txtUbicacion.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		txtUbicacion.setBackground(new Color(222, 184, 135));
-		txtUbicacion.setBounds(200, 80, 250, 25);
+		txtUbicacion.setBounds(150, 70, 250, 25);
+		txtUbicacion.setEditable(false); 
 		pnlContenedor.add(txtUbicacion);
 
 		// Etiqueta Fecha
 		JLabel lblFecha = new JLabel("FECHA: ");
-		lblFecha.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblFecha.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblFecha.setFont(new Font("Roboto Light", Font.PLAIN, 18));
-		lblFecha.setAlignmentX(1.0f);
-		lblFecha.setBounds(0, 140, 200, 25);
+		lblFecha.setFont(new Font("Roboto Light", Font.BOLD, 11));
+		lblFecha.setBounds(32, 110, 100, 20);
 		pnlContenedor.add(lblFecha);
 
-		// Campo Fecha (dinámico)
+		// Campo de texto para la fecha
 		txtFecha = new JTextField();
-		txtFecha.setForeground(Color.BLACK);
-		txtFecha.setHorizontalAlignment(SwingConstants.CENTER);
-		txtFecha.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		txtFecha.setBackground(new Color(222, 184, 135));
-		txtFecha.setBounds(200, 140, 250, 25);
+		txtFecha.setBounds(150, 110, 250, 25);
 		pnlContenedor.add(txtFecha);
 
 		// Etiqueta Hora
 		JLabel lblHora = new JLabel("HORA: ");
-		lblHora.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblHora.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblHora.setFont(new Font("Roboto Light", Font.PLAIN, 18));
-		lblHora.setAlignmentX(1.0f);
-		lblHora.setBounds(0, 200, 200, 25);
+		lblHora.setFont(new Font("Roboto Light", Font.BOLD, 11));
+		lblHora.setBounds(32, 150, 100, 20);
 		pnlContenedor.add(lblHora);
 
-		// Campo Hora (dinámico)
+		// Campo de texto para la hora
 		txtHora = new JTextField();
-		txtHora.setForeground(Color.BLACK);
-		txtHora.setHorizontalAlignment(SwingConstants.CENTER);
-		txtHora.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		txtHora.setBackground(new Color(222, 184, 135));
-		txtHora.setBounds(200, 200, 250, 25);
+		txtHora.setBounds(150, 150, 250, 25);
 		pnlContenedor.add(txtHora);
 
 		// Etiqueta Capacidad
 		JLabel lblCapacidad = new JLabel("CAPACIDAD: ");
-		lblCapacidad.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblCapacidad.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblCapacidad.setFont(new Font("Roboto Light", Font.PLAIN, 18));
-		lblCapacidad.setAlignmentX(1.0f);
-		lblCapacidad.setBounds(0, 260, 200, 25);
+		lblCapacidad.setFont(new Font("Roboto Light", Font.BOLD, 11));
+		lblCapacidad.setBounds(32, 190, 100, 20);
 		pnlContenedor.add(lblCapacidad);
 
-		// Campo Capacidad (dinámico)
+		// Campo de texto para la capacidad
 		txtCapacidad = new JTextField();
-		txtCapacidad.setForeground(Color.BLACK);
-		txtCapacidad.setHorizontalAlignment(SwingConstants.CENTER);
-		txtCapacidad.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		txtCapacidad.setBackground(new Color(222, 184, 135));
-		txtCapacidad.setBounds(200, 260, 250, 25);
+		txtCapacidad.setBounds(150, 190, 250, 25);
+		txtCapacidad.setEditable(false);
 		pnlContenedor.add(txtCapacidad);
 
 		// Etiqueta Mesa
 		JLabel lblMesa = new JLabel("MESA: ");
-		lblMesa.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblMesa.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblMesa.setFont(new Font("Roboto Light", Font.PLAIN, 18));
-		lblMesa.setAlignmentX(1.0f);
-		lblMesa.setBounds(0, 320, 200, 25);
+		lblMesa.setFont(new Font("Roboto Light", Font.BOLD, 11));
+		lblMesa.setBounds(32, 230, 100, 20);
 		pnlContenedor.add(lblMesa);
 
-		// Campo Mesa (dinámico)
+		// Campo de texto para la mesa
 		txtMesa = new JTextField();
-		txtMesa.setForeground(Color.BLACK);
-		txtMesa.setHorizontalAlignment(SwingConstants.CENTER);
-		txtMesa.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		txtMesa.setBackground(new Color(222, 184, 135));
-		txtMesa.setBounds(200, 320, 250, 25);
+		txtMesa.setBounds(150, 230, 250, 25);
+		txtMesa.setEditable(false); 
 		pnlContenedor.add(txtMesa);
 
 		// Etiqueta Comentario
 		JLabel lblComentario = new JLabel("COMENTARIO: ");
-		lblComentario.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblComentario.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblComentario.setFont(new Font("Roboto Light", Font.PLAIN, 18));
-		lblComentario.setAlignmentX(1.0f);
-		lblComentario.setBounds(0, 380, 200, 25);
+		lblComentario.setFont(new Font("Roboto Light", Font.BOLD, 11));
+		lblComentario.setBounds(32, 270, 100, 20);
 		pnlContenedor.add(lblComentario);
 
-		// Campo Comentario (dinámico)
+		// Área de texto para el comentario
 		txtComentario = new JTextArea();
-		txtComentario.setForeground(Color.BLACK);
-		txtComentario.setFont(new Font("Roboto Light", Font.BOLD, 14));
-		txtComentario.setBackground(new Color(222, 184, 135));
-		txtComentario.setBounds(200, 384, 250, 100);
+		txtComentario.setBounds(150, 270, 250, 100);
 		pnlContenedor.add(txtComentario);
 
-		// Botón de Confirmar
-		JButton btnConfirmar = new JButton("Confirmar");
-		btnConfirmar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				btnConfirmar.setBackground(new Color(126, 211, 33));
-				btnConfirmar.setForeground(Color.WHITE);
-			}
+		// Botón para confirmar la modificación
+		JButton btnModificar = new JButton("Modificar");
+		btnModificar.setBounds(150, 400, 120, 30);
+		pnlContenedor.add(btnModificar);
 
+		// Cargar datos de la reserva en los campos
+		cargarDatosReserva();
+
+		// Acción del botón de modificar
+		btnModificar.addActionListener(new ActionListener() {
 			@Override
-			public void mouseExited(MouseEvent e) {
-				btnConfirmar.setBackground(Color.WHITE);
-				btnConfirmar.setForeground(Color.BLACK);
+			public void actionPerformed(ActionEvent e) {
+				modificarReserva();
 			}
 		});
-		btnConfirmar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-		btnConfirmar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnConfirmar.setBackground(Color.WHITE);
-		btnConfirmar.setForeground(Color.BLACK);
-		btnConfirmar.setBounds(280, 500, 120, 30);
-		pnlContenedor.add(btnConfirmar);
+	}
 
-		// Botón para Cancelar
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				btnCancelar.setBackground(new Color(255, 0, 0));
-				btnCancelar.setForeground(Color.WHITE);
-			}
+	// Método para cargar los datos de la reserva en los campos de texto
+	private void cargarDatosReserva() {
+	
+		txtFecha.setText(reserva.getFecha());
+		txtHora.setText(reserva.getHora());
+	
+		txtMesa.setText(String.valueOf(reserva.getIdMesa()));
+		txtComentario.setText(reserva.getComentario());
+	}
 
-			@Override
-			public void mouseExited(MouseEvent e) {
-				btnCancelar.setBackground(Color.WHITE);
-				btnCancelar.setForeground(Color.BLACK);
-			}
-		});
-		btnCancelar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-		btnCancelar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnCancelar.setBackground(Color.WHITE);
-		btnCancelar.setForeground(Color.BLACK);
-		btnCancelar.setBounds(50, 500, 120, 30);
-		pnlContenedor.add(btnCancelar);
+	// Método para modificar la reserva
+	private void modificarReserva() {
+		// Actualizar los campos que se pueden modificar
+		reserva.setFecha(txtFecha.getText());
+		reserva.setHora(txtHora.getText());
+		reserva.setComentario(txtComentario.getText());
+
+		// Llamar al controlador para actualizar la reserva
+		boolean exito = reservaControlador.actualizarComprobante(reserva.getIdReserva(), reserva.getIdComprobante());
+		if (exito) {
+			System.out.println("Reserva modificada con éxito!");
+		} else {
+			System.out.println("Error al modificar la reserva!");
+		}
 	}
 }
