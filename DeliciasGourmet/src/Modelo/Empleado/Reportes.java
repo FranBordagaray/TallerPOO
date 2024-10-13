@@ -19,6 +19,13 @@ public class Reportes {
 		this.totalCapacidad = totalCapacidad;
     }
     
+    // Contructor personalizado para cliente mas frecuente
+    public Reportes(String nombre, String apellido, int totalReservas) {
+		this.nombre = nombre;
+		this.apellido = apellido;
+    	this.totalReservas = totalReservas;
+    }
+    
     // Constructor de clase
 	public Reportes(String nombre, String apellido, String fecha, String hora, int capacidad, String ubicacion, String comentario) {
 		this.nombre = nombre;

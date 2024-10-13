@@ -351,5 +351,35 @@ public ReservaControlador() {
                 }
             }
         }
-    }    
+    }
+    
+    // Función para obtener el cliente más frecuente
+    public Reportes obtenerClienteMasFrecuente() {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Reportes reporte = null;
+        try {
+            ps = connection.prepareStatement(
+                "SELECT c.nombre, c.apellido, COUNT(r.idReserva) AS cantidadReservas " +
+                "FROM Reserva r " +
+                "JOIN Cliente c ON r.idCliente = c.idCliente " +
+                "GROUP BY c.nombre, c.apellido " +
+                "ORDER BY cantidadReservas DESC " +
+                "LIMIT 1"
+            );
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                reporte = new Reportes(
+                    rs.getString("nombre"),
+                    rs.getString("apellido"),
+                    rs.getInt("cantidadReservas")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al obtener el cliente más frecuente");
+        }
+        return reporte;
+    }
+
 }

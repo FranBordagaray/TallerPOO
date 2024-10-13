@@ -81,11 +81,72 @@ public class Reporte extends JPanel {
         separadorHistorial.setBounds(0, 280, 992, 2);
         add(separadorHistorial);
 
-        // Etiqueta y separador de cliente más frecuente
+        // Etiqueta, boton y separador de cliente más frecuente
         JLabel lblClienteMasFrecuente = new JLabel("Cliente Más Frecuente");
+        lblClienteMasFrecuente.setHorizontalAlignment(SwingConstants.CENTER);
         lblClienteMasFrecuente.setFont(new Font("Roboto Light", Font.BOLD, 22));
-        lblClienteMasFrecuente.setBounds(378, 290, 235, 27);
+        lblClienteMasFrecuente.setBounds(346, 290, 300, 30);
         add(lblClienteMasFrecuente);
+        
+        JButton btnClienteFrecuente = new JButton("BUSCAR");
+        btnClienteFrecuente.addActionListener(new ActionListener() {
+        	@SuppressWarnings("unused")
+			public void actionPerformed(ActionEvent e) {
+        		Reportes clienteFrecuente = controlador.obtenerClienteMasFrecuente(); // Obtener el cliente más frecuente
+
+        	    Document documento = new Document();
+        	    String ruta = System.getProperty("user.home") + "\\Desktop\\Cliente_Mas_Frecuente.pdf";
+        	    File archivo = new File(ruta);
+        	    if (archivo.exists()) {
+        	        String nuevoNombre = "Cliente_Mas_Frecuente_" + System.currentTimeMillis() + ".pdf";
+        	        ruta = System.getProperty("user.home") + "\\Desktop\\" + nuevoNombre;
+        	    }
+
+        	    try {
+        	        PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(ruta));
+        	        documento.open();
+        	        
+        	        // Título del reporte
+        	        documento.add(new Paragraph("Reporte del Cliente Más Frecuente", 
+        	            FontFactory.getFont("Roboto Light", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD)));
+        	        
+        	        documento.add(new Paragraph(" "));
+        	        documento.add(new Paragraph("Información del cliente:"));
+        	        documento.add(new Paragraph("Nombre y Apellido: " + clienteFrecuente.getNombre()+" " + clienteFrecuente.getApellido()));
+        	        documento.add(new Paragraph("Reservas realizadas: " + clienteFrecuente.getTotalReservas()));
+        	        documento.add(new Paragraph(" "));
+
+        	        JOptionPane.showMessageDialog(null, "PDF generado con éxito en el escritorio: " + ruta);
+        	    } catch (DocumentException | IOException ex) {
+        	        ex.printStackTrace();
+        	        JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + ex.getMessage());
+        	    } finally {
+        	        if (documento.isOpen()) {
+        	            documento.close();
+        	        }
+        	    }
+        	}
+        });
+        btnClienteFrecuente.addMouseListener(new MouseAdapter() {
+        	public void mouseEntered(MouseEvent e) {
+        		btnClienteFrecuente.setBackground(new Color(255, 0, 0));
+        		btnClienteFrecuente.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            	btnClienteFrecuente.setBackground(Color.WHITE);
+            	btnClienteFrecuente.setForeground(Color.BLACK);
+            }
+        });
+        btnClienteFrecuente.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnClienteFrecuente.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnClienteFrecuente.setBorder(null);
+        btnClienteFrecuente.setForeground(Color.BLACK);
+        btnClienteFrecuente.setBackground(Color.WHITE);
+        btnClienteFrecuente.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        btnClienteFrecuente.setBounds(421, 339, 150, 30);
+        add(btnClienteFrecuente);
 
         JSeparator separadorClienteFrecuente = new JSeparator();
         separadorClienteFrecuente.setForeground(Color.BLACK);
@@ -343,7 +404,7 @@ public class Reporte extends JPanel {
         btnOtonio.setBounds(534, 640, 150, 30);
         add(btnOtonio);
 
-     // Boton para temporada invierno
+        // Boton para temporada invierno
         JButton btnInvierno = new JButton("INVIERNO");
         btnInvierno.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -374,7 +435,6 @@ public class Reporte extends JPanel {
         btnInvierno.setAlignmentX(0.5f);
         btnInvierno.setBounds(762, 640, 150, 30);
         add(btnInvierno);
-
     }
     
     //Metodo para generar los reportes por temporada
