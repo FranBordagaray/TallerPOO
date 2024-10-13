@@ -226,29 +226,32 @@ public class DetalleReserva extends JFrame {
 
 					if (mesaControlador.crearMesa(mesa)) {
 						System.out.println("Mesa registrada con éxito.");
-
-						if (reservaControlador.crearReserva(reserva)) {
-							JOptionPane.showMessageDialog(DetalleReserva.this, "Reserva registrada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-							idReserva = reservaControlador.buscarIdReserva(reserva);
-							comprobante.setIdTarjeta(tarjetaControlador.obtenerUltimoIdTarjeta());
-							comprobante.setIdReserva(idReserva);
+						if (reservaControlador.verificarReserva(reserva)) {
+							JOptionPane.showMessageDialog(DetalleReserva.this, "La reserva ya existe", "Error", JOptionPane.ERROR_MESSAGE);
+						} else {
+							if (reservaControlador.crearReserva(reserva)) {
+								JOptionPane.showMessageDialog(DetalleReserva.this, "Reserva registrada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+								idReserva = reservaControlador.buscarIdReserva(reserva);
+								comprobante.setIdTarjeta(tarjetaControlador.obtenerUltimoIdTarjeta());
+								comprobante.setIdReserva(idReserva);
 							
-							if (comprobanteControlador.crearComprobante(comprobante)) {
-								System.out.print("Comprobante cargado con éxito");
-								if (reservaControlador.actualizarComprobante(idReserva, comprobanteControlador.obtenerUltimoIdComprobante())) {
-									System.out.print("Reserva se actualizo con éxito");
-									enviarDetalles();
-									dispose();
+								if (comprobanteControlador.crearComprobante(comprobante)) {
+									System.out.print("Comprobante cargado con éxito");
+									if (reservaControlador.actualizarComprobante(idReserva, comprobanteControlador.obtenerUltimoIdComprobante())) {
+										System.out.print("Reserva se actualizo con éxito");
+										enviarDetalles();
+										dispose();
 									
+									} else {
+										System.out.print("Ocurrió un error al actualizar la reserva");
+									}
 								} else {
-									System.out.print("Ocurrió un error al actualizar la reserva");
+									System.out.print("Ocurrió un error al registrar el comprobante");
 								}
 							} else {
-								System.out.print("Ocurrió un error al registrar el comprobante");
+								JOptionPane.showMessageDialog(DetalleReserva.this, "Ocurrió un error al registrar la reserva", "Error", JOptionPane.ERROR_MESSAGE);
 							}
-						} else {
-							JOptionPane.showMessageDialog(DetalleReserva.this, "Ocurrió un error al registrar la reserva", "Error", JOptionPane.ERROR_MESSAGE);
-						}
+						}	
 					} else {
 						System.out.print("Ocurrió un error al registrar la mesa");
 					}

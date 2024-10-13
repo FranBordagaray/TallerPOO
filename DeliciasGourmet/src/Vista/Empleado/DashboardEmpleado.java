@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.ImageIcon;
@@ -18,8 +19,16 @@ import java.time.format.DateTimeFormatter;
 import Vista.Cliente.Dashboard;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
+import Controlador.ReservaControlador;
+import Modelo.Cliente.EnviarMail;
+import Modelo.Cliente.HistorialReserva;
+import Modelo.Cliente.SesionCliente;
+import Modelo.Complementos.Mesa;
+import Modelo.Complementos.Reserva;
 import Modelo.Empleado.SesionEmpleado;
 
 import javax.swing.JTextField;
@@ -29,11 +38,16 @@ import java.awt.Cursor;
 public class DashboardEmpleado extends JPanel {
     private static final long serialVersionUID = 1L;
     private JLabel lblFechaHora;
-    private JTable table;
+    private JTable tblBHistorial;
     private JTextField txtBuscarCliente;
+    private SesionCliente s;
+    private ReservaControlador controladorReserva;
+    
 
     @SuppressWarnings({ "static-access", "serial" })
     public DashboardEmpleado() {
+    	
+    	controladorReserva = new ReservaControlador();
         // Configuración del panel
         setLayout(null);
         setPreferredSize(new Dimension(992, 679));
@@ -78,20 +92,41 @@ public class DashboardEmpleado extends JPanel {
         scrollPane.setBounds(10, 369, 972, 300);
         add(scrollPane);
 
-        table = new JTable();
-        table.setModel(new DefaultTableModel(
-                new Object[][] {
-                },
-                new String[] {
-                        "Cliente", "Ubicacion", "Mesa", "Hora", "Evento especial"
-                }) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        });
-        table.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-        scrollPane.setViewportView(table);
+     // Tabla para el historial personal de un cliente
+     		tblBHistorial = new JTable();
+     		tblBHistorial.setGridColor(Color.DARK_GRAY);
+     		tblBHistorial.setBackground(Color.WHITE);
+     		tblBHistorial.setBorder(null);
+     		tblBHistorial.setFont(new Font("Roboto Light", Font.PLAIN, 12));
+     		tblBHistorial.setForeground(Color.BLACK);
+     		tblBHistorial.setModel(new DefaultTableModel(
+     				new Object[][] {
+     				},
+     				new String[] {
+     						"RESERVA N°","NOMBRE","APELLIDO", "FECHA", "HORA", "MESA", "COMENSALES", "UBICACION", "ESTADO"
+     				}) {
+     			@Override
+     			public boolean isCellEditable(int row, int column) {
+     				return false;
+     			}
+     		});
+     	TableColumnModel columnModel = tblBHistorial.getColumnModel();
+     	columnModel.getColumn(0).setPreferredWidth(25);
+     	columnModel.getColumn(5).setPreferredWidth(25);
+     	columnModel.getColumn(6).setPreferredWidth(25);
+     	columnModel.getColumn(8).setPreferredWidth(50);
+     	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+     	centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+     	// Aplicar el renderizador a la columna "ESTADO"
+     	tblBHistorial.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+     	tblBHistorial.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+     	tblBHistorial.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
+     	
+
+     	
+     	tblBHistorial.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        scrollPane.setViewportView(tblBHistorial);
 
         // Etiqueta y campo de texto para buscar reservas de clientes
         JLabel lblBuscarCliente = new JLabel("BUSCAR CLIENTE");
@@ -130,6 +165,8 @@ public class DashboardEmpleado extends JPanel {
                 actualizarFechaHora();
             }
         }, 0, 1000);
+        
+        cargarDatos();
     }
 
     // Método para actualizar la fecha y hora
@@ -139,4 +176,60 @@ public class DashboardEmpleado extends JPanel {
         String fechaHoraFormateada = fechaHoraActual.format(formato);
         SwingUtilities.invokeLater(() -> lblFechaHora.setText(fechaHoraFormateada));
     }
+    
+ // Metodo para enviar mail
+ 	@SuppressWarnings("static-access")
+ 	public void enviarDetalles(Mesa mesa, Reserva reserva) {
+ 		s = new SesionCliente();
+ 		String destinatario = s.getClienteActual().getEmail();
+ 		String asunto = "Confirmacion de reserva - Delicias Gourmet";
+ 		String mensaje = String.format(
+ 			    "Estimado/a cliente,\n\n" +
+ 			    "Nos complace confirmar su reserva en nuestro restaurante con los siguientes detalles:\n\n" +
+ 			    "   - Número de Mesa: %d\n" +
+ 			    "   - Ubicación: %s\n" +
+ 			    "   - Capacidad de la Mesa: %d personas\n" +
+ 			    "   - Fecha de la Reserva: %s\n" +
+ 			    "   - Hora de la Reserva: %s\n" +
+ 			    "   - Comentarios adicionales: %s\n\n" +
+ 			    "Agradecemos su preferencia y le recordamos que estaremos encantados de recibirle.\n\n" +
+ 			    "Saludos cordiales,\n" +
+ 			    "Restaurante %s",
+ 			    mesa.getIdMesa(),
+ 			    mesa.getUbicacion(),
+ 			    mesa.getCapacidad(),
+ 			    reserva.getFecha(),
+ 			    reserva.getHora(),
+ 			    reserva.getComentario(),
+ 			    "Delicias Gourmet"
+ 			);
+ 		 EnviarMail.enviarCorreo(destinatario, asunto, mensaje);
+ 	}
+ 	
+ // Función para cargar tabla con datos almacenados en la base de datos
+ 	private void cargarDatos() {
+ 		List<HistorialReserva> historial;
+ 		try {
+ 			historial = controladorReserva.obtenerHistorialReserva();
+ 			DefaultTableModel model = (DefaultTableModel) tblBHistorial.getModel();
+ 			model.setRowCount(0);
+ 		
+ 			for (HistorialReserva reserva : historial) {
+ 				String estado = reserva.getEstado() == 1 ? "VIGENTE" : "CANCELADA";
+ 				model.addRow(new Object[] {
+ 						reserva.getIdReserva(),
+ 						reserva.getNombre(),
+ 						reserva.getApellido(),
+ 						reserva.getFecha(),
+ 						reserva.getHora(),
+ 						reserva.getIdMesa(),
+ 						reserva.getCapacidad(),
+ 						reserva.getUbicacion(),
+ 						estado
+ 				});
+ 			}
+ 		} catch (Exception e) {
+ 			e.printStackTrace();
+ 		}
+ 	}
 }

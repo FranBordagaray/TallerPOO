@@ -2,6 +2,8 @@ package Modelo.Cliente;
 
 public class HistorialReserva {
 	private int idReserva;
+	private String nombre;
+	private String apellido;
     private String fecha;
     private String hora;
     private int idMesa;
@@ -21,11 +23,34 @@ public class HistorialReserva {
         this.comentario = comentario;
         this.estado = estado;
     }
+    
+    public HistorialReserva(int idReserva,String nombre, String apellido, String fecha, String hora, int idMesa, int capacidad, String ubicacion, int estado) {
+        this.idReserva = idReserva;
+        this.nombre = nombre;
+        this.apellido = apellido;
+    	this.fecha = fecha;
+        this.hora = hora;
+        this.idMesa = idMesa;
+        this.capacidad = capacidad;
+        this.ubicacion = ubicacion;
+        this.estado = estado;
+    }
 
     // Get de idReserva
     public int getIdReserva() {
     	return idReserva;
     }
+    
+    //Get de Nombre
+    public String getNombre(){
+    	return this.nombre;
+    }
+    
+    //Get de Apellido
+    public String getApellido() {
+    	return this.apellido;
+    }
+    
     // Get de fecha
     public String getFecha() {
         return fecha;

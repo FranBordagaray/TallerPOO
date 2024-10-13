@@ -54,6 +54,41 @@ public ReservaControlador() {
             }
         }
 	}
+
+	// Función para verificar si la Reserva ya existe
+   	 public boolean verificarReserva(Reserva Reserva) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = connection.prepareStatement("SELECT COUNT(*) FROM Reserva WHERE IdCliente = ? AND fecha = ? AND hora = ? AND IdMesa = ? AND IdServicio = ?");
+            ps.setInt(1,Reserva.getIdCliente());
+            ps.setString(2, Reserva.getFecha());
+            ps.setString(3, Reserva.getHora());
+            ps.setInt(4, Reserva.getIdMesa());
+            ps.setInt(5, Reserva.getIdServicio());
+            
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                if (count > 0) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al verificar el reserva!");
+            return false;
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 	
 	// Función para verificar si una mesa está ocupada en una fecha y hora específicas
     public boolean verificarMesaOcupada(int idMesa, String fecha, String hora) {
@@ -230,7 +265,7 @@ public ReservaControlador() {
         return reporte;
     }
     
-    //Funcion para obtener actualizar la reserva, y asignarle su comprobante
+    //Funcion para actualizar la reserva, y asignarle su comprobante
     public boolean actualizarComprobante(int idReserva, int idComprobante) {
         PreparedStatement ps = null;
         try {
@@ -351,6 +386,38 @@ public ReservaControlador() {
                 }
             }
         }
+    }
+	
+  //Funcion para cargar datos de la reserva Historial Empleado
+    public List<HistorialReserva> obtenerHistorialReserva(){
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<HistorialReserva> historial = new ArrayList<>();
+        try {
+            ps = connection.prepareStatement( "SELECT r.idReserva, c.nombre, c.apellido, r.fecha, r.hora, r.idMesa, m.capacidad, m.ubicacion, r.estado FROM Reserva r JOIN MesaPrecargada m ON r.idMesa = m.idMesa \r\n"
+             + "JOIN Cliente c ON r.idCliente = c.idCliente"
+            );
+                 
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                HistorialReserva reserva = new HistorialReserva(
+                	rs.getInt("idReserva"),
+                	rs.getString("nombre"),
+                	rs.getString("apellido"),
+                    rs.getString("fecha"),
+                    rs.getString("hora"),
+                    rs.getInt("idMesa"),
+                    rs.getInt("capacidad"),
+                    rs.getString("ubicacion"),
+                    rs.getInt("estado")
+                );
+                historial.add(reserva);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al obtener el historial de reservas por cliente!");
+        }
+        return historial;
     }
     
     // Función para obtener el cliente más frecuente
