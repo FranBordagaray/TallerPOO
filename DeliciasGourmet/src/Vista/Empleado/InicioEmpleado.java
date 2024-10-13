@@ -146,45 +146,15 @@ public class InicioEmpleado extends JFrame {
 		btnGestionDeMesas.setBorder(null);
 		btnGestionDeMesas.setBackground(Color.WHITE);
 		btnGestionDeMesas.setAlignmentX(0.5f);
-		btnGestionDeMesas.setBounds(0, 200, 271, 35);
+		btnGestionDeMesas.setBounds(0, 195, 271, 35);
 		panelMenu.add(btnGestionDeMesas);
-
-		// Boton para ver pantalla eventos especiales
-		JButton btnEventosEspeciales = new JButton("EVENTOS ESPECIALES");
-		btnEventosEspeciales
-				.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de eventos especiales.png")));
-		btnEventosEspeciales.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				tabbedPane.setSelectedIndex(3);
-			}
-		});
-		btnEventosEspeciales.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				btnEventosEspeciales.setBackground(new Color(255, 0, 0));
-				btnEventosEspeciales.setForeground(Color.WHITE);
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				btnEventosEspeciales.setBackground(Color.WHITE);
-				btnEventosEspeciales.setForeground(Color.BLACK);
-			}
-		});
-		btnEventosEspeciales.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		btnEventosEspeciales.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnEventosEspeciales.setBorder(null);
-		btnEventosEspeciales.setBackground(Color.WHITE);
-		btnEventosEspeciales.setAlignmentX(0.5f);
-		btnEventosEspeciales.setBounds(0, 250, 271, 35);
-		panelMenu.add(btnEventosEspeciales);
 
 		// Boton para pantalla reportes
 		JButton btnReportes = new JButton("REPORTES");
 		btnReportes.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de reportes.png")));
 		btnReportes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tabbedPane.setSelectedIndex(4);
+				tabbedPane.setSelectedIndex(3);
 			}
 		});
 		btnReportes.addMouseListener(new MouseAdapter() {
@@ -205,7 +175,7 @@ public class InicioEmpleado extends JFrame {
 		btnReportes.setBorder(null);
 		btnReportes.setBackground(Color.WHITE);
 		btnReportes.setAlignmentX(0.5f);
-		btnReportes.setBounds(0, 300, 271, 35);
+		btnReportes.setBounds(0, 240, 271, 35);
 		panelMenu.add(btnReportes);
 
 		// Boton para ver pantalla perfil
@@ -213,7 +183,7 @@ public class InicioEmpleado extends JFrame {
 		btnPerfil.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de perfil.png")));
 		btnPerfil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tabbedPane.setSelectedIndex(5);
+				tabbedPane.setSelectedIndex(4);
 			}
 		});
 		btnPerfil.addMouseListener(new MouseAdapter() {
@@ -234,7 +204,7 @@ public class InicioEmpleado extends JFrame {
 		btnPerfil.setBorder(null);
 		btnPerfil.setBackground(Color.WHITE);
 		btnPerfil.setAlignmentX(0.5f);
-		btnPerfil.setBounds(0, 350, 271, 35);
+		btnPerfil.setBounds(0, 285, 271, 35);
 		panelMenu.add(btnPerfil);
 
 		// Boton para cerrar sesion
@@ -274,7 +244,6 @@ public class InicioEmpleado extends JFrame {
 			btnReportes.setEnabled(false);
 		} else if (rol.equals("MESERO")) {
 			btnGestionEmpleados.setEnabled(false);
-			btnEventosEspeciales.setEnabled(false);
 			btnReportes.setEnabled(false);
 		} else if (rol.equals("MAITRE")) {
 			btnGestionEmpleados.setEnabled(false);
@@ -292,7 +261,7 @@ public class InicioEmpleado extends JFrame {
 		gestionEmpleado.setLayout(null);
 
 		// Panel para gestion de mesas
-		JPanel gestionMesas = new JPanel();
+		VistaReservaEmpleado gestionMesas = new VistaReservaEmpleado();
 		tabbedPane.addTab("MESAS", gestionMesas);
 		gestionMesas.setLayout(null);
 
@@ -300,16 +269,6 @@ public class InicioEmpleado extends JFrame {
 		lblComingSoonGestionMesas.setFont(new Font("Roboto Light", Font.BOLD, 30));
 		lblComingSoonGestionMesas.setBounds(265, 302, 457, 36);
 		gestionMesas.add(lblComingSoonGestionMesas);
-
-		// Panel para eventos especiales
-		JPanel eventosEspeciales = new JPanel();
-		tabbedPane.addTab("EVENTOS ESPECIALES", eventosEspeciales);
-		eventosEspeciales.setLayout(null);
-
-		JLabel lblComingSoonEventEspecial = new JLabel("COMING SOON EVENTO ESPECIAL");
-		lblComingSoonEventEspecial.setFont(new Font("Roboto Light", Font.BOLD, 30));
-		lblComingSoonEventEspecial.setBounds(252, 302, 482, 36);
-		eventosEspeciales.add(lblComingSoonEventEspecial);
 
 		// Panel para reportes
 		Reporte reporte = new Reporte();

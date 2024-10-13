@@ -19,6 +19,7 @@ import javax.swing.SwingConstants;
 
 import Controlador.TarjetaControlador;
 import Modelo.Cliente.Tarjeta;
+import Vista.Empleado.VistaReservaEmpleado;
 
 public class UsarTarjeta extends JFrame {
 
@@ -32,7 +33,7 @@ public class UsarTarjeta extends JFrame {
 
 
 
-	public UsarTarjeta(VistaReserva vistareserva) {
+	public UsarTarjeta(VistaReserva vistaReserva) {
 		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -167,7 +168,7 @@ public class UsarTarjeta extends JFrame {
 						tarjeta.setCodVerificacion(Integer.parseInt(txtCodVerificacion.getText()));
 						if (controlador.ingresarTarjeta(tarjeta)) {
 							JOptionPane.showMessageDialog(UsarTarjeta.this, "Tarjeta ingresada con exito!", "Exito",JOptionPane.INFORMATION_MESSAGE);
-							vistareserva.habilitarBoton();
+							vistaReserva.habilitarBoton();
 							System.out.println("Tarjeta ingresada con exito!");
 							dispose();
 						} else {
