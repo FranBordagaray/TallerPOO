@@ -18,7 +18,7 @@ public class Comprobante {
 	}
 	
 	// Setter de idComprobante
-	public void getIdComprobante(int idComprobante) {
+	public void setIdComprobante(int idComprobante) {
 		this.idComprobante = idComprobante;
 	}
 	

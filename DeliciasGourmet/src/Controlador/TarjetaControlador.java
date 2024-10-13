@@ -70,4 +70,40 @@ public class TarjetaControlador {
         }
         return idTarjeta;
     }
+
+	// Funcion para obtener los datos de una tarjeta mediante el id
+    public Tarjeta obtenerDatosTarjeta(int idTarjeta) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Tarjeta tarjeta = null;
+        
+        try {
+        	ps = connection.prepareStatement("SELECT * FROM Tarjeta WHERE idTarjeta = ?");
+        	ps.setInt(1, idTarjeta);
+        	rs = ps.executeQuery();
+        	
+        	if (rs.next()) {
+	            tarjeta = new Tarjeta();
+	            tarjeta.setTitular(rs.getString("titular"));
+	            tarjeta.setEmisor(rs.getString("emisor"));
+                tarjeta.setNroTarjeta(rs.getString("nroTarjeta"));
+                
+                System.out.println("Encontrado con éxito la Tarjeta: " + idTarjeta);
+	        } else {
+	            System.out.println("No se encontró una Tarjeta para la tarjeta ID: " + idTarjeta);
+	        }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al obtener un tarjeta");
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return tarjeta;
+    }
 }

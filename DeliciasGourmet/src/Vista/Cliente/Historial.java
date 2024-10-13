@@ -6,6 +6,9 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.swing.JComboBox;
@@ -19,13 +22,28 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import Controlador.ComprobanteControlador;
 import Controlador.ReservaControlador;
+import Controlador.TarjetaControlador;
 import Modelo.Cliente.SesionCliente;
+import Modelo.Cliente.Tarjeta;
+import Modelo.Complementos.Comprobante;
+import Modelo.Cliente.EnviarMail;
 import Modelo.Cliente.HistorialReserva;
 import javax.swing.JButton;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 @SuppressWarnings("static-access")
 public class Historial extends JPanel {
@@ -35,13 +53,26 @@ public class Historial extends JPanel {
 	private JComboBox<String> comboBoxMesa;
 	private JTable tblBHistorial;
 	private SesionCliente s;
-	private ReservaControlador controlador;
+	private ReservaControlador reservaControlador;
+	private ComprobanteControlador comprobanteControlador;
+	private TarjetaControlador tarjetaControlador;
 	private int idReservaSeleccionada; 
+	private String fechaReservaSeleccionada; 
+	private String horaReservaSeleccionada; 
+	private String mesaSeleccionada;
+	private String capacidadSeleccionada;
+	private String ubicacionSeleccionada;
+	private String comentarioSeleccionado;
+	private String ruta;
 
 	@SuppressWarnings("serial")
 	public Historial() {
+		
 		s = new SesionCliente();
-		controlador = new ReservaControlador();
+		reservaControlador = new ReservaControlador();
+		comprobanteControlador = new ComprobanteControlador();
+		tarjetaControlador = new TarjetaControlador();
+		
 		// Configuracion del panel historial
 		setBorder(null);
 		setBackground(new Color(222, 184, 135));
@@ -139,6 +170,12 @@ public class Historial extends JPanel {
 		            int selectedRow = tblBHistorial.getSelectedRow();
 		            if (selectedRow != -1) {
 		                idReservaSeleccionada = Integer.parseInt(tblBHistorial.getValueAt(selectedRow, 0).toString());
+		                fechaReservaSeleccionada = tblBHistorial.getValueAt(selectedRow, 1).toString();
+		            	horaReservaSeleccionada = tblBHistorial.getValueAt(selectedRow, 2).toString();
+		            	mesaSeleccionada = tblBHistorial.getValueAt(selectedRow, 3).toString();
+		            	capacidadSeleccionada = tblBHistorial.getValueAt(selectedRow, 4).toString();
+		            	ubicacionSeleccionada = tblBHistorial.getValueAt(selectedRow, 5).toString();
+		            	comentarioSeleccionado = tblBHistorial.getValueAt(selectedRow, 6).toString();
 		                System.out.println("ID seleccionado: " + idReservaSeleccionada);
 		            } else {
 		                System.out.println("No se ha seleccionado ninguna fila.");
@@ -152,15 +189,29 @@ public class Historial extends JPanel {
 		JButton btnCancelar = new JButton("CANCELAR");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-		       
+				
+				LocalDateTime ahora = LocalDateTime.now();
+				DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+				String horaSinRango = horaReservaSeleccionada.split(" - ")[0];
+				String fechaHoraSeleccionadaStr = fechaReservaSeleccionada + " " + horaSinRango;
+				LocalDateTime fechaHoraReservaSeleccionada = LocalDateTime.parse(fechaHoraSeleccionadaStr, formatoFecha);
+				long horasDiferencia = ChronoUnit.HOURS.between(ahora, fechaHoraReservaSeleccionada);
 		        
 		        try {
-		            controlador.cancelarReserva(idReservaSeleccionada);
-		            controlador.eliminarMesa(idReservaSeleccionada);
-		            JOptionPane.showMessageDialog(null, "Cambios realizados con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		        	if(horasDiferencia >= 24) {
+		        		  reservaControlador.cancelarReserva(idReservaSeleccionada);
+		        		  reservaControlador.eliminarMesa(idReservaSeleccionada);
+				          JOptionPane.showMessageDialog(null,"La cancelación se ha realizado con éxito" , "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		        	}else {
+		        		generarComprobanteMail(comprobanteControlador.obtenerComprobantePorReserva(idReservaSeleccionada));
+		        		enviarMailComprobante();
+		        		reservaControlador.cancelarReserva(idReservaSeleccionada);
+		        		reservaControlador.eliminarMesa(idReservaSeleccionada);
+		        		JOptionPane.showMessageDialog(null,"La cancelación se ha realizado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		        	}
 		        } catch (Exception e2) {
 		            e2.printStackTrace();
-		            System.out.println("Error al actualizar los datos del cliente.");
+		            System.out.println("Error al cancelar la Reserva.");
 		        }
 
 					}
@@ -182,37 +233,10 @@ public class Historial extends JPanel {
 		btnCancelar.setBounds(826, 115, 150, 25);
 		add(btnCancelar);
 		
-		JButton btnModificar = new JButton("MODIFICAR");
-		btnModificar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					
-					ModificarReserva reserva = new ModificarReserva(controlador.obtenerComprobantePorReserva(idReservaSeleccionada));
-					reserva.setVisible(true);
-				} catch (Exception e2) {
-					
-				}
-			}
-			});
-		btnModificar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-			}
-		});
-		btnModificar.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnModificar.setForeground(Color.BLACK);
-		btnModificar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-		btnModificar.setBorder(null);
-		btnModificar.setBackground(Color.WHITE);
-		btnModificar.setBounds(656, 115, 150, 25);
-		add(btnModificar);
-		
 		// Utiliza la funcion para llenar la tabla con historial de reservas
 		cargarDatos(s.getClienteActual().getIdCliente());
-		// Utiliza la funcion para llenar el combo con mesas unicamente reservadas por el cliente
+		// Utiliza la funcion para llenar el combo con mesas unicamente reservadas por
+		// el cliente
 		cargarComboMesas(s.getClienteActual().getIdCliente());
 		cargarComboEstados(s.getClienteActual().getIdCliente());
 	}
@@ -221,7 +245,7 @@ public class Historial extends JPanel {
 	private void cargarDatos(int idCliente) {
 		List<HistorialReserva> historial;
 		try {
-			historial = controlador.obtenerHistorialPorCliente(idCliente);
+			historial = reservaControlador.obtenerHistorialPorCliente(idCliente);
 			DefaultTableModel model = (DefaultTableModel) tblBHistorial.getModel();
 			model.setRowCount(0);
 
@@ -245,7 +269,7 @@ public class Historial extends JPanel {
 	private void filtrarMesas(String filtro) {
 		List<HistorialReserva> historial;
 		try {
-			historial = controlador.obtenerHistorialPorCliente(s.getClienteActual().getIdCliente());
+			historial = reservaControlador.obtenerHistorialPorCliente(s.getClienteActual().getIdCliente());
 			DefaultTableModel model = (DefaultTableModel) tblBHistorial.getModel();
 			model.setRowCount(0);
 
@@ -287,7 +311,7 @@ public class Historial extends JPanel {
 	// cliente
 	private void cargarComboMesas(int idCliente) {
 		try {
-			List<Integer> mesasReservadas = controlador.obtenerMesasReservadasPorCliente(idCliente);
+			List<Integer> mesasReservadas = reservaControlador.obtenerMesasReservadasPorCliente(idCliente);
 			comboBoxMesa.removeAllItems();
 
 			comboBoxMesa.addItem("Todas");
@@ -303,7 +327,7 @@ public class Historial extends JPanel {
 	private void filtrarEstados(String filtro) {
 		List<HistorialReserva> historial;
 		try {
-			historial = controlador.obtenerHistorialPorCliente(s.getClienteActual().getIdCliente());
+			historial = reservaControlador.obtenerHistorialPorCliente(s.getClienteActual().getIdCliente());
 			DefaultTableModel model = (DefaultTableModel) tblBHistorial.getModel();
 			model.setRowCount(0);
 			Integer filtroEstado = null;
@@ -330,11 +354,10 @@ public class Historial extends JPanel {
 		}
 	}
 
-	// Método para cargar el combo box con los estados disponibles según las
-	// reservas del cliente
+	// Método para cargar el combo box con los estados disponibles según las reservas del cliente
 	private void cargarComboEstados(int idCliente) {
 		try {
-			List<Integer> estadosReservados = controlador.obtenerEstadoReservasPorCliente(idCliente);
+			List<Integer> estadosReservados = reservaControlador.obtenerEstadoReservasPorCliente(idCliente);
 			comboBoxEstado.removeAllItems();
 			comboBoxEstado.addItem("Todos");
 			for (Integer estado : estadosReservados) {
@@ -348,4 +371,93 @@ public class Historial extends JPanel {
 			e.printStackTrace();
 		}
 	}
+	
+	 // Metodo para enviar mail
+ 	
+ 	public void enviarMailComprobante() {
+ 		
+ 		s = new SesionCliente();
+ 		String destinatario = s.getClienteActual().getEmail();
+ 		String asunto = "Comprobante de Pago - Multa por Cancelación o No Concurrencia - Delicias Gourmet";
+ 		String mensaje = String.format(
+ 			    "Estimado/a cliente,\n\n" +
+ 			    "Le informamos que se ha generado un comprobante de pago por la multa correspondiente a su reserva.\n\n" +
+ 			    "Detalle Reserva:\n"+
+ 			    "   - Id de la Reserva: %s\n"+		
+ 			    "   - Número de Mesa: %s\n" +
+ 			    "   - Ubicación: %s\n" +
+ 			    "   - Capacidad de la Mesa: %s personas\n" +
+ 			    "   - Fecha de la Reserva: %s\n" +
+ 			    "   - Hora de la Reserva: %s\n" +
+ 			    "   - Comentarios adicionales: %s\n\n" +
+ 			    "Agradecemos su comprensión y le recordamos que estamos a su disposición para cualquier consulta\n\n" +
+ 			    "Saludos cordiales,\n" +
+ 			    "Restaurante %s",
+ 			    idReservaSeleccionada,
+ 			    mesaSeleccionada,
+ 			    ubicacionSeleccionada,
+ 			    capacidadSeleccionada,
+ 			    fechaReservaSeleccionada,
+ 			    horaReservaSeleccionada,
+ 			    comentarioSeleccionado,
+ 			    "Delicias Gourmet"
+ 			);
+ 		 EnviarMail.enviarCorreoComprobante(destinatario, asunto, mensaje,ruta);
+ 	}
+ 	
+ 	//Metodo para generar pdf del comprobante
+    @SuppressWarnings("unused")
+	private void generarComprobanteMail(Comprobante  comprobante) {
+    	Tarjeta tarjeta = new Tarjeta();
+    	tarjeta = tarjetaControlador.obtenerDatosTarjeta(comprobante.getIdTarjeta());
+       
+        Document documento = new Document();
+        String projectPath  = "src/Comprobantes";
+        String nombrePDF = "Comprobante_" + comprobante.getIdComprobante() + "_" + System.currentTimeMillis() + ".pdf";
+        ruta = projectPath + "/" + nombrePDF;
+        File archivo = new File(ruta);
+        
+        if (archivo.exists()) {
+            String nuevoNombre = "ComprobanteD" + comprobante.getIdComprobante() + "_" + System.currentTimeMillis() + ".pdf";
+            ruta = projectPath + "/" + nuevoNombre;
+        }
+
+        try {
+            PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(ruta));
+            documento.open();
+            
+            
+            documento.add(new Paragraph("-------------------------------------------------------------"));
+            documento.add(new Paragraph("Delicias Gourmet", FontFactory.getFont("Roboto Light", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD)));
+            documento.add(new Paragraph("Comprobante de Pago", FontFactory.getFont("Roboto Light", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD)));
+            documento.add(new Paragraph("-------------------------------------------------------------"));
+            
+            
+            documento.add(new Paragraph("ID Comprobante: " + comprobante.getIdComprobante()));
+            documento.add(new Paragraph("Fecha: " + comprobante.getFecha()));
+            documento.add(new Paragraph("Hora: " + comprobante.getHora()));
+            documento.add(new Paragraph("Importe: $" + String.format("%.2f", comprobante.getImporte())));
+            documento.add(new Paragraph("ID Reserva: " + comprobante.getIdReserva()));
+            
+           
+            documento.add(new Paragraph(" "));
+            documento.add(new Paragraph("Detalles de la Tarjeta:"));
+            documento.add(new Paragraph("Titular: " + tarjeta.getTitular()));
+            documento.add(new Paragraph("Emisor: " + tarjeta.getEmisor()));
+            documento.add(new Paragraph("Número de Tarjeta: **** **** **** " + tarjeta.getNroTarjeta().substring(tarjeta.getNroTarjeta().length() - 4)));
+            
+            
+            documento.add(new Paragraph("-------------------------------------------------------------"));
+            documento.add(new Paragraph("Descripción del Servicio:"));
+            documento.add(new Paragraph("Multa por cancelación fuera del tiempo establecido o por no concurrir."));
+        } catch (DocumentException | IOException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + ex.getMessage());
+        } finally {
+            if (documento.isOpen()) {
+                documento.close();
+            }
+        }
+    }
+ 	
 }
