@@ -448,5 +448,43 @@ public ReservaControlador() {
         }
         return reporte;
     }
-
+    
+    // Función para obtener el historial de Reservas de un cliente
+    public HistorialReserva obtenerComprobantePorReserva(int idReserva) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        HistorialReserva reserva = null;
+        try {
+            ps = connection.prepareStatement("SELECT m.ubicacion, r.fecha, r.hora, m.capacidad, r.idMesa, r.comentario "
+            		+ "FROM Reserva r "
+            		+ "JOIN MesaPrecargada m ON r.idMesa = m.idMesa "
+            		+ "WHERE r.idReserva = ?");
+            ps.setInt(1, idReserva);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+            	reserva = new HistorialReserva(
+            			rs.getString("ubicacion"),
+            			rs.getString("fecha"),
+                        rs.getString("hora"),
+                        rs.getInt("capacidad"),
+                        rs.getInt("idMesa"),
+                        rs.getString("comentario"));
+                System.out.println("Comprobante encontrado con éxito para la reserva ID: " + idReserva);
+            } else {
+                System.out.println("No se encontró un comprobante para la reserva ID: " + idReserva);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al obtener el comprobante para la reserva ID: " + idReserva);
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return reserva; 
+    }
 }

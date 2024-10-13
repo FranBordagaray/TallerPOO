@@ -182,10 +182,37 @@ public class Historial extends JPanel {
 		btnCancelar.setBounds(826, 115, 150, 25);
 		add(btnCancelar);
 		
+		JButton btnModificar = new JButton("MODIFICAR");
+		btnModificar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					
+					ModificarReserva reserva = new ModificarReserva(controlador.obtenerComprobantePorReserva(idReservaSeleccionada));
+					reserva.setVisible(true);
+				} catch (Exception e2) {
+					
+				}
+			}
+			});
+		btnModificar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
+		btnModificar.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnModificar.setForeground(Color.BLACK);
+		btnModificar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+		btnModificar.setBorder(null);
+		btnModificar.setBackground(Color.WHITE);
+		btnModificar.setBounds(656, 115, 150, 25);
+		add(btnModificar);
+		
 		// Utiliza la funcion para llenar la tabla con historial de reservas
 		cargarDatos(s.getClienteActual().getIdCliente());
-		// Utiliza la funcion para llenar el combo con mesas unicamente reservadas por
-		// el cliente
+		// Utiliza la funcion para llenar el combo con mesas unicamente reservadas por el cliente
 		cargarComboMesas(s.getClienteActual().getIdCliente());
 		cargarComboEstados(s.getClienteActual().getIdCliente());
 	}

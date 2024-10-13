@@ -5,8 +5,6 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,7 +15,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import Controlador.ReservaControlador;
-import Modelo.Complementos.Reserva;
+import Modelo.Cliente.HistorialReserva;
 
 public class ModificarReserva extends JFrame {
 
@@ -30,10 +28,11 @@ public class ModificarReserva extends JFrame {
 	private JTextField txtMesa;
 	private JTextArea txtComentario;
 
+	@SuppressWarnings("unused")
 	private ReservaControlador reservaControlador;
-	private Reserva reserva; // Objeto para almacenar la reserva que se va a modificar
+	private HistorialReserva reserva; // Objeto para almacenar la reserva que se va a modificar
 
-	public ModificarReserva(Reserva reserva) {
+	public ModificarReserva(HistorialReserva reserva) {
 		this.reserva = reserva; // Inicializar la reserva con la que se va a modificar
 		reservaControlador = new ReservaControlador();
 
@@ -116,29 +115,36 @@ public class ModificarReserva extends JFrame {
 		// Etiqueta Mesa
 		JLabel lblMesa = new JLabel("MESA: ");
 		lblMesa.setFont(new Font("Roboto Light", Font.BOLD, 11));
-		lblMesa.setBounds(32, 230, 100, 20);
+		lblMesa.setBounds(32, 300, 100, 20);
 		pnlContenedor.add(lblMesa);
 
 		// Campo de texto para la mesa
 		txtMesa = new JTextField();
-		txtMesa.setBounds(150, 230, 250, 25);
+		txtMesa.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+		txtMesa.setBounds(150, 300, 250, 30);
 		txtMesa.setEditable(false); 
 		pnlContenedor.add(txtMesa);
 
 		// Etiqueta Comentario
 		JLabel lblComentario = new JLabel("COMENTARIO: ");
+		lblComentario.setHorizontalAlignment(SwingConstants.CENTER);
 		lblComentario.setFont(new Font("Roboto Light", Font.BOLD, 11));
-		lblComentario.setBounds(32, 270, 100, 20);
+		lblComentario.setBounds(10, 365, 122, 20);
 		pnlContenedor.add(lblComentario);
 
 		// Área de texto para el comentario
 		txtComentario = new JTextArea();
-		txtComentario.setBounds(150, 270, 250, 100);
+		txtComentario.setFont(new Font("Roboto Light", Font.PLAIN, 14));
+		txtComentario.setBounds(150, 365, 270, 120);
 		pnlContenedor.add(txtComentario);
 
 		// Botón para confirmar la modificación
 		JButton btnModificar = new JButton("Modificar");
-		btnModificar.setBounds(150, 400, 120, 30);
+		btnModificar.setBorder(null);
+		btnModificar.setBackground(Color.WHITE);
+		btnModificar.setForeground(Color.BLACK);
+		btnModificar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+		btnModificar.setBounds(150, 505, 150, 30);
 		pnlContenedor.add(btnModificar);
 
 		// Cargar datos de la reserva en los campos
@@ -148,21 +154,21 @@ public class ModificarReserva extends JFrame {
 		btnModificar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				modificarReserva();
+				//modificarReserva();
 			}
 		});
 	}
 
 	// Método para cargar los datos de la reserva en los campos de texto
 	private void cargarDatosReserva() {
-	
+		txtUbicacion.setText(reserva.getUbicacion());
 		txtFecha.setText(reserva.getFecha());
 		txtHora.setText(reserva.getHora());
-	
+		txtCapacidad.setText(String.valueOf(reserva.getCapacidad()));
 		txtMesa.setText(String.valueOf(reserva.getIdMesa()));
 		txtComentario.setText(reserva.getComentario());
 	}
-
+	/*
 	// Método para modificar la reserva
 	private void modificarReserva() {
 		// Actualizar los campos que se pueden modificar
@@ -177,5 +183,5 @@ public class ModificarReserva extends JFrame {
 		} else {
 			System.out.println("Error al modificar la reserva!");
 		}
-	}
+	}*/
 }
