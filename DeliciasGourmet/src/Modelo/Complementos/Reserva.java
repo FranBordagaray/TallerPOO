@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.MonthDay;
 import java.time.format.DateTimeFormatter;
 
+import Modelo.Cliente.HistorialReserva;
+
 public class Reserva {
 
 	// Variables de clase
@@ -177,5 +179,14 @@ public class Reserva {
         else {
             return fecha.equals(inicio) || fecha.isAfter(inicio) || fecha.equals(fin) || fecha.isBefore(fin);
         }
+    }
+    
+    // Metodo que convierte un objeto de tipo HistorialReserva a Reserva
+    public static Reserva convertirAReserva(HistorialReserva historial) {
+    	Reserva reserva = new Reserva();
+    	reserva.setFecha(historial.getFecha());
+    	reserva.setHora(historial.getHora());
+    	
+        return reserva;
     }
 }

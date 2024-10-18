@@ -130,4 +130,60 @@ public class MesaControlador {
 		}
 		return capacidad;
 	}
+	
+	//Funcion para actualizar los datos de una mesa
+		public boolean eliminarMesa(int idMesa, int idServicio) {
+		    PreparedStatement ps = null;
+		    boolean eliminado = false; 
+
+		    try {
+		        ps = connection.prepareStatement("DELETE FROM Mesa WHERE idMesa = ? AND idServicio = ?");
+		        ps.setInt(1, idMesa);
+		        ps.setInt(2, idServicio);
+
+		        int filasAfectadas = ps.executeUpdate(); 
+		        eliminado = filasAfectadas > 0; 
+
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    } finally {
+		        if (ps != null) {
+		            try {
+		                ps.close();
+		            } catch (SQLException e) {
+		                e.printStackTrace();
+		            }
+		        }
+		    }
+		    return eliminado; 
+		}
+
+		// Función para actualizar el idServicio de una Mesa
+		public boolean actualizarIdServicio(int nuevoIdServicio,int idMesa, int idServicioAntiguo) {
+		    PreparedStatement ps = null;
+		    try {
+		       
+		        ps = connection.prepareStatement("UPDATE Mesa SET idServicio = ? WHERE idMesa = ? AND idServicio = ?");
+		        ps.setInt(1, nuevoIdServicio);  
+		        ps.setInt(2, idMesa);           
+		        ps.setInt(3, idServicioAntiguo); 
+		        ps.executeUpdate(); 
+		        
+		        System.out.println("ID del servicio actualizado con éxito!");
+		        return true;
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        System.out.println("Error al actualizar el ID del servicio!");
+		        return false; 
+		    } finally {
+		        if (ps != null) {
+		            try {
+		                ps.close(); 
+		            } catch (SQLException e) {
+		                e.printStackTrace();
+		            }
+		        }
+		    }
+		}
+
 }

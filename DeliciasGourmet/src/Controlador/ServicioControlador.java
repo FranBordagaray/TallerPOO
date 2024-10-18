@@ -19,7 +19,7 @@ public class ServicioControlador {
 
     // Función para registrar un servicio con verificación previa
     public boolean registrarServicio(Servicio servicio) {
-        if (verficarServicio(servicio)) {
+        if (verificarServicio(servicio)) {
             System.out.println("El servicio ya existe en esa fecha y hora. No se puede registrar.");
             return false;
         } else {
@@ -70,7 +70,7 @@ public class ServicioControlador {
     }
 
     // Función para verificar si un servicio ya existe en una fecha y hora específicas
-    public boolean verficarServicio(Servicio servicio) {
+    public boolean verificarServicio(Servicio servicio) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {

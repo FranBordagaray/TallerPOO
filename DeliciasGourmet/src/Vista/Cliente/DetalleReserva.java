@@ -205,7 +205,7 @@ public class DetalleReserva extends JFrame {
 				int idServicio;
 				int idReserva;
 				try {
-					if (servicioControlador.verficarServicio(servicio)) {
+					if (servicioControlador.verificarServicio(servicio)) {
 						idServicio = servicioControlador.buscarServicioPorReserva(reserva);
 						System.out.println("El servicio ya existe, ID: " + idServicio);
 					} else {

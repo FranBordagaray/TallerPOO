@@ -487,4 +487,89 @@ public ReservaControlador() {
         }
         return reserva; 
     }
+    
+    // Función para obtener el historial de Reservas de un cliente
+    public HistorialReserva obtenerReservaPorId(int idReserva) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        HistorialReserva reserva = null;
+        try {
+            ps = connection.prepareStatement("SELECT r.idReserva, m.ubicacion, r.fecha, r.hora, m.capacidad, r.idMesa, r.comentario "
+            		+ "FROM Reserva r "
+            		+ "JOIN MesaPrecargada m ON r.idMesa = m.idMesa "
+            		+ "WHERE r.idReserva = ?");
+            ps.setInt(1, idReserva);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+            	reserva = new HistorialReserva(
+            			rs.getInt("idReserva"),
+            			rs.getString("fecha"),
+                        rs.getString("hora"),
+                        rs.getInt("idMesa"),
+                        rs.getInt("capacidad"),
+                        rs.getString("ubicacion"),
+                        rs.getString("comentario"));
+                System.out.println("Comprobante encontrado con éxito para la reserva ID: " + idReserva);
+            } else {
+                System.out.println("No se encontró un comprobante para la reserva ID: " + idReserva);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al obtener el comprobante para la reserva ID: " + idReserva);
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return reserva; 
+    }
+    
+    // Funcion que actualiza los datos de la reserva 
+    public boolean actualizarReserva(int idReserva,Reserva reserva) {
+	    PreparedStatement ps = null;
+	    ComprobanteControlador controladorc = new ComprobanteControlador();
+	    
+	    int idComprobante = controladorc.obteneridComprobante(idReserva);
+	    try {
+	    	
+	    	ps = connection.prepareStatement("UPDATE Comprobante SET fecha = ?, hora = ? WHERE idComprobante = ?");
+	    	ps.setString(1, reserva.getFecha());
+	    	ps.setString(2, reserva.getHora());
+	    	ps.setInt(3, idComprobante);
+	    	ps.executeUpdate();
+	    	
+	    	System.out.println("Paso comprobante");
+	    	
+	        ps = connection.prepareStatement("UPDATE Reserva SET fecha = ?, hora = ?, idMesa = ?, comentario = ?, dispocicionMesa = ?, idServicio = ?, idComprobante = ?, Temporada = ?  WHERE idReserva = ?");
+	        ps.setString(1, reserva.getFecha());
+	    	ps.setString(2, reserva.getHora());          
+	        ps.setInt(3, reserva.getIdMesa());
+	        ps.setString(4,reserva.getComentario());
+	        ps.setString(5, reserva.getDispocicionMesa());
+	        ps.setInt(6, reserva.getIdServicio());
+	        ps.setInt(7, idComprobante);
+	        ps.setString(8,reserva.getTemporada());
+	        ps.setInt(9, idReserva);
+	        ps.executeUpdate(); 
+	
+	        System.out.println("Reserva actualiza con exito!");
+	        return true;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Error al actualizar la Reserva!");
+	        return false; 
+	    } finally {
+	        if (ps != null) {
+	            try {
+	                ps.close(); 
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	}
 }

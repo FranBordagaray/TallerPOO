@@ -20,7 +20,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -164,24 +166,42 @@ public class Historial extends JPanel {
 				return false;
 			}
 		});
+		TableColumnModel columnModel = tblBHistorial.getColumnModel();
+     	columnModel.getColumn(0).setPreferredWidth(20);
+     	columnModel.getColumn(1).setPreferredWidth(25);
+     	columnModel.getColumn(2).setPreferredWidth(25);
+     	columnModel.getColumn(3).setPreferredWidth(20);
+     	columnModel.getColumn(4).setPreferredWidth(20);
+     	columnModel.getColumn(5).setPreferredWidth(60);
+     	columnModel.getColumn(6).setPreferredWidth(60);
+     	columnModel.getColumn(7).setPreferredWidth(25);
+     	
+     	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+     	centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+     	// Aplicar el renderizador a la columna "ESTADO"
+     	tblBHistorial.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+     	tblBHistorial.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+     	tblBHistorial.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+     	tblBHistorial.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
 		tblBHistorial.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-		    public void valueChanged(ListSelectionEvent event) {
-		        if (!event.getValueIsAdjusting()) {
-		            int selectedRow = tblBHistorial.getSelectedRow();
-		            if (selectedRow != -1) {
-		                idReservaSeleccionada = Integer.parseInt(tblBHistorial.getValueAt(selectedRow, 0).toString());
-		                fechaReservaSeleccionada = tblBHistorial.getValueAt(selectedRow, 1).toString();
-		            	horaReservaSeleccionada = tblBHistorial.getValueAt(selectedRow, 2).toString();
-		            	mesaSeleccionada = tblBHistorial.getValueAt(selectedRow, 3).toString();
-		            	capacidadSeleccionada = tblBHistorial.getValueAt(selectedRow, 4).toString();
-		            	ubicacionSeleccionada = tblBHistorial.getValueAt(selectedRow, 5).toString();
-		            	comentarioSeleccionado = tblBHistorial.getValueAt(selectedRow, 6).toString();
-		                System.out.println("ID seleccionado: " + idReservaSeleccionada);
-		            } else {
-		                System.out.println("No se ha seleccionado ninguna fila.");
-		            }
-		        }
-		    }
+	    public void valueChanged(ListSelectionEvent event) {
+	        if (!event.getValueIsAdjusting()) {
+	            int selectedRow = tblBHistorial.getSelectedRow();
+	            if (selectedRow != -1) {
+	                idReservaSeleccionada = Integer.parseInt(tblBHistorial.getValueAt(selectedRow, 0).toString());
+	                fechaReservaSeleccionada = tblBHistorial.getValueAt(selectedRow, 1).toString();
+	            	horaReservaSeleccionada = tblBHistorial.getValueAt(selectedRow, 2).toString();
+	            	mesaSeleccionada = tblBHistorial.getValueAt(selectedRow, 3).toString();
+	            	capacidadSeleccionada = tblBHistorial.getValueAt(selectedRow, 4).toString();
+	            	ubicacionSeleccionada = tblBHistorial.getValueAt(selectedRow, 5).toString();
+	            	comentarioSeleccionado = tblBHistorial.getValueAt(selectedRow, 6).toString();
+	                System.out.println("ID seleccionado: " + idReservaSeleccionada);
+	            } else {
+	                System.out.println("No se ha seleccionado ninguna fila.");
+	            }
+	        }
+	    }
 		});
 		scrollPane.setViewportView(tblBHistorial);
 		
@@ -233,6 +253,34 @@ public class Historial extends JPanel {
 		btnCancelar.setBounds(826, 115, 150, 25);
 		add(btnCancelar);
 		
+		// Boton para modificar
+        JButton btnModificar = new JButton("MODIFICAR");
+        btnModificar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    ModificarReserva reserva = new ModificarReserva(reservaControlador.obtenerReservaPorId(idReservaSeleccionada));
+                    reserva.setVisible(true);
+                } catch (Exception e2) {
+
+                }
+            }
+            });
+        btnModificar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
+        btnModificar.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnModificar.setForeground(Color.BLACK);
+        btnModificar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        btnModificar.setBorder(null);
+        btnModificar.setBackground(Color.WHITE);
+        btnModificar.setBounds(656, 115, 150, 25);
+        add(btnModificar);
+        
 		// Utiliza la funcion para llenar la tabla con historial de reservas
 		cargarDatos(s.getClienteActual().getIdCliente());
 		// Utiliza la funcion para llenar el combo con mesas unicamente reservadas por
@@ -240,6 +288,8 @@ public class Historial extends JPanel {
 		cargarComboMesas(s.getClienteActual().getIdCliente());
 		cargarComboEstados(s.getClienteActual().getIdCliente());
 	}
+	
+	
 
 	// Función para cargar tabla con datos almacenados en la base de datos
 	private void cargarDatos(int idCliente) {

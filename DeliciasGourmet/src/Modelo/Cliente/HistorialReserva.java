@@ -24,6 +24,16 @@ public class HistorialReserva {
         this.estado = estado;
     }
     
+    public HistorialReserva(int idReserva, String fecha, String hora, int idMesa, int capacidad, String ubicacion, String comentario) {
+        this.idReserva = idReserva;
+    	this.fecha = fecha;
+        this.hora = hora;
+        this.idMesa = idMesa;
+        this.capacidad = capacidad;
+        this.ubicacion = ubicacion;
+        this.comentario = comentario;
+    }
+    
     public HistorialReserva(int idReserva,String nombre, String apellido, String fecha, String hora, int idMesa, int capacidad, String ubicacion, int estado) {
         this.idReserva = idReserva;
         this.nombre = nombre;
@@ -93,4 +103,6 @@ public class HistorialReserva {
     public int getEstado() {
 		return estado;
 	}
+    
+
 }

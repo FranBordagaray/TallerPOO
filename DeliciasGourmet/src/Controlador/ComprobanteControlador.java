@@ -112,4 +112,38 @@ public class ComprobanteControlador {
 	    
 	    return comprobante; 
 	}
+	
+	//Funcion qeu retorna el id del comprobante de una reserva
+	public int obteneridComprobante(int idReserva) {
+		PreparedStatement ps = null;
+	    ResultSet rs = null;
+	    int comprobante = 0;
+	    
+	    try {
+	        ps = connection.prepareStatement("SELECT * FROM Comprobante WHERE idReserva = ?");
+	        ps.setInt(1, idReserva);
+	        rs = ps.executeQuery();
+	        
+	        if (rs.next()) {
+	        	comprobante = rs.getInt("idComprobante");
+                
+	            System.out.println("Id comprobante obtenido: " + comprobante);
+	        } else {
+	            System.out.println("No se encontró un comprobante");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Error al obtener el comprobante para la reserva ID: " + idReserva);
+	    } finally {
+	        if (ps != null) {
+	            try {
+	                ps.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	    
+	    return comprobante; 
+	}
 }
