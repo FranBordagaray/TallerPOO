@@ -1,14 +1,17 @@
 package Vista.Empleado;
 
 import java.awt.CardLayout;
+import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -16,6 +19,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -29,13 +33,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import Controlador.MesaControlador;
+import Controlador.ServicioControlador;
 import Modelo.Complementos.Comprobante;
+import Modelo.Complementos.EnumEstado;
 import Modelo.Complementos.Mesa;
 import Modelo.Complementos.Reserva;
 import Modelo.Complementos.Servicio;
 import Modelo.Empleado.SesionEmpleado;
-import Vista.Cliente.DetalleReserva;
+import Vista.Cliente.DetalleReservaCliente;
 import Vista.Cliente.UsarTarjeta;
+import Vista.Cliente.VistaReservaCliente;
 
 import com.toedter.calendar.JDateChooser;
 import javax.swing.JCheckBox;
@@ -47,8 +54,12 @@ public class VistaReservaEmpleado extends JPanel {
 
 	private JPanel Mapas;
 	private JDateChooser calendario2;
-	private JComboBox<String> comboHora;
-	JButton btnSiguiente;
+	private JComboBox<String> horarioComboBox;
+	private JComboBox<String> horaFinComboBox;
+	private JComboBox<String> horaInicioComboBox;
+	JButton btnReservar;
+	private JButton btnCrearEventoEspecial;
+	private VistaReservaCliente vista;
 	private LocalDate hoy;
 	private LocalDate unAnoFuturo;
 	private JComboBox<String> comboUbicaciones;
@@ -59,6 +70,9 @@ public class VistaReservaEmpleado extends JPanel {
 	private int capacidadSeleccionada;
 	private String fechaFormateada;
 	private String horaSeleccionada;
+	private String horaInicio;
+	private String horaFinal;
+	private JList<String> listaMesas;
 	private JTextArea CampoComentario;
 	private String[] ubicaciones;
 	private Reserva reserva;
@@ -66,7 +80,9 @@ public class VistaReservaEmpleado extends JPanel {
 	private int idMesaSeleccionada;
 	private Comprobante comprobante;
 	private Servicio servicio;
-	private DetalleReserva detalle;
+	private DetalleReservaEmpleado detalle_2;
+	private DetalleReservaCliente detalles_1;
+	
 
 	public VistaReservaEmpleado() {
 
@@ -129,6 +145,87 @@ public class VistaReservaEmpleado extends JPanel {
 		lblFecha.setBounds(16, 94, 200, 20);
 		pnlVertical.add(lblFecha);
 
+		DefaultListModel<String> listModel = new DefaultListModel<>();
+
+		// Crear el JList
+		listaMesas = new JList<>(listModel);
+		listaMesas.setBounds(113, 386, 103, 70);
+		pnlVertical.add(listaMesas);
+		
+		//Boton para quitar mesas
+		JButton btnQuitar = new JButton("Quitar");
+		btnQuitar.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        int selectedIndex = listaMesas.getSelectedIndex();
+		        
+		        if (selectedIndex != -1) {
+		            listModel.remove(selectedIndex);
+		        } else {
+		            JOptionPane.showMessageDialog(null, "Seleccione una mesa para quitar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+		        }
+		    }
+		});
+		btnQuitar.setFont(new Font("Roboto Light", Font.BOLD, 10));
+		btnQuitar.setEnabled(false);
+		btnQuitar.setBounds(16, 396, 87, 25);
+		pnlVertical.add(btnQuitar);
+
+
+		// Crear el botón "Agregar"
+		JButton btnAgregar = new JButton("Agregar");
+		btnAgregar.setFont(new Font("Roboto Light", Font.BOLD, 10));
+		btnAgregar.setBounds(16, 358, 87, 25);
+		pnlVertical.add(btnAgregar);
+		btnAgregar.setEnabled(false);
+
+		// Acción para el botón "Agregar"
+		btnAgregar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String seleccionMesa = (String) comboMesa.getSelectedItem();
+
+				if (seleccionMesa != null && !seleccionMesa.isEmpty()) {
+					if (!listModel.contains(seleccionMesa)) {
+						listModel.addElement(seleccionMesa);
+					} else {
+						JOptionPane.showMessageDialog(null, "La mesa ya ha sido añadida.");
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Por favor, selecciona una mesa.");
+				}
+			}
+		});
+
+		// JCheckBox para habilitar eventos especiales
+		JCheckBox eventoEspecialCheckBox = new JCheckBox("Evento Especial");
+		eventoEspecialCheckBox.setBounds(11, 6, 150, 21);
+		pnlVertical.add(eventoEspecialCheckBox);
+		eventoEspecialCheckBox.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        if (eventoEspecialCheckBox.isSelected()) {
+		            horaInicioComboBox.setEnabled(true);
+		            horaFinComboBox.setEnabled(true);
+		            horarioComboBox.setEnabled(false);
+		            btnAgregar.setEnabled(true);
+		            btnQuitar.setEnabled(true);
+		            btnReservar.setEnabled(false);
+		            btnCrearEventoEspecial.setEnabled(true);
+		        } else {
+		            horaInicioComboBox.setEnabled(false);
+		            horaFinComboBox.setEnabled(false);
+		            horarioComboBox.setEnabled(true);
+		            btnAgregar.setEnabled(false);
+		            btnQuitar.setEnabled(false);
+		            btnReservar.setEnabled(true);
+		            btnCrearEventoEspecial.setEnabled(false);
+		            listaMesas.clearSelection();
+		            ((DefaultListModel<String>) listaMesas.getModel()).clear();
+		        }
+		    }
+		});
+
+
 		// JCalendar para la fecha
 		calendario2 = new JDateChooser();
 		calendario2.setBounds(16, 124, 200, 25);
@@ -140,9 +237,13 @@ public class VistaReservaEmpleado extends JPanel {
 			Date fechaSeleccionadaDate = calendario2.getDate();
 			ZonedDateTime zonedDateTime = fechaSeleccionadaDate.toInstant().atZone(ZoneId.systemDefault());
 			LocalDateTime fechaSeleccionada = zonedDateTime.toLocalDateTime();
-			actualizarHorasDisponibles(fechaSeleccionada);
 
-			// Formatear la fecha
+			if (eventoEspecialCheckBox.isSelected()) {
+				actualizarHorasInicioDisponibles();
+			} else {
+				actualizarHorasDisponibles(fechaSeleccionada);
+			}
+
 			DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 			fechaFormateada = fechaSeleccionada.format(formato);
 		});
@@ -158,21 +259,21 @@ public class VistaReservaEmpleado extends JPanel {
 		pnlVertical.add(lblHora);
 
 		// Desplegable Hora
-		comboHora = new JComboBox<String>();
-		comboHora.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		comboHora.setBorder(null);
-		comboHora.setForeground(Color.BLACK);
-		comboHora.setBackground(Color.WHITE);
-		comboHora.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-		comboHora.setBounds(10, 189, 87, 25);
-		comboHora.addItem("08:00 - 10:00");
-		comboHora.addActionListener(new ActionListener() {
+		horarioComboBox = new JComboBox<String>();
+		horarioComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		horarioComboBox.setBorder(null);
+		horarioComboBox.setForeground(Color.BLACK);
+		horarioComboBox.setBackground(Color.WHITE);
+		horarioComboBox.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+		horarioComboBox.setBounds(74, 189, 87, 25);
+		horarioComboBox.addItem("08:00 - 10:00");
+		horarioComboBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				actualizarMesas();
 			}
 		});
-		pnlVertical.add(comboHora);
+		pnlVertical.add(horarioComboBox);
 
 		// Etiqueta de Capacidad
 		JLabel lblCapacidad = new JLabel("Capacidad");
@@ -181,7 +282,7 @@ public class VistaReservaEmpleado extends JPanel {
 		lblCapacidad.setForeground(Color.BLACK);
 		lblCapacidad.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 		lblCapacidad.setBackground(Color.WHITE);
-		lblCapacidad.setBounds(16, 224, 200, 20);
+		lblCapacidad.setBounds(16, 261, 200, 20);
 		pnlVertical.add(lblCapacidad);
 
 		// Desplegable Capacidad
@@ -192,7 +293,7 @@ public class VistaReservaEmpleado extends JPanel {
 		comboCapacidad.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 		comboCapacidad.setBorder(null);
 		comboCapacidad.setBackground(Color.WHITE);
-		comboCapacidad.setBounds(41, 243, 150, 25);
+		comboCapacidad.setBounds(41, 291, 150, 25);
 		pnlVertical.add(comboCapacidad);
 		comboCapacidad.addActionListener(new ActionListener() {
 			@Override
@@ -202,67 +303,31 @@ public class VistaReservaEmpleado extends JPanel {
 			}
 		});
 
-		// ComboBox hora para eventos especiales
-		JComboBox<String> comboHora_1 = new JComboBox<String>();
-		comboHora_1.setForeground(Color.BLACK);
-		comboHora_1.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-		comboHora_1.setBorder(null);
-		comboHora_1.setBackground(Color.WHITE);
-		comboHora_1.setBounds(129, 189, 87, 25);
-		comboHora_1.setEnabled(false);
-		pnlVertical.add(comboHora_1);
-		
-		DefaultListModel<String> listModel = new DefaultListModel<>();
-
-		// Crear el JList
-		JList<String> listMesas = new JList<>(listModel);
-		listMesas.setBounds(113, 316, 103, 100); // Ajusta la posición y tamaño según sea necesario
-		pnlVertical.add(listMesas);
-
-		// Crear el botón "Agregar"
-		JButton btnAgregar = new JButton("Agregar");
-		btnAgregar.setFont(new Font("Roboto Light", Font.BOLD, 10));
-		btnAgregar.setBounds(16, 351, 87, 25); // Ajusta la posición y tamaño según sea necesario
-		pnlVertical.add(btnAgregar);
-		btnAgregar.setEnabled(false);
-
-		// Acción para el botón "Agregar"
-		btnAgregar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String seleccionMesa = (String) comboMesa.getSelectedItem();
-		        
-		        // Verificar si la mesa ya fue añadida
-		        if (seleccionMesa != null && !seleccionMesa.isEmpty()) {
-		            if (!listModel.contains(seleccionMesa)) {
-		                // Si no está en la lista, agregar la mesa seleccionada
-		                listModel.addElement(seleccionMesa);
-		            } else {
-		                // Si ya está en la lista, mostrar un mensaje
-		                JOptionPane.showMessageDialog(null, "La mesa ya ha sido añadida.");
-		            }
-		        } else {
-		            JOptionPane.showMessageDialog(null, "Por favor, selecciona una mesa.");
-		        }
-		    }});
-
-		// JCheckBox para habilitar eventos especiales
-		JCheckBox chckbxNewCheckBox = new JCheckBox("Evento Especial");
-		chckbxNewCheckBox.setBounds(11, 6, 150, 21);
-		pnlVertical.add(chckbxNewCheckBox);
-		chckbxNewCheckBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (chckbxNewCheckBox.isSelected()) {
-					comboHora_1.setEnabled(true);
-					btnAgregar.setEnabled(true);
-
-				} else {
-					comboHora_1.setEnabled(false);
-					btnAgregar.setEnabled(false);
-				}
+		// ComboBox de horaInicio
+		horaInicioComboBox = new JComboBox<String>();
+		horaInicioComboBox.setForeground(Color.BLACK);
+		horaInicioComboBox.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+		horaInicioComboBox.setBorder(null);
+		horaInicioComboBox.setBackground(Color.WHITE);
+		horaInicioComboBox.setBounds(11, 226, 87, 25);
+		horaInicioComboBox.setEnabled(false);
+		horaInicioComboBox.addItemListener(e -> {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				actualizarHorasFinDisponibles();
 			}
 		});
+
+		// ComboBox de horaFin
+		horaFinComboBox = new JComboBox<String>();
+		horaFinComboBox.setForeground(Color.BLACK);
+		horaFinComboBox.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+		horaFinComboBox.setEnabled(false);
+		horaFinComboBox.setBorder(null);
+		horaFinComboBox.setBackground(Color.WHITE);
+		horaFinComboBox.setBounds(129, 224, 87, 25);
+		horaFinComboBox.setEnabled(false);
+		pnlVertical.add(horaFinComboBox);
+		pnlVertical.add(horaInicioComboBox);
 
 		// Etiqueta Mesa
 		JLabel lblMesa = new JLabel("Mesas");
@@ -272,7 +337,7 @@ public class VistaReservaEmpleado extends JPanel {
 		lblMesa.setForeground(Color.BLACK);
 		lblMesa.setBackground(Color.WHITE);
 		lblMesa.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-		lblMesa.setBounds(16, 286, 200, 20);
+		lblMesa.setBounds(16, 326, 200, 20);
 		pnlVertical.add(lblMesa);
 
 		// Desplegable Mesa
@@ -282,22 +347,14 @@ public class VistaReservaEmpleado extends JPanel {
 		comboMesa.setBackground(Color.WHITE);
 		comboMesa.setBorder(null);
 		comboMesa.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-		comboMesa.setBounds(16, 316, 87, 25);
+		comboMesa.setBounds(113, 356, 87, 25);
 		pnlVertical.add(comboMesa);
-
-		// Inicializa el modelo y el JList para mostrar mesas seleccionadas
-		DefaultListModel mesasModel = new DefaultListModel<>();
-
 		comboMesa.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String seleccionMesa = (String) comboMesa.getSelectedItem();
 				if (seleccionMesa != null && !seleccionMesa.isEmpty()) {
-					if (chckbxNewCheckBox.isSelected()) {
-						if (!mesasModel.contains(seleccionMesa)) {
-							mesasModel.addElement(seleccionMesa);
-						}
-					}
+					idMesaSeleccionada = obtenerIdMesa(seleccionMesa);
 				}
 			}
 		});
@@ -308,7 +365,7 @@ public class VistaReservaEmpleado extends JPanel {
 		TituloComentario.setHorizontalAlignment(SwingConstants.CENTER);
 		TituloComentario.setBackground(Color.WHITE);
 		TituloComentario.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-		TituloComentario.setBounds(16, 421, 200, 20);
+		TituloComentario.setBounds(16, 466, 200, 20);
 		pnlVertical.add(TituloComentario);
 
 		// Campo de Texto Comentario de la Reserva
@@ -317,60 +374,176 @@ public class VistaReservaEmpleado extends JPanel {
 		CampoComentario.setForeground(Color.BLACK);
 		CampoComentario.setBorder(null);
 		CampoComentario.setBackground(Color.WHITE);
-		CampoComentario.setBounds(10, 451, 210, 113);
+		CampoComentario.setBounds(11, 496, 210, 70);
 		CampoComentario.setLineWrap(true);
 		CampoComentario.setWrapStyleWord(true);
 		pnlVertical.add(CampoComentario);
 
-		// Boton Siguiente Paso
-		btnSiguiente = new JButton("Siguiente");
-        btnSiguiente.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	
+		//Boton para hacer una Reserva Normal
+		btnReservar = new JButton("Reservar");
+		btnReservar.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	
+		    	vista =  new VistaReservaCliente();
+		    	
+		    	comprobante = new Comprobante();
                 mesa = new Mesa();
                 reserva = new Reserva();
                 servicio = new Servicio();
-                recopilarDatosReserva(reserva);
-                recopilarDatosMesa(mesa);
-                recopilarDatosServicio(servicio);
-                detalle = new DetalleReserva(reserva, mesa, servicio, null);
-                detalle.setVisible(true);
-            }
-        });
+                recopilarDatosReservaNormal(reserva);
+                recopilarDatosMesaNormal(mesa);
+                recopilarDatosServicioNormal(servicio);
+                recopilarDatosComprobante(comprobante);
+                detalles_1 = new DetalleReservaCliente(reserva, mesa, servicio, comprobante);
+                detalles_1.setVisible(true);
+		    	
+		    }
+		        
+		});
 
-        btnSiguiente.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                btnSiguiente.setBackground(new Color(255, 0, 0));
-                btnSiguiente.setForeground(Color.WHITE);
-            }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                btnSiguiente.setBackground(Color.WHITE);
-                btnSiguiente.setForeground(Color.BLACK);
-            }
-        });
-        btnSiguiente.setEnabled(true);
-        btnSiguiente.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnSiguiente.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnSiguiente.setBorder(null);
-        btnSiguiente.setForeground(Color.BLACK);
-        btnSiguiente.setBackground(Color.WHITE);
-        btnSiguiente.setFont(new Font("Roboto Light", Font.BOLD, 16));
-        btnSiguiente.setBounds(41, 630, 150, 25);
-        pnlVertical.add(btnSiguiente);
-        
-        JButton btnBloquear = new JButton("Bloquear");
-        btnBloquear.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        	}
-        });
-        btnBloquear.setFont(new Font("Roboto Light", Font.BOLD, 10));
-        btnBloquear.setEnabled(true);
-        btnBloquear.setBounds(16, 391, 87, 25);
-        pnlVertical.add(btnBloquear);
+		btnReservar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnReservar.setBackground(new Color(255, 0, 0));
+				btnReservar.setForeground(Color.WHITE);
+			}
 
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnReservar.setBackground(Color.WHITE);
+				btnReservar.setForeground(Color.BLACK);
+			}
+		});
+		btnReservar.setEnabled(true);
+		btnReservar.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnReservar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnReservar.setBorder(null);
+		btnReservar.setForeground(Color.BLACK);
+		btnReservar.setBackground(Color.WHITE);
+		btnReservar.setFont(new Font("Roboto Light", Font.BOLD, 16));
+		btnReservar.setBounds(16, 609, 150, 25);
+		pnlVertical.add(btnReservar);
+
+		//Boton para bloquear Mesas
+		JButton btnBloquear = new JButton("Bloquear");
+		btnBloquear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnBloquear.setFont(new Font("Roboto Light", Font.BOLD, 10));
+		btnBloquear.setEnabled(true);
+		btnBloquear.setBounds(16, 431, 87, 25);
+		pnlVertical.add(btnBloquear);
+
+		//Boton pra agregar tarjeta
+		JButton btnAgregarTarjeta = new JButton("Agregar Tarjeta");
+		btnAgregarTarjeta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (eventoEspecialCheckBox.isSelected()) {
+
+					if (validarHoras()) {
+						JOptionPane.showMessageDialog(null, "Reserva válida. Procediendo a añadir la tarjeta.");
+
+						UsarTarjeta tarjeta = new UsarTarjeta(VistaReservaEmpleado.this);
+						tarjeta.setVisible(true);
+					}
+				} else {
+					UsarTarjeta tarjeta = new UsarTarjeta(VistaReservaEmpleado.this);
+					tarjeta.setVisible(true);
+
+				}
+			}
+		});
+		btnAgregarTarjeta.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnAgregarTarjeta.setForeground(Color.BLACK);
+		btnAgregarTarjeta.setFont(new Font("Roboto Light", Font.BOLD, 16));
+		btnAgregarTarjeta.setBorder(null);
+		btnAgregarTarjeta.setBackground(Color.WHITE);
+		btnAgregarTarjeta.setBounds(16, 577, 150, 25);
+		pnlVertical.add(btnAgregarTarjeta);
+		
+		btnCrearEventoEspecial = new JButton("Evento Especial");
+		btnCrearEventoEspecial.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        String[] mesasSeleccionadas = convertirListModelAArray(listModel);
+		        System.out.println("Mesas seleccionadas: " + Arrays.toString(mesasSeleccionadas));
+
+		        if (validarHoras()) {
+		            horaInicio = (String) horaInicioComboBox.getSelectedItem();
+		            horaFinal = (String) horaFinComboBox.getSelectedItem();
+		            System.out.println("Hora de inicio: " + horaInicio);
+		            System.out.println("Hora de fin: " + horaFinal);
+
+		            // Crear el objeto Servicio
+		            Servicio nuevoServicio = new Servicio();
+		            nuevoServicio.setFecha(fechaFormateada);
+		            nuevoServicio.setHoraInicio(horaInicio);
+		            nuevoServicio.setHoraFin(horaFinal);
+		            nuevoServicio.setEventoPrivado(1);
+		            System.out.println("Servicio creado con fecha: " + fechaFormateada + ", Hora inicio: " + horaInicio + ", Hora fin: " + horaFinal); // Mensaje para verificar el servicio
+
+		            // Crear el Comprobante y recopilar datos
+		            Comprobante nuevoComprobante = new Comprobante();
+		            recopilarDatosComprobante(nuevoComprobante); 
+		            System.out.println("Comprobante creado: " + nuevoComprobante.toString()); 
+
+		            // Verificar si todas las mesas están disponibles antes de crear las reservas
+		            boolean todasMesasDisponibles = true;
+		            for (String seleccionMesa : mesasSeleccionadas) {
+		                int idMesaSeleccionada = obtenerIdMesa(seleccionMesa); 
+		                System.out.println("ID de mesa seleccionada: " + idMesaSeleccionada); 
+		                Mesa mesa1 = recopilarDatosMesaPorNumero(mesasSeleccionadas, idMesaSeleccionada);
+		                
+		             // Crear una nueva reserva para cada mesa
+	                    Reserva nuevaReserva = new Reserva();
+	                    recopilarDatosReserva(nuevaReserva, horaInicio, horaFinal); 
+	                    nuevaReserva.setIdMesa(idMesaSeleccionada); 
+	                    System.out.println("Reserva creada: " + nuevaReserva.toString()); 
+		                
+	                    detalle_2 = new DetalleReservaEmpleado(nuevaReserva, mesa1, nuevoServicio, nuevoComprobante, mesasSeleccionadas);
+
+
+		                if (!detalle_2.verificarMesaDisponible(mesa1, nuevoServicio)) {
+		                    todasMesasDisponibles = false;
+		                    JOptionPane.showMessageDialog(null, "La mesa " + idMesaSeleccionada + " ya está reservada en este horario. No se puede continuar.");
+		                    break;
+		                }
+		            }
+
+		            // Si todas las mesas están disponibles, proceder con la reserva
+		            if (todasMesasDisponibles) {
+		                for (String seleccionMesa : mesasSeleccionadas) {
+		                    int idMesaSeleccionada = obtenerIdMesa(seleccionMesa); 
+		                    Mesa mesa1 = recopilarDatosMesaPorNumero(mesasSeleccionadas, idMesaSeleccionada);
+		                   	                  
+		                    detalle_2.procesarReserva();
+		                }
+
+		                // Mensaje para indicar que se procesaron todas las mesas
+		                JOptionPane.showMessageDialog(null, "Espere un momento, se está creando el evento...");
+		                JOptionPane.showMessageDialog(null, "Evento especial creado con éxito para todas las mesas seleccionadas.");
+		                System.out.println("Evento especial creado con éxito para todas las mesas seleccionadas."); 
+		                detalle_2.enviarDetalles();
+		            }
+		        } else {
+		            System.out.println("Las horas seleccionadas no son válidas."); // Mensaje si las horas no son válidas
+		        }
+		    }
+		});
+
+
+	
+		btnCrearEventoEspecial.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnCrearEventoEspecial.setForeground(Color.BLACK);
+		btnCrearEventoEspecial.setFont(new Font("Roboto Light", Font.BOLD, 16));
+		btnCrearEventoEspecial.setEnabled(true);
+		btnCrearEventoEspecial.setBorder(null);
+		btnCrearEventoEspecial.setBackground(Color.WHITE);
+		btnCrearEventoEspecial.setBounds(16, 644, 150, 25);
+		btnCrearEventoEspecial.setEnabled(false);
+		pnlVertical.add(btnCrearEventoEspecial);
+		
 		// Panel Mapas
 		Mapas = new JPanel(new CardLayout());
 		Mapas.setBounds(232, 0, 760, 679);
@@ -426,13 +599,8 @@ public class VistaReservaEmpleado extends JPanel {
 		ImagenPatio.setBounds(189, 0, 587, 473);
 		panelPatio.add(ImagenPatio);
 
-		// Asegura que se inicie con el panel de "Comedor Principal"
 		cambioPanel("COMEDOR PRINCIPAL");
-		// Si no se selecciona ninguna ubicacion setea comedor principal
 		SeleccionarUbicacion = "COMEDOR PRINCIPAL";
-
-		// Llama a la funcion actualizarMesas para actualizar filtros de capacidad
-		// actualizarMesas();
 
 	}
 
@@ -445,7 +613,7 @@ public class VistaReservaEmpleado extends JPanel {
 	// Funcion actualiza horas disponibles
 	private void actualizarHorasDisponibles(LocalDateTime fechaSeleccionada) {
 
-		comboHora.removeAllItems();
+		horarioComboBox.removeAllItems();
 		LocalDate fecha = fechaSeleccionada.toLocalDate();
 		LocalDate hoy = LocalDate.now();
 		String[] horasDisponibles = new String[] { "08:00 - 10:00", "10:00 - 12:00", "12:00 - 14:00", "20:00 - 22:00",
@@ -459,20 +627,83 @@ public class VistaReservaEmpleado extends JPanel {
 				String[] partes = hora.split(" - ");
 				LocalTime horaInicio = LocalTime.parse(partes[0], DateTimeFormatter.ofPattern("HH:mm"));
 				if (horaInicio.isAfter(ahora) || horaInicio.equals(ahora)) {
-					comboHora.addItem(hora);
+					horarioComboBox.addItem(hora);
 					horasAgregadas = true;
 				}
 			}
 
 			if (!horasAgregadas) {
-				comboHora.addItem("No hay servicios disponibles hoy.");
+				horarioComboBox.addItem("No hay servicios disponibles hoy.");
 			}
 		} else {
 
 			for (String hora : horasDisponibles) {
-				comboHora.addItem(hora);
+				horarioComboBox.addItem(hora);
 			}
 		}
+	}
+
+	// Método para actualizar horas de inicio disponibles
+	private void actualizarHorasInicioDisponibles() {
+		horaInicioComboBox.removeAllItems();
+		String[] horasDisponibles = new String[] { "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00",
+				"22:00", "00:00", "02:00" };
+
+
+		for (String hora : horasDisponibles) {
+			horaInicioComboBox.addItem(hora);
+		}
+	}
+
+	// Método para actualizar horas de fin disponibles
+	private void actualizarHorasFinDisponibles() {
+		horaFinComboBox.removeAllItems();
+		String[] horasDisponibles = new String[] { "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00",
+				"22:00", "00:00", "02:00" };
+		
+		for (String hora : horasDisponibles) {
+			horaFinComboBox.addItem(hora);
+		}
+	}
+
+	// Método para validar las horas de inicio y fin
+	private boolean validarHoras() {
+		String horaInicioSeleccionada = (String) horaInicioComboBox.getSelectedItem();
+		String horaFinSeleccionada = (String) horaFinComboBox.getSelectedItem();
+
+		if (horaInicioSeleccionada == null || horaFinSeleccionada == null) {
+			JOptionPane.showMessageDialog(null, "Debe seleccionar ambas horas.");
+			return false;
+		}
+
+
+		LocalTime horaInicio = LocalTime.parse(horaInicioSeleccionada, DateTimeFormatter.ofPattern("HH:mm"));
+		LocalTime horaFin = LocalTime.parse(horaFinSeleccionada, DateTimeFormatter.ofPattern("HH:mm"));
+
+		if (horaFin.equals(horaInicio)) {
+			JOptionPane.showMessageDialog(null, "La hora de fin no puede ser igual a la hora de inicio.");
+			return false;
+		}
+
+		if ((horaFin.equals(LocalTime.parse("00:00")) || horaFin.equals(LocalTime.parse("02:00")))
+				&& (horaInicio.isAfter(LocalTime.parse("08:00").minusSeconds(1))
+						&& horaInicio.isBefore(LocalTime.parse("22:00").plusSeconds(1)))) {
+			return true;
+		}
+
+		if ((horaInicio.equals(LocalTime.parse("00:00")) || horaInicio.equals(LocalTime.parse("02:00")))
+				&& horaFin.isAfter(LocalTime.parse("02:00"))) {
+			JOptionPane.showMessageDialog(null,
+					"Si la hora de inicio es 00:00 o 02:00, la hora de fin no puede ser después de las 02:00.");
+			return false;
+		}
+
+		if (horaFin.isBefore(horaInicio)) {
+			JOptionPane.showMessageDialog(null, "La hora de fin no puede ser anterior a la hora de inicio.");
+			return false;
+		}
+
+		return true;
 	}
 
 	// Funcion para actualizar Mesas
@@ -484,7 +715,7 @@ public class VistaReservaEmpleado extends JPanel {
 
 				mesasP = mesaControlador.buscarMesasPorUbicacion(ubicacionSeleccionada);
 				List<Integer> mesasO = mesaControlador.buscarMesasOcupadasPorServicio(fechaFormateada,
-						(String) comboHora.getSelectedItem());
+						(String) horarioComboBox.getSelectedItem());
 
 				comboMesa.removeAllItems();
 
@@ -552,12 +783,11 @@ public class VistaReservaEmpleado extends JPanel {
 
 	// Metodo que Almacena los datos seleccionados para el objeto de Reserva
 	@SuppressWarnings("static-access")
-	public Reserva recopilarDatosReserva(Reserva reserva) {
-
+	public Reserva recopilarDatosReserva(Reserva reserva, String horaInicio, String horaFin) {
 		SesionEmpleado s1 = new SesionEmpleado();
 		reserva.setIdCliente(s1.getEmpleadoActual().getIdEmpleado());
 		reserva.setFecha(fechaFormateada);
-		reserva.setHora((String) comboHora.getSelectedItem());
+		reserva.setHora(horaInicio + " - " + horaFin); // Actualiza aquí para reflejar la hora correcta
 		reserva.setIdMesa(idMesaSeleccionada);
 		reserva.setComentario(CampoComentario.getText());
 		reserva.setDispocicionMesa(BuscarPath(ubicaciones, (String) comboUbicaciones.getSelectedItem()));
@@ -565,46 +795,94 @@ public class VistaReservaEmpleado extends JPanel {
 		reserva.asignarTemporada();
 		return reserva;
 	}
-
-	// Metodo que Almacena los datos seleccionados para el objeto de Servicio
-	public Servicio recopilarDatosServicio(Servicio servicio) {
-
-		horaSeleccionada = (String) comboHora.getSelectedItem();
-		String[] partes = horaSeleccionada.split(" - ");
-		String horaI = partes[0];
-		String horaF = partes[1];
-		servicio.setFecha(fechaFormateada);
-		servicio.setHoraInicio(horaI);
-		servicio.setHoraFin(horaF);
-		servicio.setEventoPrivado(0);
-		return servicio;
-	}
 	
-	// Metodo que Almacena los datos seleccionados para el objeto de Comprobante
-    public Comprobante recopilarDatosComprobante(Comprobante comprobante) {
-    	LocalDate fechaActual = LocalDate.now();
-    	DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    	String fechaActualFormateada = fechaActual.format(formatoFecha);
-    	LocalTime horaActual = LocalTime.now();
-    	DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm:ss");
-        String horaActualFormateada = horaActual.format(formatoHora);
-        
-        comprobante.setFecha(fechaActualFormateada);
-        comprobante.setHora(horaActualFormateada);
-        comprobante.setImporte(500);
-        return comprobante;
+	// Metodo que Almacena los datos seleccionados para el objeto de Reserva
+    @SuppressWarnings("static-access")
+    public Reserva recopilarDatosReservaNormal(Reserva reserva) {
+
+        SesionEmpleado s1 = new SesionEmpleado();
+        reserva.setIdCliente(s1.getEmpleadoActual().getIdEmpleado());
+        reserva.setFecha(fechaFormateada);
+        reserva.setHora((String) horarioComboBox.getSelectedItem());
+        reserva.setIdMesa(idMesaSeleccionada);
+        reserva.setComentario(CampoComentario.getText());
+        reserva.setDispocicionMesa(BuscarPath(ubicaciones, (String) comboUbicaciones.getSelectedItem()));
+        reserva.setEstado(0);
+        reserva.asignarTemporada();
+        return reserva;
     }
 
-	// Metodo que Almacena los datos seleccionados para el objeto de Mesa
-	public Mesa recopilarDatosMesa(Mesa mesa) {
+    // Metodo que Almacena los datos seleccionados para el objeto de Servicio
+    public Servicio recopilarDatosServicioNormal(Servicio servicio) {
 
-		mesa.setIdMesa(idMesaSeleccionada);
-		mesa.setUbicacion(SeleccionarUbicacion);
-		if (capacidadSeleccionada == 0) {
-			mesa.setCapacidad(mesaControlador.filtrarCapacidad(idMesaSeleccionada));
-		} else {
-			mesa.setCapacidad(capacidadSeleccionada);
-		}
-		return mesa;
+        horaSeleccionada = (String) horarioComboBox.getSelectedItem();
+        String[] partes = horaSeleccionada.split(" - ");
+        String horaI = partes[0];
+        String horaF = partes[1];
+        servicio.setFecha(fechaFormateada);
+        servicio.setHoraInicio(horaI);
+        servicio.setHoraFin(horaF);
+        servicio.setEventoPrivado(0);
+        return servicio;
+    }
+
+	// Metodo que Almacena los datos seleccionados para el objeto de Comprobante
+	public Comprobante recopilarDatosComprobante(Comprobante comprobante) {
+		LocalDate fechaActual = LocalDate.now();
+		DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		String fechaActualFormateada = fechaActual.format(formatoFecha);
+		LocalTime horaActual = LocalTime.now();
+		DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm:ss");
+		String horaActualFormateada = horaActual.format(formatoHora);
+
+		comprobante.setFecha(fechaActualFormateada);
+		comprobante.setHora(horaActualFormateada);
+		comprobante.setImporte(500);
+		return comprobante;
+	}
+
+	// Metodo que Almacena los datos seleccionados para el objeto de Mesa
+    public Mesa recopilarDatosMesaNormal(Mesa mesa) {
+        mesa.setIdMesa(idMesaSeleccionada);
+        mesa.setUbicacion(SeleccionarUbicacion);
+        
+        if (capacidadSeleccionada == 0) {
+            mesa.setCapacidad(mesaControlador.filtrarCapacidad(idMesaSeleccionada));
+        } else {
+            mesa.setCapacidad(capacidadSeleccionada);
+        }
+        return mesa;
+    }
+    
+    // Método que almacena los datos seleccionados para el objeto de Mesa
+    public Mesa recopilarDatosMesaPorNumero(String mesasSeleccionadas [], int id) {
+        Mesa mesa = new Mesa();
+        
+
+        mesa.setIdMesa(id); 
+        mesa.setUbicacion(SeleccionarUbicacion);
+        
+        if (capacidadSeleccionada == 0) {
+            mesa.setCapacidad(mesaControlador.filtrarCapacidad(id));
+        } else {
+            mesa.setCapacidad(capacidadSeleccionada);
+        }
+        
+        return mesa;
+    }
+    
+ // Método que convierte un DefaultListModel a un array de String
+    public String[] convertirListModelAArray(DefaultListModel<String> listModel) {
+        String[] arrayMesas = new String[listModel.getSize()];
+        
+        for (int i = 0; i < listModel.getSize(); i++) {
+            arrayMesas[i] = listModel.getElementAt(i);
+        }
+        return arrayMesas; 
+    }
+
+	// Metodo que habilita el boton siguiente depues de confirmar la tarjeta
+	public void habilitarBoton() {
+		btnReservar.setEnabled(true);
 	}
 }

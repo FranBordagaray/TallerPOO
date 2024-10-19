@@ -77,6 +77,79 @@ public class MesaControlador {
 		return mesasP;
 	}
 
+	//Metodo para verificar si hay solapamiento de servicios
+	public boolean verificarMesaConServicio(Mesa mesa, String fecha, String horaInicioNueva, String horaFinNueva) {
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+	    PreparedStatement psServicio = null;
+	    ResultSet rsServicio = null;
+	    PreparedStatement psReserva = null;
+	    ResultSet rsReserva = null;
+
+	    try {
+	        // Obtener idServicio de la mesa
+	        ps = connection.prepareStatement("SELECT idServicio FROM Mesa WHERE idMesa = ?");
+	        ps.setInt(1, mesa.getIdMesa());
+	        rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            int idServicio = rs.getInt("idServicio");
+
+	            // Obtener horas de Servicio
+	            psServicio = connection.prepareStatement("SELECT horaInicio, horaFin FROM Servicio WHERE idServicio = ?");
+	            psServicio.setInt(1, idServicio);
+	            rsServicio = psServicio.executeQuery();
+
+	            if (rsServicio.next()) {
+	                String horaInicioServicio = rsServicio.getString("horaInicio");
+	                String horaFinServicio = rsServicio.getString("horaFin");
+
+	                // Verificar reservas
+	                psReserva = connection.prepareStatement(
+	                    "SELECT COUNT(*) FROM Reserva r " +
+	                    "WHERE r.idMesa = ? AND r.fecha = ? AND " +
+	                    "(? < r.hora AND r.hora < ?)"
+	                );
+	                psReserva.setInt(1, mesa.getIdMesa());
+	                psReserva.setString(2, fecha);
+	                psReserva.setString(3, horaInicioNueva); // Hora de inicio nueva
+	                psReserva.setString(4, horaFinNueva);   // Hora de fin nueva
+
+	                rsReserva = psReserva.executeQuery();
+	                return rsReserva.getInt(1) > 0; // Retorna true si hay solapamiento
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        // Cerrar ResultSet y PreparedStatements en orden inverso
+	        try {
+	            if (rsReserva != null) {
+	                rsReserva.close();
+	            }
+	            if (psReserva != null) {
+	                psReserva.close();
+	            }
+	            if (rsServicio != null) {
+	                rsServicio.close();
+	            }
+	            if (psServicio != null) {
+	                psServicio.close();
+	            }
+	            if (rs != null) {
+	                rs.close();
+	            }
+	            if (ps != null) {
+	                ps.close();
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    return false; // Retorna false si no hay solapamiento
+	}
+
+
 	// Funcion busca mesas con estado "Ocupado" en una fecha y hora
 	public List<Integer> buscarMesasOcupadasPorServicio(String fecha, String hora) {
 		List<Integer> mesasOcupadasIds = new ArrayList<>();

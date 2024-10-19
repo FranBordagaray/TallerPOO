@@ -33,7 +33,7 @@ public class UsarTarjeta extends JFrame {
 
 
 
-	public UsarTarjeta(VistaReserva vistaReserva) {
+	public UsarTarjeta(JPanel vistaReserva) {
 		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -168,7 +168,11 @@ public class UsarTarjeta extends JFrame {
 						tarjeta.setCodVerificacion(Integer.parseInt(txtCodVerificacion.getText()));
 						if (controlador.ingresarTarjeta(tarjeta)) {
 							JOptionPane.showMessageDialog(UsarTarjeta.this, "Tarjeta ingresada con exito!", "Exito",JOptionPane.INFORMATION_MESSAGE);
-							vistaReserva.habilitarBoton();
+							if (vistaReserva instanceof VistaReservaEmpleado) {
+							    ((VistaReservaEmpleado) vistaReserva).habilitarBoton();
+							} else {
+							    ((VistaReservaCliente) vistaReserva).habilitarBoton();
+							}
 							System.out.println("Tarjeta ingresada con exito!");
 							dispose();
 						} else {
@@ -195,7 +199,7 @@ public class UsarTarjeta extends JFrame {
 		JButton btnAtras = new JButton("Volver");
 		btnAtras.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				VistaReserva reserva = new VistaReserva();
+				VistaReservaCliente reserva = new VistaReservaCliente();
 				reserva.setVisible(true);
 				UsarTarjeta.this.dispose();
 			}
