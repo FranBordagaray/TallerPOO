@@ -288,7 +288,7 @@ public class DetalleReserva extends JFrame {
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				VistaReserva reserva = new VistaReserva();
+				VistaReservaCliente reserva = new VistaReservaCliente();
 				reserva.setVisible(true);
 				DetalleReserva.this.dispose();
 

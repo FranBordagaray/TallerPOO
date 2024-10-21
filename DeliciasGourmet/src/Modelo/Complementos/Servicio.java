@@ -14,7 +14,6 @@ public class Servicio {
 	}
 
 	public Servicio(String fecha2, String horaInicio2, String horaFin2, int i) {
-		// TODO Auto-generated constructor stub
 	}
 
 	// Getter de idServico

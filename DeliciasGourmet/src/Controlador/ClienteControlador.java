@@ -214,9 +214,7 @@ public class ClienteControlador {
         return codRecuperacion;
     }
     
-    /* Funcion para actualizar la contraseña 
-     * despues de ingresar el codigo de recuperacion
-     */
+    //Funcion para actualizar la contraseña despues de ingresar el codigo de recuperacion
     public boolean recuperarContraseña(String email, String nuevaContrasenia, String codigoRecuperacion) {
         PreparedStatement ps = null;
         try {

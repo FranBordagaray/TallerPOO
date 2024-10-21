@@ -168,14 +168,53 @@ public class ServicioControlador {
 		}
 		return solapado;
 	}
+	
+	// Método para buscar un servicio por su ID
+		public Servicio buscarServicioPorId(int idServicio) {
+		    PreparedStatement ps = null;
+		    ResultSet rs = null;
+		    Servicio servicio = null;
 
-// Método para registrar un servicio con verificación de solapamiento
-	public boolean registrarServicioConSolapamiento(Servicio servicio) {
-		if (verificarSolapamientoServicio(servicio)) {
-			System.out.println("El servicio se solapa con otro existente. No se puede registrar.");
-			return false;
-		} else {
-			return registrarServicio(servicio); // Llama al método existente para registrar
+		    try {
+		        ps = connection.prepareStatement("SELECT * FROM Servicio WHERE idServicio = ?");
+		        ps.setInt(1, idServicio);
+		        rs = ps.executeQuery();
+
+		        if (rs.next()) {
+		            servicio = new Servicio();
+		            servicio.setIdServicio(rs.getInt("idServicio"));
+		            servicio.setFecha(rs.getString("fecha"));
+		            servicio.setHoraInicio(rs.getString("horaInicio"));
+		            servicio.setHoraFin(rs.getString("horaFin"));
+		            servicio.setEventoPrivado(rs.getInt("eventoPrivado"));
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        System.out.println("Error al buscar el servicio por ID.");
+		    } finally {
+		        try {
+		            if (rs != null) {
+		                rs.close();
+		            }
+		            if (ps != null) {
+		                ps.close();
+		            }
+		        } catch (SQLException e) {
+		            e.printStackTrace();
+		        }
+		    }
+		    return servicio;
 		}
-	}
+
+
+		// Método para registrar un servicio con verificación de solapamiento
+		public boolean registrarServicioConSolapamiento(Servicio servicio) {
+			if (verificarSolapamientoServicio(servicio)) {
+				System.out.println("El servicio se solapa con otro existente. No se puede registrar.");
+				return false;
+			} else {
+				return registrarServicio(servicio);
+			}
+		}
+	
 }

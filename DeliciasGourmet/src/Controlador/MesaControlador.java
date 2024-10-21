@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Conexion.Conexion;
+import Modelo.Complementos.EnumEstado;
 import Modelo.Complementos.Mesa;
 
 public class MesaControlador {
@@ -87,7 +88,6 @@ public class MesaControlador {
 	    ResultSet rsReserva = null;
 
 	    try {
-	        // Obtener idServicio de la mesa
 	        ps = connection.prepareStatement("SELECT idServicio FROM Mesa WHERE idMesa = ?");
 	        ps.setInt(1, mesa.getIdMesa());
 	        rs = ps.executeQuery();
@@ -95,16 +95,14 @@ public class MesaControlador {
 	        if (rs.next()) {
 	            int idServicio = rs.getInt("idServicio");
 
-	            // Obtener horas de Servicio
 	            psServicio = connection.prepareStatement("SELECT horaInicio, horaFin FROM Servicio WHERE idServicio = ?");
 	            psServicio.setInt(1, idServicio);
 	            rsServicio = psServicio.executeQuery();
 
 	            if (rsServicio.next()) {
-	                String horaInicioServicio = rsServicio.getString("horaInicio");
+					String horaInicioServicio = rsServicio.getString("horaInicio");
 	                String horaFinServicio = rsServicio.getString("horaFin");
 
-	                // Verificar reservas
 	                psReserva = connection.prepareStatement(
 	                    "SELECT COUNT(*) FROM Reserva r " +
 	                    "WHERE r.idMesa = ? AND r.fecha = ? AND " +
@@ -112,17 +110,15 @@ public class MesaControlador {
 	                );
 	                psReserva.setInt(1, mesa.getIdMesa());
 	                psReserva.setString(2, fecha);
-	                psReserva.setString(3, horaInicioNueva); // Hora de inicio nueva
-	                psReserva.setString(4, horaFinNueva);   // Hora de fin nueva
-
+	                psReserva.setString(3, horaInicioNueva);
+	                psReserva.setString(4, horaFinNueva);
 	                rsReserva = psReserva.executeQuery();
-	                return rsReserva.getInt(1) > 0; // Retorna true si hay solapamiento
+	                return rsReserva.getInt(1) > 0;
 	            }
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    } finally {
-	        // Cerrar ResultSet y PreparedStatements en orden inverso
 	        try {
 	            if (rsReserva != null) {
 	                rsReserva.close();
@@ -146,7 +142,7 @@ public class MesaControlador {
 	            e.printStackTrace();
 	        }
 	    }
-	    return false; // Retorna false si no hay solapamiento
+	    return false;
 	}
 
 
@@ -205,58 +201,96 @@ public class MesaControlador {
 	}
 	
 	//Funcion para actualizar los datos de una mesa
-		public boolean eliminarMesa(int idMesa, int idServicio) {
-		    PreparedStatement ps = null;
-		    boolean eliminado = false; 
+	public boolean eliminarMesa(int idMesa, int idServicio) {
+		PreparedStatement ps = null;
+		boolean eliminado = false; 
 
-		    try {
-		        ps = connection.prepareStatement("DELETE FROM Mesa WHERE idMesa = ? AND idServicio = ?");
-		        ps.setInt(1, idMesa);
-		        ps.setInt(2, idServicio);
+		try {
+		     ps = connection.prepareStatement("DELETE FROM Mesa WHERE idMesa = ? AND idServicio = ?");
+		     ps.setInt(1, idMesa);
+		     ps.setInt(2, idServicio);
 
-		        int filasAfectadas = ps.executeUpdate(); 
-		        eliminado = filasAfectadas > 0; 
+		     int filasAfectadas = ps.executeUpdate(); 
+		     eliminado = filasAfectadas > 0; 
 
-		    } catch (SQLException e) {
+		 } catch (SQLException e) {
 		        e.printStackTrace();
-		    } finally {
-		        if (ps != null) {
-		            try {
-		                ps.close();
-		            } catch (SQLException e) {
-		                e.printStackTrace();
-		            }
+		 } finally {
+		    if (ps != null) {
+		        try {
+		            ps.close();
+		        } catch (SQLException e) {
+		            e.printStackTrace();
 		        }
 		    }
-		    return eliminado; 
-		}
+		 }
+		return eliminado; 
+	}
 
-		// Función para actualizar el idServicio de una Mesa
-		public boolean actualizarIdServicio(int nuevoIdServicio,int idMesa, int idServicioAntiguo) {
-		    PreparedStatement ps = null;
-		    try {
-		       
-		        ps = connection.prepareStatement("UPDATE Mesa SET idServicio = ? WHERE idMesa = ? AND idServicio = ?");
-		        ps.setInt(1, nuevoIdServicio);  
-		        ps.setInt(2, idMesa);           
-		        ps.setInt(3, idServicioAntiguo); 
-		        ps.executeUpdate(); 
-		        
-		        System.out.println("ID del servicio actualizado con éxito!");
-		        return true;
-		    } catch (SQLException e) {
-		        e.printStackTrace();
-		        System.out.println("Error al actualizar el ID del servicio!");
-		        return false; 
-		    } finally {
-		        if (ps != null) {
-		            try {
-		                ps.close(); 
-		            } catch (SQLException e) {
-		                e.printStackTrace();
-		            }
-		        }
-		    }
+	// Función para actualizar el idServicio de una Mesa
+	public boolean actualizarIdServicio(int nuevoIdServicio, int idMesa, int idServicioAntiguo) {
+		PreparedStatement ps = null;
+		try {
+
+			ps = connection.prepareStatement("UPDATE Mesa SET idServicio = ? WHERE idMesa = ? AND idServicio = ?");
+			ps.setInt(1, nuevoIdServicio);
+			ps.setInt(2, idMesa);
+			ps.setInt(3, idServicioAntiguo);
+			ps.executeUpdate();
+
+			System.out.println("ID del servicio actualizado con éxito!");
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Error al actualizar el ID del servicio!");
+			return false;
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
+	}
+		
+	// Método para buscar mesas por ID
+	public ArrayList<Mesa> buscarMesaPorId(int idMesa) {
+		ArrayList<Mesa> mesas = new ArrayList<>();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			ps = connection.prepareStatement("SELECT * FROM Mesa WHERE idMesa = ?");
+			ps.setInt(1, idMesa);
+			rs = ps.executeQuery();
+		          
+			while (rs.next()) {
+				Mesa mesa = new Mesa();
+				mesa.setIdMesa(rs.getInt("idMesa"));
+				mesa.setCapacidad(rs.getInt("capacidad"));
+				mesa.setEstado(EnumEstado.valueOf(rs.getString("estado"))); 
+				mesa.setIdServicio(rs.getInt("idServicio"));
+				mesas.add(mesa);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (ps != null) {
+					ps.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			}
+		return mesas;
+	 	}
+
 
 }

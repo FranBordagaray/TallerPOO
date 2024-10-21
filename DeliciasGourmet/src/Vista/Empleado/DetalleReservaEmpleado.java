@@ -5,10 +5,12 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +37,7 @@ import Modelo.Complementos.Mesa;
 import Modelo.Complementos.Reserva;
 import Modelo.Complementos.Servicio;
 import Modelo.Empleado.SesionEmpleado;
+import Vista.Cliente.DetalleReservaCliente;
 
 @SuppressWarnings("unused")
 public class DetalleReservaEmpleado extends JFrame {
@@ -60,15 +63,17 @@ public class DetalleReservaEmpleado extends JFrame {
 	private String horaInicio;
 	private String horaFin;
 	private String comentario;
+	private String[] mesasSeleccionadasEvento;
 
-	public DetalleReservaEmpleado(Reserva reserva, Mesa mesa, Servicio servicio, Comprobante comprobante,
-			String[] mesasSeleccionadas) {
+	public DetalleReservaEmpleado(Reserva reserva, Mesa mesa, Servicio servicio, Comprobante comprobante, 
+		String[] mesasSeleccionadasEvento) {
 		
 		this.reserva = reserva;
 		this.mesa = mesa;
 		this.servicio = servicio;
 		this.comprobante = comprobante;
-		this.mesasSeleccionadas = mesasSeleccionadas;
+		this.mesasSeleccionadasEvento = mesasSeleccionadasEvento;
+
 
 		this.servicioControlador = new ServicioControlador();
 		this.reservaControlador = new ReservaControlador();
@@ -187,7 +192,7 @@ public class DetalleReservaEmpleado extends JFrame {
 		pnlContenedor.add(lblHoraSeleccionada);
 
 		// Etiqueta de Mesas Seleccionadas de la reserva
-		JLabel lblMesaSeleccionada = new JLabel(concatenarIdsMesas(mesasSeleccionadas));
+		JLabel lblMesaSeleccionada = new JLabel(concatenarIdsMesas(mesasSeleccionadasEvento));
 		lblMesaSeleccionada.setForeground(Color.BLACK);
 		lblMesaSeleccionada.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMesaSeleccionada.setFont(new Font("Roboto Light", Font.BOLD, 16));
@@ -208,37 +213,39 @@ public class DetalleReservaEmpleado extends JFrame {
 		pnlContenedor.add(textArea);
 
 		// Botón de Confirmar
-		JButton btnConfirmar = new JButton("Confirmar");
-		btnConfirmar.addActionListener(new ActionListener() {
+		JButton btnEnviarEmail = new JButton("Enviar Email");
+		btnEnviarEmail.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				EnviarEmail enviar = new EnviarEmail(DetalleReservaEmpleado.this);
+				enviar.setVisible(true);
+				
 			}
 		});
-		btnConfirmar.addMouseListener(new MouseAdapter() {
+		btnEnviarEmail.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				btnConfirmar.setBackground(new Color(126, 211, 33));
-				btnConfirmar.setForeground(Color.WHITE);
+				btnEnviarEmail.setBackground(new Color(126, 211, 33));
+				btnEnviarEmail.setForeground(Color.WHITE);
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				btnConfirmar.setBackground(Color.WHITE);
-				btnConfirmar.setForeground(Color.BLACK);
+				btnEnviarEmail.setBackground(Color.WHITE);
+				btnEnviarEmail.setForeground(Color.BLACK);
 			}
 		});
-		btnConfirmar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-		btnConfirmar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnConfirmar.setBackground(Color.WHITE);
-		btnConfirmar.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnConfirmar.setBorder(null);
-		btnConfirmar.setForeground(Color.BLACK);
-		btnConfirmar.setBounds(280, 500, 120, 30);
-		pnlContenedor.add(btnConfirmar);
+		btnEnviarEmail.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+		btnEnviarEmail.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnEnviarEmail.setBackground(Color.WHITE);
+		btnEnviarEmail.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btnEnviarEmail.setBorder(null);
+		btnEnviarEmail.setForeground(Color.BLACK);
+		btnEnviarEmail.setBounds(280, 500, 120, 30);
+		pnlContenedor.add(btnEnviarEmail);
 
 		// Boton para Cancelar
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(new ActionListener() {
+		JButton btnCerrar = new JButton("Cerrar");
+		btnCerrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				VistaReservaEmpleado reserva = new VistaReservaEmpleado();
@@ -247,34 +254,36 @@ public class DetalleReservaEmpleado extends JFrame {
 
 			}
 		});
-		btnCancelar.addMouseListener(new MouseAdapter() {
+		btnCerrar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				btnCancelar.setBackground(new Color(255, 0, 0));
-				btnCancelar.setForeground(Color.WHITE);
+				btnCerrar.setBackground(new Color(255, 0, 0));
+				btnCerrar.setForeground(Color.WHITE);
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				btnCancelar.setBackground(Color.WHITE);
-				btnCancelar.setForeground(Color.BLACK);
+				btnCerrar.setBackground(Color.WHITE);
+				btnCerrar.setForeground(Color.BLACK);
 			}
 		});
-		btnCancelar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-		btnCancelar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnCancelar.setBackground(Color.WHITE);
-		btnCancelar.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnCancelar.setBorder(null);
-		btnCancelar.setForeground(Color.BLACK);
-		btnCancelar.setBounds(50, 500, 120, 30);
-		pnlContenedor.add(btnCancelar);
+		btnCerrar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+		btnCerrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnCerrar.setBackground(Color.WHITE);
+		btnCerrar.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btnCerrar.setBorder(null);
+		btnCerrar.setForeground(Color.BLACK);
+		btnCerrar.setBounds(50, 500, 120, 30);
+		pnlContenedor.add(btnCerrar);
 
 	}
+	
+	
 
 	// Metodo para concatenar las mesas
-	public String concatenarIdsMesas(String[] mesas) {
+	public String concatenarIdsMesas(String[] mesasSeleccionadasEvento) {
 		StringBuilder sb = new StringBuilder();
-		for (String mesa : mesas) {
+		for (String mesa : mesasSeleccionadasEvento) {
 			sb.append(mesa).append(",");
 		}
 
@@ -286,87 +295,151 @@ public class DetalleReservaEmpleado extends JFrame {
 		
 	}
 
-	public void procesarReserva() {
-		int idServicio;
-		int idReserva;
+	//Metodo para verificar disponibilidad de las Mesas
+	public boolean verificarDisponibilidadMesas() {
+	    try {
+	        // 1. Obtener todas las mesas con el mismo idMesa
+	        ArrayList<Mesa> mesasConMismoId = mesaControlador.buscarMesaPorId(mesa.getIdMesa());
+	        
+	        if (mesasConMismoId.isEmpty()) {
+	            System.out.println("No se encontraron mesas con ese id.");
+	            return true;
+	        }
 
-		try {
-			// Crear un nuevo servicio
-			idServicio = servicioControlador.crearServicio(servicio);
-			System.out.println("Nuevo servicio creado: " + idServicio);
+	        // 2. Verificar solapamiento de fechas y horas para cada mesa
+	        for (Mesa m : mesasConMismoId) {
+	            Servicio servicioExistente = servicioControlador.buscarServicioPorId(m.getIdServicio());
 
-			if (idServicio != -1) {
-				System.out.println("Servicio ingresado con éxito, ID: " + idServicio);
-			} else {
-				JOptionPane.showMessageDialog(DetalleReservaEmpleado.this, "Error al registrar el servicio", "Error",
-						JOptionPane.ERROR_MESSAGE);
-				return;
-			}
+	            if (servicioExistente != null) {
+	                // Mostrar los detalles del servicio existente
+	                System.out.println("Servicio existente: " + servicioExistente.getIdServicio() 
+	                    + ", Fecha: " + servicioExistente.getFecha() 
+	                    + ", HoraInicio: " + servicioExistente.getHoraInicio() 
+	                    + ", HoraFin: " + servicioExistente.getHoraFin());
 
-			// Asignar el ID del servicio a la reserva
-			reserva.setIdServicio(idServicio);
-			reserva.setEstado(1);
-			mesa.setIdServicio(idServicio);
-			mesa.setEstado(EnumEstado.OCUPADA);
+	                // 3. Verificar solapamiento
+	                boolean solapamiento = verificarSolapamiento(
+	                    servicioExistente.getFecha(),
+	                    servicioExistente.getHoraInicio(),
+	                    servicioExistente.getHoraFin(),
+	                    servicio.getFecha(),
+	                    servicio.getHoraInicio(),
+	                    servicio.getHoraFin()
+	                );
 
-			// Registrar la mesa
-			if (mesaControlador.crearMesa(mesa)) {
-				System.out.println("Mesa registrada con éxito.");
-
-				// Crear la nueva reserva directamente
-				if (reservaControlador.crearReserva(reserva)) {
-					idReserva = reservaControlador.buscarIdReserva(reserva);
-					comprobante.setIdTarjeta(tarjetaControlador.obtenerUltimoIdTarjeta());
-					comprobante.setIdReserva(idReserva);
-
-					// Crear el comprobante
-					if (comprobanteControlador.crearComprobante(comprobante)) {
-						System.out.print("Comprobante cargado con éxito");
-
-						// Actualizar la reserva con el ID del comprobante
-						if (reservaControlador.actualizarComprobante(idReserva,
-								comprobanteControlador.obtenerUltimoIdComprobante())) {
-							System.out.print("Reserva se actualizó con éxito");
-							dispose();
-						} else {
-							System.out.print("Ocurrió un error al actualizar la reserva");
-						}
-					} else {
-						System.out.print("Ocurrió un error al registrar el comprobante");
-					}
-				} else {
-					JOptionPane.showMessageDialog(DetalleReservaEmpleado.this,
-							"Ocurrió un error al registrar la reserva", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			} else {
-				System.out.print("Ocurrió un error al registrar la mesa");
-			}
-		} catch (Exception e2) {
-			JOptionPane.showMessageDialog(DetalleReservaEmpleado.this, "Error inesperado: " + e2.getMessage(), "Error",
-					JOptionPane.ERROR_MESSAGE);
-			e2.printStackTrace();
-		}
+	                if (solapamiento) {
+	                    System.out.println("Solapamiento en la mesa: " + m.getIdMesa());
+	                    return false;
+	                }
+	            }
+	        }
+	        return true;
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
+	
+	//Metodo para crear la Mesa y Reserva
+	public void crearReservasYMesas() {
+	    try {
+	        // Crear el servicio
+	        int idServicio = servicioControlador.crearServicio(servicio);
+	        
+	        if (idServicio != -1) {
+	            reserva.setIdServicio(idServicio);
+	            reserva.setEstado(1);
+	            mesa.setIdServicio(idServicio);
+	            mesa.setEstado(EnumEstado.OCUPADA);
 
-	// Metodo para verificar si las mesas no se solapan
-	public boolean verificarMesaDisponible(Mesa mesa, Servicio servicio) {
-		if (mesaControlador.verificarMesaConServicio(mesa, servicio.getFecha(), servicio.getHoraInicio(),
-				servicio.getHoraFin())) {
-			return false;
-		}
-		return true;
+	            if (mesaControlador.crearMesa(mesa)) {
+	                if (!reservaControlador.verificarReserva(reserva) && reservaControlador.crearReserva(reserva)) {
+	                    int idReserva = reservaControlador.buscarIdReserva(reserva);
+	                    comprobante.setIdTarjeta(tarjetaControlador.obtenerUltimoIdTarjeta());
+	                    comprobante.setIdReserva(idReserva);
+
+	                    if (comprobanteControlador.crearComprobante(comprobante)) {
+	                        reservaControlador.actualizarComprobante(idReserva, comprobanteControlador.obtenerUltimoIdComprobante());                     
+	                        dispose();
+	                    } else {
+	                        System.out.println("Error al registrar el comprobante.");
+	                    }
+	                } else {
+	                    System.out.println("La reserva ya existe o no se pudo crear.");
+	                }
+	            } else {
+	                System.out.println("Error al registrar la mesa.");
+	            }
+	        } else {
+	            System.out.println("Error al crear el servicio.");
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}		
+	
+	//Otro constructor para solo hacer Bloqueos de Mesas
+	public DetalleReservaEmpleado(Mesa mesa, Servicio servicio) {
+		this.mesa = mesa;
+		this.servicio = servicio;
+		
+		this.servicioControlador = new ServicioControlador();
+		this.mesaControlador = new MesaControlador();
+		
 	}
+	
+	
+	// Método para bloquear mesas
+    public void BloquearMesas() {
+        try {
+            int idServicio = servicioControlador.crearServicio(servicio);
+            
+            if (idServicio != -1) {
+                mesa.setIdServicio(idServicio);
+                mesa.setEstado(EnumEstado.BLOQUEADA);
+                if (mesaControlador.crearMesa(mesa)) {
+                    System.out.println("Mesa bloqueada correctamente.");
+                } else {
+                    System.out.println("La reserva ya existe o no se pudo bloquear.");
+                }
+            } else {
+                System.out.println("Error al bloquear la mesa.");
+            }
+        
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+		
+	// Método para verificar solapamiento entre dos servicios
+		private boolean verificarSolapamiento(String fecha1, String horaInicio1, String horaFin1, String fecha2,
+				String horaInicio2, String horaFin2) {
+					
+		    if (!fecha1.equals(fecha2)) {
+		        return false;
+		    }
+		    	
+		    LocalTime inicio1 = LocalTime.parse(horaInicio1);
+		    LocalTime fin1 = LocalTime.parse(horaFin1);
+		    LocalTime inicio2 = LocalTime.parse(horaInicio2);
+		    LocalTime fin2 = LocalTime.parse(horaFin2);
+		 
+		    if (fin1.isBefore(inicio1)) {	        
+		        return (inicio1.isBefore(fin2) || fin2.equals(fin1)) || (inicio2.isBefore(fin1) || fin1.equals(fin2));
+		    } else {
+		        return (inicio1.isBefore(fin2) && fin1.isAfter(inicio2));
+		    }
+		}
 
 	// Metodo para enviar mail
 	@SuppressWarnings("static-access")
-	public void enviarDetalles() {
-		s = new SesionCliente();
-		v = new SesionEmpleado();
-		if (s.getClienteActual() != null) {
-			destinatario = s.getClienteActual().getEmail();
-		} else {
-			destinatario = v.getEmpleadoActual().getEmail();
-		}
+	public void enviarDetalles(String destinatario) {
+	    if (destinatario == null || destinatario.isEmpty()) {
+	        System.out.println("El destinatario proporcionado no es válido.");
+	        return; 
+	    }
 
 		String asunto = "Confirmacion de Evento Especial - Delicias Gourmet";
 		String mensaje = String.format(
@@ -376,7 +449,7 @@ public class DetalleReservaEmpleado extends JFrame {
 						+ "   - Horario de la Reserva: %s\n" + "   - Comentarios adicionales: %s\n\n"
 						+ "Agradecemos su preferencia y le recordamos que estaremos encantados de recibirle.\n\n"
 						+ "Saludos cordiales,\n" + "Restaurante %s",
-				concatenarIdsMesas(mesasSeleccionadas), mesa.getUbicacion(), reserva.getFecha(), rangoHoras,
+				concatenarIdsMesas(mesasSeleccionadasEvento), mesa.getUbicacion(), reserva.getFecha(), rangoHoras,
 				reserva.getComentario(), "Delicias Gourmet");
 		EnviarMail.enviarCorreo(destinatario, asunto, mensaje);
 	}
