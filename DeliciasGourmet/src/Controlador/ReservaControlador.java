@@ -90,7 +90,7 @@ public class ReservaControlador {
 				ps.setInt(1, reserva.getIdCliente());
 				ps.setString(2, reserva.getFecha());
 				ps.setString(3, reserva.getHora());
-				ps.setInt(4, idMesa); 
+				ps.setInt(4, idMesa);
 				ps.setString(5, reserva.getComentario());
 				ps.setString(6, reserva.getDispocicionMesa());
 				ps.setInt(7, reserva.getEstado());
@@ -181,63 +181,62 @@ public class ReservaControlador {
 		}
 	}
 
-	//Metodo para verificar si hay solapamientos en una reserva para Evento Especial
+	// Metodo para verificar si hay solapamientos en una reserva para Evento
+	// Especial
 	public boolean verificarSolapamientoReserva(Reserva reserva) {
-	    PreparedStatement ps = null;
-	    ResultSet rs = null;
-	    ServicioControlador servicioControlador = new ServicioControlador();
-	    
-	    try {
-	        int idServicio = servicioControlador.buscarServicioPorReserva(reserva);
-	        
-	        if (idServicio == -1) {
-	            System.out.println("No se encontró un servicio para la reserva.");
-	            return false;
-	        }
-	        ps = connection.prepareStatement("SELECT COUNT(*) FROM Reserva r " +
-	                "JOIN Servicio s ON r.IdServicio = s.idServicio " +
-	                "WHERE r.IdMesa = ? AND r.IdServicio = ? " +
-	                "AND ( ? < s.horaFin AND ? > s.horaInicio )");
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ServicioControlador servicioControlador = new ServicioControlador();
 
-	        ps.setInt(1, reserva.getIdMesa());
-	        ps.setInt(2, idServicio);
-	        
-	        String[] horas = reserva.getHora().split(" - ");
-	        ps.setString(3, horas[0]);
-	        ps.setString(4, horas[1]);
+		try {
+			int idServicio = servicioControlador.buscarServicioPorReserva(reserva);
 
-	        rs = ps.executeQuery();
+			if (idServicio == -1) {
+				System.out.println("No se encontró un servicio para la reserva.");
+				return false;
+			}
+			ps = connection.prepareStatement("SELECT COUNT(*) FROM Reserva r "
+					+ "JOIN Servicio s ON r.IdServicio = s.idServicio " + "WHERE r.IdMesa = ? AND r.IdServicio = ? "
+					+ "AND ( ? < s.horaFin AND ? > s.horaInicio )");
 
-	        if (rs.next()) {
-	            int count = rs.getInt(1);
-	            if (count > 0) {
-	                return true;
-	            }
-	        }
-	        return false;
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        System.out.println("Error al verificar solapamiento de reserva!");
-	        return false;
-	    } finally {
-	        if (ps != null) {
-	            try {
-	                ps.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        if (rs != null) {
-	            try {
-	                rs.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }
+			ps.setInt(1, reserva.getIdMesa());
+			ps.setInt(2, idServicio);
+
+			String[] horas = reserva.getHora().split(" - ");
+			ps.setString(3, horas[0]);
+			ps.setString(4, horas[1]);
+
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				int count = rs.getInt(1);
+				if (count > 0) {
+					return true;
+				}
+			}
+			return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Error al verificar solapamiento de reserva!");
+			return false;
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
-	
-	
+
 	// Función para verificar si una mesa está ocupada en una fecha y hora
 	// específicas
 	public boolean verificarMesaOcupada(int idMesa, String fecha, String hora) {
@@ -368,58 +367,50 @@ public class ReservaControlador {
 		}
 		return reporte;
 	}
-	
+
 	// Función para obtener el historial completo de Reservas de un cliente
-		public ArrayList<Reserva> obtenerHistorialDeReservasCompleta(int idCliente) {
-		    PreparedStatement ps = null;
-		    ResultSet rs = null;
-		    ArrayList<Reserva> reservas = new ArrayList<>();
+	public ArrayList<Reserva> obtenerHistorialDeReservasCompleta(int idCliente) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ArrayList<Reserva> reservas = new ArrayList<>();
+		try {
+			ps = connection.prepareStatement("SELECT r.*, c.nombre, c.apellido, m.capacidad, m.ubicacion "
+					+ "FROM Reserva r JOIN Cliente c ON r.idCliente = c.idCliente "
+					+ "JOIN MesaPrecargada m ON r.idMesa = m.idMesa " + "WHERE r.idCliente = ?");
+			ps.setInt(1, idCliente);
+			rs = ps.executeQuery();
 
-		    try {
-		        // Consulta para obtener todas las reservas del cliente
-		        ps = connection.prepareStatement(
-		            "SELECT r.*, c.nombre, c.apellido, m.capacidad, m.ubicacion " +
-		            "FROM Reserva r JOIN Cliente c ON r.idCliente = c.idCliente " +
-		            "JOIN MesaPrecargada m ON r.idMesa = m.idMesa " +
-		            "WHERE r.idCliente = ?"
-		        );
-		        ps.setInt(1, idCliente);  // Asigna el idCliente al PreparedStatement
-		        rs = ps.executeQuery();
-		        
-		        while (rs.next()) {
-		            // Crea un objeto Reserva por cada fila de la consulta
-		            Reserva reserva = new Reserva();
-		            reserva.setIdReserva(rs.getInt("idReserva"));  // Asumiendo que tienes un método setIdReserva
-		            reserva.setIdCliente(rs.getInt("idCliente"));
-		            reserva.setFecha(rs.getString("fecha"));
-		            reserva.setHora(rs.getString("hora"));
-		            reserva.setIdMesa(rs.getInt("idMesa"));
-		            reserva.setComentario(rs.getString("comentario"));
-		            reserva.setDispocicionMesa(rs.getString("dispocicionMesa"));
-		            reserva.setEstado(rs.getInt("estado"));
-		            reserva.setIdServicio(rs.getInt("idServicio"));
-		            reserva.setIdComprobante(rs.getInt("idComprobante"));
-		            // Puedes agregar más atributos según sea necesario
+			while (rs.next()) {
+				Reserva reserva = new Reserva();
+				reserva.setIdReserva(rs.getInt("idReserva"));
+				reserva.setIdCliente(rs.getInt("idCliente"));
+				reserva.setFecha(rs.getString("fecha"));
+				reserva.setHora(rs.getString("hora"));
+				reserva.setIdMesa(rs.getInt("idMesa"));
+				reserva.setComentario(rs.getString("comentario"));
+				reserva.setDispocicionMesa(rs.getString("dispocicionMesa"));
+				reserva.setEstado(rs.getInt("estado"));
+				reserva.setIdServicio(rs.getInt("idServicio"));
+				reserva.setIdComprobante(rs.getInt("idComprobante"));
+				reservas.add(reserva);
+			}
 
-		            // Agrega el objeto Reserva a la lista
-		            reservas.add(reserva);
-		        }
-
-		    } catch (SQLException e) {
-		        e.printStackTrace();
-		        System.out.println("Error al obtener el historial completo de reservas para el cliente con ID: " + idCliente);
-		    } finally {
-		        if (ps != null) {
-		            try {
-		                ps.close();
-		            } catch (SQLException e) {
-		                e.printStackTrace();
-		            }
-		        }
-		    }
-
-		    return reservas;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out
+					.println("Error al obtener el historial completo de reservas para el cliente con ID: " + idCliente);
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
+
+		return reservas;
+	}
 
 	// Función para obtener el historial de comensales por temporada
 	public List<Reportes> obtenerHistorialComensalesPorTemporada(String Temporada) {
@@ -641,89 +632,85 @@ public class ReservaControlador {
 		}
 		return reserva;
 	}
-	
-	 // Función para obtener el historial de Reservas de un cliente
-    public HistorialReserva obtenerReservaPorId(int idReserva) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        HistorialReserva reserva = null;
-        try {
-            ps = connection.prepareStatement("SELECT r.idReserva, m.ubicacion, r.fecha, r.hora, m.capacidad, r.idMesa, r.comentario "
-            		+ "FROM Reserva r "
-            		+ "JOIN MesaPrecargada m ON r.idMesa = m.idMesa "
-            		+ "WHERE r.idReserva = ?");
-            ps.setInt(1, idReserva);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-            	reserva = new HistorialReserva(
-            			rs.getInt("idReserva"),
-            			rs.getString("fecha"),
-                        rs.getString("hora"),
-                        rs.getInt("idMesa"),
-                        rs.getInt("capacidad"),
-                        rs.getString("ubicacion"),
-                        rs.getString("comentario"));
-                System.out.println("Comprobante encontrado con éxito para la reserva ID: " + idReserva);
-            } else {
-                System.out.println("No se encontró un comprobante para la reserva ID: " + idReserva);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Error al obtener el comprobante para la reserva ID: " + idReserva);
-        } finally {
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return reserva; 
-    }
-    
-    // Funcion que actualiza los datos de la reserva 
-    public boolean actualizarReserva(int idReserva,Reserva reserva) {
-	    PreparedStatement ps = null;
-	    ComprobanteControlador controladorc = new ComprobanteControlador();
-	    
-	    int idComprobante = controladorc.obteneridComprobante(idReserva);
-	    try {
-	    	
-	    	ps = connection.prepareStatement("UPDATE Comprobante SET fecha = ?, hora = ? WHERE idComprobante = ?");
-	    	ps.setString(1, reserva.getFecha());
-	    	ps.setString(2, reserva.getHora());
-	    	ps.setInt(3, idComprobante);
-	    	ps.executeUpdate();
-	    	
-	    	System.out.println("Paso comprobante");
-	    	
-	        ps = connection.prepareStatement("UPDATE Reserva SET fecha = ?, hora = ?, idMesa = ?, comentario = ?, dispocicionMesa = ?, idServicio = ?, idComprobante = ?, Temporada = ?  WHERE idReserva = ?");
-	        ps.setString(1, reserva.getFecha());
-	    	ps.setString(2, reserva.getHora());          
-	        ps.setInt(3, reserva.getIdMesa());
-	        ps.setString(4,reserva.getComentario());
-	        ps.setString(5, reserva.getDispocicionMesa());
-	        ps.setInt(6, reserva.getIdServicio());
-	        ps.setInt(7, idComprobante);
-	        ps.setString(8,reserva.getTemporada());
-	        ps.setInt(9, idReserva);
-	        ps.executeUpdate(); 
-	
-	        System.out.println("Reserva actualiza con exito!");
-	        return true;
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        System.out.println("Error al actualizar la Reserva!");
-	        return false; 
-	    } finally {
-	        if (ps != null) {
-	            try {
-	                ps.close(); 
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }
+
+	// Función para obtener el historial de Reservas de un cliente
+	public HistorialReserva obtenerReservaPorId(int idReserva) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		HistorialReserva reserva = null;
+		try {
+			ps = connection.prepareStatement(
+					"SELECT r.idReserva, m.ubicacion, r.fecha, r.hora, m.capacidad, r.idMesa, r.comentario "
+							+ "FROM Reserva r " + "JOIN MesaPrecargada m ON r.idMesa = m.idMesa "
+							+ "WHERE r.idReserva = ?");
+			ps.setInt(1, idReserva);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				reserva = new HistorialReserva(rs.getInt("idReserva"), rs.getString("fecha"), rs.getString("hora"),
+						rs.getInt("idMesa"), rs.getInt("capacidad"), rs.getString("ubicacion"),
+						rs.getString("comentario"));
+				System.out.println("Comprobante encontrado con éxito para la reserva ID: " + idReserva);
+			} else {
+				System.out.println("No se encontró un comprobante para la reserva ID: " + idReserva);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Error al obtener el comprobante para la reserva ID: " + idReserva);
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return reserva;
+	}
+
+	// Funcion que actualiza los datos de la reserva
+	public boolean actualizarReserva(int idReserva, Reserva reserva) {
+		PreparedStatement ps = null;
+		ComprobanteControlador controladorc = new ComprobanteControlador();
+
+		int idComprobante = controladorc.obteneridComprobante(idReserva);
+		try {
+
+			ps = connection.prepareStatement("UPDATE Comprobante SET fecha = ?, hora = ? WHERE idComprobante = ?");
+			ps.setString(1, reserva.getFecha());
+			ps.setString(2, reserva.getHora());
+			ps.setInt(3, idComprobante);
+			ps.executeUpdate();
+
+			System.out.println("Paso comprobante");
+
+			ps = connection.prepareStatement(
+					"UPDATE Reserva SET fecha = ?, hora = ?, idMesa = ?, comentario = ?, dispocicionMesa = ?, idServicio = ?, idComprobante = ?, Temporada = ?  WHERE idReserva = ?");
+			ps.setString(1, reserva.getFecha());
+			ps.setString(2, reserva.getHora());
+			ps.setInt(3, reserva.getIdMesa());
+			ps.setString(4, reserva.getComentario());
+			ps.setString(5, reserva.getDispocicionMesa());
+			ps.setInt(6, reserva.getIdServicio());
+			ps.setInt(7, idComprobante);
+			ps.setString(8, reserva.getTemporada());
+			ps.setInt(9, idReserva);
+			ps.executeUpdate();
+
+			System.out.println("Reserva actualiza con exito!");
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Error al actualizar la Reserva!");
+			return false;
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }

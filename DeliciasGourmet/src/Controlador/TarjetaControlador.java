@@ -78,12 +78,10 @@ public class TarjetaControlador {
  		Tarjeta tarjeta = null;
 
  		try {
- 			// Convertir el número de tarjeta a String si no lo es
  			String nroTarjetaStr = String.valueOf(nroTarjeta);
 
- 			// Cambiar la consulta para usar el número de tarjeta
  			ps = connection.prepareStatement("SELECT * FROM Tarjeta WHERE nroTarjeta = ?");
- 			ps.setString(1, nroTarjetaStr); // Establecer el número de tarjeta como parámetro
+ 			ps.setString(1, nroTarjetaStr);
  			rs = ps.executeQuery();
 
  			if (rs.next()) {
@@ -91,8 +89,6 @@ public class TarjetaControlador {
  				tarjeta.setTitular(rs.getString("titular"));
  				tarjeta.setEmisor(rs.getString("emisor"));
  				tarjeta.setNroTarjeta(rs.getString("nroTarjeta"));
-
- 				// Obtener y establecer el código de verificación
  				tarjeta.setCodVerificacion(rs.getInt("codVerificacion"));
 
  				System.out.println("Tarjeta encontrada con éxito: " + nroTarjetaStr);
@@ -157,7 +153,6 @@ public class TarjetaControlador {
  		Tarjeta tarjeta = null;
 
  		try {
- 			// Primero, obtén el idTarjeta asociado al comprobante
  			ps = connection.prepareStatement("SELECT idTarjeta FROM Comprobante WHERE idComprobante = ?");
  			ps.setInt(1, idComprobante);
  			rs = ps.executeQuery();
@@ -165,7 +160,6 @@ public class TarjetaControlador {
  			if (rs.next()) {
  				int idTarjeta = rs.getInt("idTarjeta");
 
- 				// Ahora, con el idTarjeta, obtén los detalles de la tarjeta
  				tarjeta = obtenerDatosTarjeta(idTarjeta);
  			} else {
  				System.out.println("No se encontró un comprobante con ID: " + idComprobante);

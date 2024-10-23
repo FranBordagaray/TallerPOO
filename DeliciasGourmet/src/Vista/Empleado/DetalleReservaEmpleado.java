@@ -65,6 +65,9 @@ public class DetalleReservaEmpleado extends JFrame {
 	private String comentario;
 	private String[] mesasSeleccionadasEvento;
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public DetalleReservaEmpleado(Reserva reserva, Mesa mesa, Servicio servicio, Comprobante comprobante, 
 		String[] mesasSeleccionadasEvento) {
 		
@@ -118,7 +121,7 @@ public class DetalleReservaEmpleado extends JFrame {
 		lblUbicacion.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblUbicacion.setFont(new Font("Roboto Light", Font.PLAIN, 18));
 		lblUbicacion.setAlignmentX(1.0f);
-		lblUbicacion.setBounds(0, 80, 200, 25);
+		lblUbicacion.setBounds(-29, 80, 200, 25);
 		pnlContenedor.add(lblUbicacion);
 
 		// Etiqueta Fecha
@@ -127,7 +130,7 @@ public class DetalleReservaEmpleado extends JFrame {
 		lblFecha.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblFecha.setFont(new Font("Roboto Light", Font.PLAIN, 18));
 		lblFecha.setAlignmentX(1.0f);
-		lblFecha.setBounds(0, 140, 200, 25);
+		lblFecha.setBounds(-41, 140, 200, 25);
 		pnlContenedor.add(lblFecha);
 
 		// Etiqueta Hora
@@ -136,7 +139,7 @@ public class DetalleReservaEmpleado extends JFrame {
 		lblHora.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblHora.setFont(new Font("Roboto Light", Font.PLAIN, 18));
 		lblHora.setAlignmentX(1.0f);
-		lblHora.setBounds(0, 200, 200, 25);
+		lblHora.setBounds(-41, 200, 200, 25);
 		pnlContenedor.add(lblHora);
 
 		// Etiqueta Mesa
@@ -145,7 +148,7 @@ public class DetalleReservaEmpleado extends JFrame {
 		lblMesa.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblMesa.setFont(new Font("Roboto Light", Font.PLAIN, 18));
 		lblMesa.setAlignmentX(1.0f);
-		lblMesa.setBounds(0, 248, 200, 25);
+		lblMesa.setBounds(-54, 245, 200, 25);
 		pnlContenedor.add(lblMesa);
 
 		// Etiqueta Comentario
@@ -154,7 +157,7 @@ public class DetalleReservaEmpleado extends JFrame {
 		lblComentario.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblComentario.setFont(new Font("Roboto Light", Font.PLAIN, 18));
 		lblComentario.setAlignmentX(1.0f);
-		lblComentario.setBounds(0, 293, 200, 25);
+		lblComentario.setBounds(-54, 366, 200, 25);
 		pnlContenedor.add(lblComentario);
 
 		ubicacion = mesa.getUbicacion();
@@ -168,7 +171,7 @@ public class DetalleReservaEmpleado extends JFrame {
 		lblUbiSeleccionada.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUbiSeleccionada.setFont(new Font("Roboto Light", Font.BOLD, 16));
 		lblUbiSeleccionada.setBackground(new Color(222, 184, 135));
-		lblUbiSeleccionada.setBounds(200, 80, 250, 25);
+		lblUbiSeleccionada.setBounds(181, 80, 139, 25);
 		pnlContenedor.add(lblUbiSeleccionada);
 		pnlContenedor.revalidate();
 		pnlContenedor.repaint();
@@ -179,7 +182,7 @@ public class DetalleReservaEmpleado extends JFrame {
 		lblFecSeleccionada.setHorizontalAlignment(SwingConstants.CENTER);
 		lblFecSeleccionada.setFont(new Font("Roboto Light", Font.BOLD, 16));
 		lblFecSeleccionada.setBackground(new Color(222, 184, 135));
-		lblFecSeleccionada.setBounds(200, 140, 250, 25);
+		lblFecSeleccionada.setBounds(150, 140, 111, 25);
 		pnlContenedor.add(lblFecSeleccionada);
 
 		// Etiqueta de el rango de Horas de la reserva
@@ -188,17 +191,18 @@ public class DetalleReservaEmpleado extends JFrame {
 		lblHoraSeleccionada.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHoraSeleccionada.setFont(new Font("Roboto Light", Font.BOLD, 16));
 		lblHoraSeleccionada.setBackground(new Color(222, 184, 135));
-		lblHoraSeleccionada.setBounds(200, 200, 250, 25);
+		lblHoraSeleccionada.setBounds(119, 200, 187, 25);
 		pnlContenedor.add(lblHoraSeleccionada);
-
-		// Etiqueta de Mesas Seleccionadas de la reserva
-		JLabel lblMesaSeleccionada = new JLabel(concatenarIdsMesas(mesasSeleccionadasEvento));
-		lblMesaSeleccionada.setForeground(Color.BLACK);
-		lblMesaSeleccionada.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMesaSeleccionada.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		lblMesaSeleccionada.setBackground(new Color(222, 184, 135));
-		lblMesaSeleccionada.setBounds(210, 248, 250, 25);
-		pnlContenedor.add(lblMesaSeleccionada);
+		
+		JTextArea textAreaMesas = new JTextArea(concatenarIdsMesas(mesasSeleccionadasEvento));
+		textAreaMesas.setLineWrap(true);
+		textAreaMesas.setForeground(Color.BLACK);
+		textAreaMesas.setFont(new Font("Roboto Light", Font.BOLD, 14));
+		textAreaMesas.setEditable(false);
+		textAreaMesas.setBorder(null);
+		textAreaMesas.setBackground(new Color(222, 184, 135));
+		textAreaMesas.setBounds(169, 250, 271, 100);
+		pnlContenedor.add(textAreaMesas);
 
 		// Etiqueta de Comentarios de la reserva
 		JTextArea textArea = new JTextArea(comentario);
@@ -209,7 +213,7 @@ public class DetalleReservaEmpleado extends JFrame {
 		textArea.setFont(new Font("Roboto Light", Font.BOLD, 14));
 		textArea.setEditable(false);
 		textArea.setBackground(new Color(222, 184, 135));
-		textArea.setBounds(150, 337, 250, 100);
+		textArea.setBounds(150, 371, 250, 100);
 		pnlContenedor.add(textArea);
 
 		// Botón de Confirmar
@@ -275,16 +279,15 @@ public class DetalleReservaEmpleado extends JFrame {
 		btnCerrar.setForeground(Color.BLACK);
 		btnCerrar.setBounds(50, 500, 120, 30);
 		pnlContenedor.add(btnCerrar);
+				
 
 	}
 	
-	
-
 	// Metodo para concatenar las mesas
 	public String concatenarIdsMesas(String[] mesasSeleccionadasEvento) {
 		StringBuilder sb = new StringBuilder();
 		for (String mesa : mesasSeleccionadasEvento) {
-			sb.append(mesa).append(",");
+			sb.append(mesa).append(", ");
 		}
 
 		if (sb.length() > 0) {
@@ -341,44 +344,36 @@ public class DetalleReservaEmpleado extends JFrame {
 	    }
 	}
 	
-	//Metodo para crear la Mesa y Reserva
-	public void crearReservasYMesas() {
+	
+	public int crearServicioYRetornarId(Servicio servicio) {
+	    int idServicio = -1;
 	    try {
-	        // Crear el servicio
-	        int idServicio = servicioControlador.crearServicio(servicio);
-	        
-	        if (idServicio != -1) {
-	            reserva.setIdServicio(idServicio);
-	            reserva.setEstado(1);
-	            mesa.setIdServicio(idServicio);
-	            mesa.setEstado(EnumEstado.OCUPADA);
-
-	            if (mesaControlador.crearMesa(mesa)) {
-	                if (!reservaControlador.verificarReserva(reserva) && reservaControlador.crearReserva(reserva)) {
-	                    int idReserva = reservaControlador.buscarIdReserva(reserva);
-	                    comprobante.setIdTarjeta(tarjetaControlador.obtenerUltimoIdTarjeta());
-	                    comprobante.setIdReserva(idReserva);
-
-	                    if (comprobanteControlador.crearComprobante(comprobante)) {
-	                        reservaControlador.actualizarComprobante(idReserva, comprobanteControlador.obtenerUltimoIdComprobante());                     
-	                        dispose();
-	                    } else {
-	                        System.out.println("Error al registrar el comprobante.");
-	                    }
-	                } else {
-	                    System.out.println("La reserva ya existe o no se pudo crear.");
-	                }
-	            } else {
-	                System.out.println("Error al registrar la mesa.");
-	            }
-	        } else {
+	        idServicio = servicioControlador.crearServicio(servicio);
+	        if (idServicio == -1) {
 	            System.out.println("Error al crear el servicio.");
 	        }
-
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-	}		
+	    return idServicio;
+	}
+	
+	
+	// Método para crear las mesas y las reservas
+	public void crearMesas(int idServicio) {
+	    try {
+	        mesa.setIdServicio(idServicio);
+	        mesa.setEstado(EnumEstado.OCUPADA);
+
+	        if (mesaControlador.crearMesa(mesa)) {	            
+	            dispose();
+	        } else {
+	            System.out.println("Error al registrar la mesa.");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
 	
 	//Otro constructor para solo hacer Bloqueos de Mesas
 	public DetalleReservaEmpleado(Mesa mesa, Servicio servicio) {
