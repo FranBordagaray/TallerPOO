@@ -70,6 +70,49 @@ public class TarjetaControlador {
         }
         return idTarjeta;
     }
+    
+ // Función para obtener los datos de una tarjeta mediante el número de tarjeta como String
+ 	public Tarjeta obtenerDatosTarjetaConNumTarjeta(String nroTarjeta) {
+ 		PreparedStatement ps = null;
+ 		ResultSet rs = null;
+ 		Tarjeta tarjeta = null;
+
+ 		try {
+ 			// Convertir el número de tarjeta a String si no lo es
+ 			String nroTarjetaStr = String.valueOf(nroTarjeta);
+
+ 			// Cambiar la consulta para usar el número de tarjeta
+ 			ps = connection.prepareStatement("SELECT * FROM Tarjeta WHERE nroTarjeta = ?");
+ 			ps.setString(1, nroTarjetaStr); // Establecer el número de tarjeta como parámetro
+ 			rs = ps.executeQuery();
+
+ 			if (rs.next()) {
+ 				tarjeta = new Tarjeta();
+ 				tarjeta.setTitular(rs.getString("titular"));
+ 				tarjeta.setEmisor(rs.getString("emisor"));
+ 				tarjeta.setNroTarjeta(rs.getString("nroTarjeta"));
+
+ 				// Obtener y establecer el código de verificación
+ 				tarjeta.setCodVerificacion(rs.getInt("codVerificacion"));
+
+ 				System.out.println("Tarjeta encontrada con éxito: " + nroTarjetaStr);
+ 			} else {
+ 				System.out.println("No se encontró una tarjeta para el número: " + nroTarjetaStr);
+ 			}
+ 		} catch (SQLException e) {
+ 			e.printStackTrace();
+ 			System.out.println("Error al obtener la tarjeta");
+ 		} finally {
+ 			if (ps != null) {
+ 				try {
+ 					ps.close();
+ 				} catch (SQLException e) {
+ 					e.printStackTrace();
+ 				}
+ 			}
+ 		}
+ 		return tarjeta;
+ 	}
 
 	// Funcion para obtener los datos de una tarjeta mediante el id
     public Tarjeta obtenerDatosTarjeta(int idTarjeta) {
@@ -106,4 +149,40 @@ public class TarjetaControlador {
         }
         return tarjeta;
     }
+    
+ // Función para obtener los datos de una tarjeta mediante el id del comprobante
+ 	public Tarjeta obtenerTarjetaPorComprobante(int idComprobante) {
+ 		PreparedStatement ps = null;
+ 		ResultSet rs = null;
+ 		Tarjeta tarjeta = null;
+
+ 		try {
+ 			// Primero, obtén el idTarjeta asociado al comprobante
+ 			ps = connection.prepareStatement("SELECT idTarjeta FROM Comprobante WHERE idComprobante = ?");
+ 			ps.setInt(1, idComprobante);
+ 			rs = ps.executeQuery();
+
+ 			if (rs.next()) {
+ 				int idTarjeta = rs.getInt("idTarjeta");
+
+ 				// Ahora, con el idTarjeta, obtén los detalles de la tarjeta
+ 				tarjeta = obtenerDatosTarjeta(idTarjeta);
+ 			} else {
+ 				System.out.println("No se encontró un comprobante con ID: " + idComprobante);
+ 			}
+ 		} catch (SQLException e) {
+ 			e.printStackTrace();
+ 			System.out.println("Error al obtener la tarjeta asociada al comprobante ID: " + idComprobante);
+ 		} finally {
+ 			if (ps != null) {
+ 				try {
+ 					ps.close();
+ 				} catch (SQLException e) {
+ 					e.printStackTrace();
+ 				}
+ 			}
+ 		}
+
+ 		return tarjeta;
+ 	}
 }

@@ -368,6 +368,58 @@ public class ReservaControlador {
 		}
 		return reporte;
 	}
+	
+	// Función para obtener el historial completo de Reservas de un cliente
+		public ArrayList<Reserva> obtenerHistorialDeReservasCompleta(int idCliente) {
+		    PreparedStatement ps = null;
+		    ResultSet rs = null;
+		    ArrayList<Reserva> reservas = new ArrayList<>();
+
+		    try {
+		        // Consulta para obtener todas las reservas del cliente
+		        ps = connection.prepareStatement(
+		            "SELECT r.*, c.nombre, c.apellido, m.capacidad, m.ubicacion " +
+		            "FROM Reserva r JOIN Cliente c ON r.idCliente = c.idCliente " +
+		            "JOIN MesaPrecargada m ON r.idMesa = m.idMesa " +
+		            "WHERE r.idCliente = ?"
+		        );
+		        ps.setInt(1, idCliente);  // Asigna el idCliente al PreparedStatement
+		        rs = ps.executeQuery();
+		        
+		        while (rs.next()) {
+		            // Crea un objeto Reserva por cada fila de la consulta
+		            Reserva reserva = new Reserva();
+		            reserva.setIdReserva(rs.getInt("idReserva"));  // Asumiendo que tienes un método setIdReserva
+		            reserva.setIdCliente(rs.getInt("idCliente"));
+		            reserva.setFecha(rs.getString("fecha"));
+		            reserva.setHora(rs.getString("hora"));
+		            reserva.setIdMesa(rs.getInt("idMesa"));
+		            reserva.setComentario(rs.getString("comentario"));
+		            reserva.setDispocicionMesa(rs.getString("dispocicionMesa"));
+		            reserva.setEstado(rs.getInt("estado"));
+		            reserva.setIdServicio(rs.getInt("idServicio"));
+		            reserva.setIdComprobante(rs.getInt("idComprobante"));
+		            // Puedes agregar más atributos según sea necesario
+
+		            // Agrega el objeto Reserva a la lista
+		            reservas.add(reserva);
+		        }
+
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        System.out.println("Error al obtener el historial completo de reservas para el cliente con ID: " + idCliente);
+		    } finally {
+		        if (ps != null) {
+		            try {
+		                ps.close();
+		            } catch (SQLException e) {
+		                e.printStackTrace();
+		            }
+		        }
+		    }
+
+		    return reservas;
+		}
 
 	// Función para obtener el historial de comensales por temporada
 	public List<Reportes> obtenerHistorialComensalesPorTemporada(String Temporada) {

@@ -8,7 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.HashSet;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,9 +20,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import Controlador.ComprobanteControlador;
+import Controlador.ReservaControlador;
 import Controlador.TarjetaControlador;
+import Modelo.Cliente.SesionCliente;
 import Modelo.Cliente.Tarjeta;
+import Modelo.Complementos.Reserva;
 import Vista.Empleado.VistaReservaEmpleado;
+import javax.swing.JComboBox;
 
 public class UsarTarjeta extends JFrame {
 
@@ -28,14 +36,23 @@ public class UsarTarjeta extends JFrame {
 	private JTextField txtEmisor;
 	private JTextField txtNroTarjeta;
 	private JTextField txtCodVerificacion;
+	private JComboBox cbxTarjetas;
+	private JComboBox<String> comboBox;
+	private SesionCliente s;
+	private ReservaControlador reservaControlador;
+	private ComprobanteControlador comprobanteControlador;
+	private String numeroTarjetaSeleccionada;
+	private boolean seleccion;
+
 	TarjetaControlador controlador = new TarjetaControlador();
+
 	Tarjeta tarjeta = new Tarjeta();
 
-
-
 	public UsarTarjeta(JPanel vistaReserva) {
-		
-		
+
+		this.reservaControlador = new ReservaControlador();
+		this.comprobanteControlador = new ComprobanteControlador();
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 350);
 		setUndecorated(true);
@@ -100,7 +117,7 @@ public class UsarTarjeta extends JFrame {
 		lblTarjeta.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblTarjeta.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTarjeta.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		lblTarjeta.setBounds(100, 10, 250, 25);
+		lblTarjeta.setBounds(115, 10, 213, 25);
 		panelContenedor.add(lblTarjeta);
 
 		// Etiqueta Titular
@@ -120,7 +137,7 @@ public class UsarTarjeta extends JFrame {
 		lblEmisor.setFont(new Font("Roboto Light", Font.BOLD, 12));
 		lblEmisor.setBounds(45, 150, 120, 25);
 		panelContenedor.add(lblEmisor);
-		
+
 		// Etiqueta Numero Tarjeta
 		JLabel lblNroTarjeta = new JLabel("NRO TARJETA");
 		lblNroTarjeta.setHorizontalAlignment(SwingConstants.CENTER);
@@ -129,7 +146,7 @@ public class UsarTarjeta extends JFrame {
 		lblNroTarjeta.setFont(new Font("Roboto Light", Font.BOLD, 12));
 		lblNroTarjeta.setBounds(45, 190, 120, 25);
 		panelContenedor.add(lblNroTarjeta);
-		
+
 		// Etiqueta Codigo Verificacion
 		JLabel lblCodVerificacion = new JLabel("COD VERIFICACION");
 		lblCodVerificacion.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -138,7 +155,7 @@ public class UsarTarjeta extends JFrame {
 		lblCodVerificacion.setFont(new Font("Roboto Light", Font.BOLD, 12));
 		lblCodVerificacion.setBounds(45, 230, 120, 25);
 		panelContenedor.add(lblCodVerificacion);
-		
+
 		// Boton Confirmar
 		JButton btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.addMouseListener(new MouseAdapter() {
@@ -157,35 +174,47 @@ public class UsarTarjeta extends JFrame {
 		btnConfirmar.setForeground(Color.BLACK);
 		btnConfirmar.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnConfirmar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					if(verificarCampos()) {
-						return;
-					} else {
-						tarjeta.setTitular(txtTitular.getText());
-						tarjeta.setEmisor(txtEmisor.getText());
-						tarjeta.setNroTarjeta(txtNroTarjeta.getText());
-						tarjeta.setCodVerificacion(Integer.parseInt(txtCodVerificacion.getText()));
-						if (controlador.ingresarTarjeta(tarjeta)) {
-							JOptionPane.showMessageDialog(UsarTarjeta.this, "Tarjeta ingresada con exito!", "Exito",JOptionPane.INFORMATION_MESSAGE);
-							if (vistaReserva instanceof VistaReservaEmpleado) {
-							    ((VistaReservaEmpleado) vistaReserva).habilitarBoton();
-							} else {
-							    ((VistaReservaCliente) vistaReserva).habilitarBoton();
-							}
-							System.out.println("Tarjeta ingresada con exito!");
-							dispose();
-						} else {
-							JOptionPane.showMessageDialog(UsarTarjeta.this, "Error al ingresar", "Error",
-									JOptionPane.INFORMATION_MESSAGE);
-						}
-					}
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(UsarTarjeta.this, "Error inesperado: " + e2.getMessage(), "Error",
-							JOptionPane.ERROR_MESSAGE);
-					System.out.print(e2.getMessage());
-				}
-			} 
+		    public void actionPerformed(ActionEvent e) {
+		        if (seleccion) {
+		            if (numeroTarjetaSeleccionada.equals((String)txtCodVerificacion.getText())) {
+		                if (vistaReserva instanceof VistaReservaEmpleado) {
+		                    ((VistaReservaEmpleado) vistaReserva).habilitarBoton();
+		                } else if (vistaReserva instanceof VistaReservaCliente) {
+		                    ((VistaReservaCliente) vistaReserva).habilitarBoton();
+		                }
+                        JOptionPane.showMessageDialog(UsarTarjeta.this, "Tarjeta ingresada con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		                dispose();
+		            } else {
+		                JOptionPane.showMessageDialog(UsarTarjeta.this, "El código de verificación no coincide con el número de tarjeta seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
+		            }
+		        } else {
+		            try {
+		                if (verificarCampos()) {
+		                    return;
+		                } else {
+		                    tarjeta.setTitular(txtTitular.getText());
+		                    tarjeta.setEmisor(txtEmisor.getText());
+		                    tarjeta.setNroTarjeta(txtNroTarjeta.getText());
+		                    tarjeta.setCodVerificacion(Integer.parseInt(txtCodVerificacion.getText()));
+
+		                    if (controlador.ingresarTarjeta(tarjeta)) {
+		                        JOptionPane.showMessageDialog(UsarTarjeta.this, "Tarjeta ingresada con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);		                        
+		                        if (vistaReserva instanceof VistaReservaEmpleado) {
+		                            ((VistaReservaEmpleado) vistaReserva).habilitarBoton();
+		                        } else if (vistaReserva instanceof VistaReservaCliente) {
+		                            ((VistaReservaCliente) vistaReserva).habilitarBoton();
+		                        }
+		                        
+		                        dispose();
+		                    } else {
+		                        JOptionPane.showMessageDialog(UsarTarjeta.this, "Error al ingresar la tarjeta", "Error", JOptionPane.ERROR_MESSAGE);
+		                    }
+		                }
+		            } catch (Exception e2) {
+		                JOptionPane.showMessageDialog(UsarTarjeta.this, "Error inesperado: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		            }
+		        }
+		    }
 		});
 		btnConfirmar.setBackground(Color.WHITE);
 		btnConfirmar.setBorder(null);
@@ -194,7 +223,7 @@ public class UsarTarjeta extends JFrame {
 		btnConfirmar.setFont(new Font("Roboto Light", Font.BOLD, 16));
 		btnConfirmar.setBounds(250, 300, 150, 25);
 		panelContenedor.add(btnConfirmar);
-		
+
 		// Boton para volver a la pantalla reservas
 		JButton btnAtras = new JButton("Volver");
 		btnAtras.addActionListener(new ActionListener() {
@@ -226,30 +255,104 @@ public class UsarTarjeta extends JFrame {
 		btnAtras.setAlignmentX(0.5f);
 		btnAtras.setBounds(50, 300, 150, 25);
 		panelContenedor.add(btnAtras);
-	}
-	
-		// Funcion para verificar campos vacios
-		private boolean verificarCampos() {
-			String titular = txtTitular.getText();
-			String emisor = txtEmisor.getText();
-			String nroTarjeta = txtNroTarjeta.getText();
-			String codVerificacion = txtCodVerificacion.getText();
 
-			if (titular.isEmpty() || emisor.isEmpty() || nroTarjeta.isEmpty() || codVerificacion.isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Complete todos los campos", "Advertencia", JOptionPane.ERROR_MESSAGE);
-				return true;
-			} else if (nroTarjeta.length() != 16) {
-				JOptionPane.showMessageDialog(this, "El numero de tarjeta, debe ser de 16 digitos!", "Error",
-						JOptionPane.ERROR_MESSAGE);
-				return true;
-				
-			}else if(codVerificacion.length()!=3){
-				JOptionPane.showMessageDialog(this, "El codigo de verificacion debe ser de 3 digitos!", "Error",
-						JOptionPane.ERROR_MESSAGE);
-				return true;
-				
+		s = new SesionCliente();
+		int id = s.getClienteActual().getIdCliente();
+		ArrayList<Reserva> reservas = reservaControlador.obtenerHistorialDeReservasCompleta(id);
+
+		// Combo box de Tarjetas
+		cbxTarjetas = new JComboBox<String>();
+		cargarNumerosDeTarjetaEnComboBox(cbxTarjetas, obtenerIdsComprobantesPorListaReservas(reservas));
+		cbxTarjetas.setBounds(169, 79, 119, 21);
+		panelContenedor.add(cbxTarjetas);
+
+		// btn Cargar tarjeta
+		JButton btnCargar = new JButton("Cargar");
+		btnCargar.addActionListener(e -> {
+			Tarjeta tarjetaSeleccionada = controlador
+					.obtenerDatosTarjetaConNumTarjeta((String) cbxTarjetas.getSelectedItem());
+
+			if (tarjetaSeleccionada != null) {
+				txtTitular.setText(tarjetaSeleccionada.getTitular());
+				txtEmisor.setText(tarjetaSeleccionada.getEmisor());
+				txtNroTarjeta.setText(tarjetaSeleccionada.getNroTarjeta());
+				txtCodVerificacion.setText("");
+
+				numeroTarjetaSeleccionada = String.valueOf(tarjetaSeleccionada.getCodVerificacion());
+				System.out.println(numeroTarjetaSeleccionada);
+
+				seleccion = true;
+			} else {
+				System.out.println("No hay tarjeta seleccionada.");
 			}
-			return false;
+		});
+		btnCargar.setBounds(298, 79, 85, 21);
+		panelContenedor.add(btnCargar);
+
+	}
+
+	// Funcion para verificar campos vacios
+	private boolean verificarCampos() {
+		String titular = txtTitular.getText();
+		String emisor = txtEmisor.getText();
+		String nroTarjeta = txtNroTarjeta.getText();
+		String codVerificacion = txtCodVerificacion.getText();
+
+		if (titular.isEmpty() || emisor.isEmpty() || nroTarjeta.isEmpty() || codVerificacion.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Complete todos los campos", "Advertencia", JOptionPane.ERROR_MESSAGE);
+			return true;
+		} else if (nroTarjeta.length() != 16) {
+			JOptionPane.showMessageDialog(this, "El numero de tarjeta, debe ser de 16 digitos!", "Error",
+					JOptionPane.ERROR_MESSAGE);
+			return true;
+
+		} else if (codVerificacion.length() != 3) {
+			JOptionPane.showMessageDialog(this, "El codigo de verificacion debe ser de 3 digitos!", "Error",
+					JOptionPane.ERROR_MESSAGE);
+			return true;
+
 		}
-		
+		return false;
+	}
+
+	// Método para obtener los IDs de comprobantes de una lista de reservas
+	public ArrayList<Integer> obtenerIdsComprobantesPorListaReservas(ArrayList<Reserva> listaReservas) {
+		ArrayList<Integer> idsComprobantes = new ArrayList<>();
+
+		for (Reserva reserva : listaReservas) {
+			int idComprobante = comprobanteControlador.obteneridComprobante(reserva.getIdReserva());
+			if (idComprobante != 0) {
+				idsComprobantes.add(idComprobante);
+			} else {
+				System.out.println("No se encontró comprobante para la reserva ID: " + reserva.getIdReserva());
+			}
+		}
+
+		return idsComprobantes;
+	}
+
+	// Método para cargar los números de tarjeta en un JComboBox desde una lista de
+	// comprobantes
+	public void cargarNumerosDeTarjetaEnComboBox(JComboBox<String> comboBox, ArrayList<Integer> idsComprobantes) {
+		HashSet<String> numerosTarjetas = new HashSet<>();
+
+		for (int comprobante : idsComprobantes) {
+			Tarjeta tarjeta = controlador.obtenerTarjetaPorComprobante(comprobante);
+			if (tarjeta != null) {
+				try {
+					String nroTarjeta = tarjeta.getNroTarjeta();
+					numerosTarjetas.add(nroTarjeta);
+				} catch (NumberFormatException e) {
+					System.out.println("Error al convertir el número de tarjeta: " + tarjeta.getNroTarjeta());
+				}
+			}
+		}
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+
+		for (String nroTarjeta : numerosTarjetas) {
+			model.addElement(nroTarjeta);
+		}
+
+		comboBox.setModel(model);
+	}
 }
