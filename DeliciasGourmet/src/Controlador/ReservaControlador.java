@@ -10,7 +10,6 @@ import java.util.List;
 import Conexion.Conexion;
 import Modelo.Cliente.HistorialReserva;
 import Modelo.Complementos.Reserva;
-import Modelo.Complementos.Servicio;
 import Modelo.Empleado.Reportes;
 
 public class ReservaControlador {
@@ -93,7 +92,6 @@ public class ReservaControlador {
 	    }
 	}
 
-
 	// Función para verificar si la Reserva ya existe
 	public boolean verificarReserva(Reserva Reserva) {
 	    PreparedStatement ps = null;
@@ -134,7 +132,6 @@ public class ReservaControlador {
 	        }
 	    }
 	}
-
 
 	// Metodo para verificar si hay solapamientos en una reserva para Evento
 	// Especial
@@ -268,7 +265,6 @@ public class ReservaControlador {
 	    return historial;
 	}
 
-
 	// Función para cargar el combo solamente con las mesas que el cliente reservó
 	public List<Integer> obtenerMesasReservadasPorCliente(int idCliente) throws SQLException {
 	    List<Integer> mesasReservadas = new ArrayList<>();
@@ -303,7 +299,6 @@ public class ReservaControlador {
 	    return mesasReservadas;
 	}
 
-
 	// Función para cargar el combo solamente con las mesas que el cliente reservó
 	public List<Integer> obtenerEstadoReservasPorCliente(int idCliente) throws SQLException {
 	    List<Integer> estadoReservas = new ArrayList<>();
@@ -337,7 +332,6 @@ public class ReservaControlador {
 	    }
 	    return estadoReservas;
 	}
-
 
 	// Función para obtener el historial de Reservas de un cliente
 	public List<Reportes> obtenerHistorialDeReservas(String dateDesde, String dateHasta) {
@@ -377,7 +371,6 @@ public class ReservaControlador {
 	    }
 	    return reporte;
 	}
-
 
 	// Función para obtener el historial completo de Reservas de un cliente
 	public ArrayList<Reserva> obtenerHistorialDeReservasCompleta(int idCliente) {
@@ -466,7 +459,6 @@ public class ReservaControlador {
 	    return reporte;
 	}
 
-
 	// Funcion para actualizar la reserva, y asignarle su comprobante
 	public boolean actualizarComprobante(int idReserva, int idComprobante) {
 		PreparedStatement ps = null;
@@ -542,7 +534,6 @@ public class ReservaControlador {
 	    return idReserva;
 	}
 
-
 	// Funcion para cancelar una Reserva
 	public void cancelarReserva(int idSeleccionado) {
 		PreparedStatement ps = null;
@@ -607,7 +598,6 @@ public class ReservaControlador {
 	    }
 	}
 
-
 	// Funcion para cargar datos de la reserva Historial Empleado
 	public List<HistorialReserva> obtenerHistorialReserva() {
 	    PreparedStatement ps = null;
@@ -648,6 +638,54 @@ public class ReservaControlador {
 	    return historial;
 	}
 
+	//Metodo para obtener las reservas futuras del cliente
+	public List<Reportes> obtenerReservasFuturasPorCliente(int idCliente) {
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+	    List<Reportes> reservasFuturas = new ArrayList<>();
+	    try {
+	        ps = connection.prepareStatement(
+	            "SELECT c.nombre, c.apellido, r.fecha, r.hora, m.capacidad, m.ubicacion, r.comentario " +
+	            "FROM Reserva r JOIN MesaPrecargada m ON r.idMesa = m.idMesa " +
+	            "JOIN Cliente c ON r.idCliente = c.idCliente " +
+	            "WHERE r.idCliente = ? AND r.fecha >= DATE('now')"
+	        );
+	        ps.setInt(1, idCliente);
+	        rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            Reportes reporte = new Reportes(
+	                rs.getString("nombre"),
+	                rs.getString("apellido"),
+	                rs.getString("fecha"),
+	                rs.getString("hora"),
+	                rs.getInt("capacidad"),
+	                rs.getString("ubicacion"),
+	                rs.getString("comentario")
+	            );
+	            reservasFuturas.add(reporte);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Error al obtener las reservas futuras para el cliente con id: " + idCliente);
+	    } finally {
+	        if (rs != null) {
+	            try {
+	                rs.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	        if (ps != null) {
+	            try {
+	                ps.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	    return reservasFuturas;
+	}
 
 	// Función para obtener el cliente más frecuente
 	public Reportes obtenerClienteMasFrecuente() {
@@ -683,7 +721,6 @@ public class ReservaControlador {
 	    }
 	    return reporte;
 	}
-
 
 	// Función para obtener el historial de Reservas de un cliente
 	public HistorialReserva obtenerComprobantePorReserva(int idReserva) {

@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import Conexion.Conexion;
 import Modelo.Cliente.SesionCliente;
@@ -84,7 +86,6 @@ public class ClienteControlador {
 	    }
 	    return false; 
 	}
-
 
 	// Función para actualizar cuentas de clientes
 	public void actualizarCliente(Cliente cliente) {
@@ -192,7 +193,6 @@ public class ClienteControlador {
 	    return contrasenia;
 	}
 
-
 	// Función para obtener el código de recuperación
 	public String obtenerCodigoRecuperacion(String email) {
 	    PreparedStatement ps = null;
@@ -258,6 +258,50 @@ public class ClienteControlador {
 			}
 		}
 		return false;
+	}
+	
+	// Función para obtener una lista de todos los clientes
+	public List<Cliente> obtenerTodosLosClientes() {
+	    List<Cliente> listaClientes = new ArrayList<>();
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+
+	    try {
+	        ps = connection.prepareStatement("SELECT * FROM Cliente");
+	        rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            Cliente cliente = new Cliente();
+	            cliente.setIdCliente(rs.getInt("idCliente"));
+	            cliente.setNombre(rs.getString("nombre"));
+	            cliente.setApellido(rs.getString("apellido"));
+	            cliente.setDomicilio(rs.getString("domicilio"));
+	            cliente.setTelefono(rs.getString("telefono"));
+	            cliente.setEmail(rs.getString("email"));
+	            cliente.setContrasenia(rs.getString("contrasenia"));
+	            listaClientes.add(cliente);
+	        }
+	        System.out.println("Clientes obtenidos con éxito!");
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Error al obtener la lista de clientes.");
+	    } finally {
+	        if (rs != null) {
+	            try {
+	                rs.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	        if (ps != null) {
+	            try {
+	                ps.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	    return listaClientes;
 	}
 
 	// Funcion para cifrar contraseñas

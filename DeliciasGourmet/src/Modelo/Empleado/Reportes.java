@@ -37,6 +37,7 @@ public class Reportes {
 		this.comentario = comentario;
 	}
 	
+
 	// Get de totalReservas
 	public int getTotalReservas() {
 		return totalReservas;

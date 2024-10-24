@@ -42,6 +42,7 @@ public class Reporte extends JPanel {
     private JDateChooser dateDesde;
     private JDateChooser dateHasta;
     private ReservaControlador controlador;
+    private SeleccionarCliente seleccionarCliente;
 
     private static final long serialVersionUID = 1L;
     public Reporte() {
@@ -54,7 +55,7 @@ public class Reporte extends JPanel {
         // Etiqueta de reporte
         JLabel lblReportes = new JLabel("REPORTES");
         lblReportes.setFont(new Font("Roboto Light", Font.BOLD, 32));
-        lblReportes.setBounds(414, 15, 164, 38);
+        lblReportes.setBounds(397, 15, 197, 38);
         add(lblReportes);
 
         // Etiqueta y separador de reservas futuras de cliente
@@ -435,6 +436,21 @@ public class Reporte extends JPanel {
         btnInvierno.setAlignmentX(0.5f);
         btnInvierno.setBounds(762, 640, 150, 30);
         add(btnInvierno);
+        
+        JButton btnReservasFuturas = new JButton("BUSCAR");
+        btnReservasFuturas.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		seleccionarCliente = new SeleccionarCliente();
+        		seleccionarCliente.setVisible(true);
+        	}
+        });
+        btnReservasFuturas.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnReservasFuturas.setForeground(Color.BLACK);
+        btnReservasFuturas.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        btnReservasFuturas.setBorder(null);
+        btnReservasFuturas.setBackground(Color.WHITE);
+        btnReservasFuturas.setBounds(421, 140, 150, 30);
+        add(btnReservasFuturas);
     }
     
     //Metodo para generar los reportes por temporada
