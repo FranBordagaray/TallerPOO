@@ -47,52 +47,60 @@ public class ComprobanteControlador {
 		}
 	}
 
-	// Funcion que obtiene el id de comprobante que se creo, el ultimo en la tabla
+	// Función que obtiene el id de comprobante que se creó, el último en la tabla
 	public int obtenerUltimoIdComprobante() {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		int idComprobante = -1;
-		try {
-			ps = connection.prepareStatement("SELECT MAX(idComprobante) FROM Comprobante");
-			rs = ps.executeQuery();
-			if (rs.next()) {
-				idComprobante = rs.getInt(1);
-			}
-			System.out.println("Último ID de tarjeta obtenido con éxito: " + idComprobante);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("Error al obtener el último ID de tarjeta!");
-		} finally {
-			if (ps != null) {
-				try {
-					ps.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return idComprobante;
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+	    int idComprobante = -1;
+	    try {
+	        ps = connection.prepareStatement("SELECT MAX(idComprobante) FROM Comprobante");
+	        rs = ps.executeQuery();
+	        if (rs.next()) {
+	            idComprobante = rs.getInt(1);
+	        }
+	        System.out.println("Último ID de comprobante obtenido con éxito: " + idComprobante);
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Error al obtener el último ID de comprobante!");
+	    } finally {
+	        if (rs != null) {
+	            try {
+	                rs.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	        if (ps != null) {
+	            try {
+	                ps.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	    return idComprobante;
 	}
 
-	//Funcion que obtiene el comprobante asociado a una reserva
+
+	// Función que obtiene el comprobante asociado a una reserva
 	public Comprobante obtenerComprobantePorReserva(int idReserva) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
 	    Comprobante comprobante = null;
-	    
+
 	    try {
 	        ps = connection.prepareStatement("SELECT * FROM Comprobante WHERE idReserva = ?");
 	        ps.setInt(1, idReserva);
 	        rs = ps.executeQuery();
-	        
+
 	        if (rs.next()) {
 	            comprobante = new Comprobante();
-                comprobante.setIdComprobante(rs.getInt("idComprobante"));
-                comprobante.setFecha(rs.getString("fecha"));
-                comprobante.setHora(rs.getString("hora"));
-                comprobante.setImporte(rs.getFloat("importe"));
-                comprobante.setIdReserva(rs.getInt("idReserva"));
-                comprobante.setIdTarjeta(rs.getInt("idTarjeta"));
+	            comprobante.setIdComprobante(rs.getInt("idComprobante"));
+	            comprobante.setFecha(rs.getString("fecha"));
+	            comprobante.setHora(rs.getString("hora"));
+	            comprobante.setImporte(rs.getFloat("importe"));
+	            comprobante.setIdReserva(rs.getInt("idReserva"));
+	            comprobante.setIdTarjeta(rs.getInt("idTarjeta"));
 	            System.out.println("Comprobante encontrado con éxito para la reserva ID: " + idReserva);
 	        } else {
 	            System.out.println("No se encontró un comprobante para la reserva ID: " + idReserva);
@@ -101,6 +109,13 @@ public class ComprobanteControlador {
 	        e.printStackTrace();
 	        System.out.println("Error al obtener el comprobante para la reserva ID: " + idReserva);
 	    } finally {
+	        if (rs != null) {
+	            try {
+	                rs.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
 	        if (ps != null) {
 	            try {
 	                ps.close();
@@ -109,24 +124,24 @@ public class ComprobanteControlador {
 	            }
 	        }
 	    }
-	    
+
 	    return comprobante; 
 	}
+
 	
-	//Funcion qeu retorna el id del comprobante de una reserva
+	// Función que retorna el id del comprobante de una reserva
 	public int obteneridComprobante(int idReserva) {
-		PreparedStatement ps = null;
+	    PreparedStatement ps = null;
 	    ResultSet rs = null;
 	    int comprobante = 0;
-	    
+
 	    try {
 	        ps = connection.prepareStatement("SELECT * FROM Comprobante WHERE idReserva = ?");
 	        ps.setInt(1, idReserva);
 	        rs = ps.executeQuery();
-	        
+
 	        if (rs.next()) {
-	        	comprobante = rs.getInt("idComprobante");
-                
+	            comprobante = rs.getInt("idComprobante");
 	            System.out.println("Id comprobante obtenido: " + comprobante);
 	        } else {
 	            System.out.println("No se encontró un comprobante");
@@ -135,6 +150,13 @@ public class ComprobanteControlador {
 	        e.printStackTrace();
 	        System.out.println("Error al obtener el comprobante para la reserva ID: " + idReserva);
 	    } finally {
+	        if (rs != null) {
+	            try {
+	                rs.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
 	        if (ps != null) {
 	            try {
 	                ps.close();
@@ -143,7 +165,7 @@ public class ComprobanteControlador {
 	            }
 	        }
 	    }
-	    
+
 	    return comprobante; 
 	}
 }
