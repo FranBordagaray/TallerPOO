@@ -44,48 +44,84 @@ public class EmpleadoControlador {
 			System.out.println("Error al crear cuenta!");
 			return false;
 		} finally {
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
+
 	// Método para verificar si el email ya está en uso
 	public boolean emailEnUso(String email) {
-	    PreparedStatement ps = null;
-	    ResultSet rs = null;
-	    boolean emailExiste = false;
-	    
-	    try {
-	        ps = connection.prepareStatement("SELECT COUNT(*) FROM Empleado WHERE email = ?");
-	        ps.setString(1, email);
-	        rs = ps.executeQuery();
-	        
-	        if (rs.next()) {
-	            int count = rs.getInt(1);
-	            if (count > 0) {
-	                emailExiste = true;
-	                System.out.println("El email ya está en uso.");
-	            }
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        System.out.println("Error al verificar el email!");
-	    } finally {
-	        if (ps != null) {
-	            try {
-	                ps.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }
-	    
-	    return emailExiste;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		boolean emailExiste = false;
+
+		try {
+			ps = connection.prepareStatement("SELECT COUNT(*) FROM Empleado WHERE email = ?");
+			ps.setString(1, email);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				int count = rs.getInt(1);
+				if (count > 0) {
+					emailExiste = true;
+					System.out.println("El email ya está en uso.");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Error al verificar el email!");
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return emailExiste;
 	}
+
+	// Método para verificar si el nombre de usuario ya está en uso
+	public boolean usuarioEnUso(String usuario) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		boolean usuarioExiste = false;
+
+		try {
+			ps = connection.prepareStatement("SELECT COUNT(*) FROM Empleado WHERE Usuario = ?");
+			ps.setString(1, usuario);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				int count = rs.getInt(1);
+				if (count > 0) {
+					usuarioExiste = true;
+					System.out.println("El nombre de usuario ya está en uso.");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Error al verificar el nombre de usuario!");
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return usuarioExiste;
+	}
+
 	// Funcion para cifrar contraseñas
 	public String convertirSHA256(String contrasenia) {
 		MessageDigest md = null;
@@ -129,14 +165,14 @@ public class EmpleadoControlador {
 			e.printStackTrace();
 			System.out.println("Error al obtener empleados!");
 		} finally {
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		return empleados;
 	}
 
@@ -145,7 +181,8 @@ public class EmpleadoControlador {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			ps = connection.prepareStatement("SELECT idEmpleado, Rol, nombre, apellido, domicilio, telefono, email, usuario, contrasenia FROM Empleado WHERE usuario = ?");
+			ps = connection.prepareStatement(
+					"SELECT idEmpleado, Rol, nombre, apellido, domicilio, telefono, email, usuario, contrasenia FROM Empleado WHERE usuario = ?");
 			ps.setString(1, usuario);
 			rs = ps.executeQuery();
 			if (rs.next()) {
@@ -170,14 +207,14 @@ public class EmpleadoControlador {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		return false;
 	}
 
@@ -201,14 +238,14 @@ public class EmpleadoControlador {
 			System.out.println("Error al eliminar empleado!");
 			return false;
 		} finally {
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	// Método para obtener el rol de un empleado según su usuario
@@ -227,14 +264,14 @@ public class EmpleadoControlador {
 			e.printStackTrace();
 			System.out.println("Error al obtener el rol del empleado!");
 		} finally {
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		return rol;
 	}
 }

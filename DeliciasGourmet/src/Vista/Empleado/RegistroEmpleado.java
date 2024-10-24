@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -69,7 +70,7 @@ public class RegistroEmpleado extends JFrame {
 		lblRegistro.setFont(new Font("Roboto Light", Font.BOLD, 28));
 		lblRegistro.setBounds(287, 10, 138, 33);
 		pnlContenedor.add(lblRegistro);
-		
+
 		// Etiqueta y combobox de roles
 		JLabel lblRol = new JLabel("ROL:");
 		lblRol.setHorizontalAlignment(SwingConstants.CENTER);
@@ -77,7 +78,7 @@ public class RegistroEmpleado extends JFrame {
 		lblRol.setAlignmentX(1.0f);
 		lblRol.setBounds(53, 60, 248, 27);
 		pnlContenedor.add(lblRol);
-		
+
 		JComboBox<EnumRoles> roles = new JComboBox<>(EnumRoles.values());
 		roles.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		roles.setBorder(null);
@@ -207,50 +208,65 @@ public class RegistroEmpleado extends JFrame {
 		JButton btnRegistro = new JButton("Crear cuenta");
 		btnRegistro.setIcon(new ImageIcon(RegistroEmpleado.class.getResource("/Img/icono de crear cuenta.png")));
 		btnRegistro.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        try {
-		             if (verificarCampos()) {
-		                return;
-		            } else {
-		                
-		                String email = txtEmail.getText();
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if (verificarCampos()) {
+						return;
+					} else {
 
-		                // Verificar si el email ya está en uso
-		                if (controlador.emailEnUso(email)) {
-		                    JOptionPane.showMessageDialog(RegistroEmpleado.this, "El email ya está en uso.Por favor utilice  otro.", "Error", 
-		                            JOptionPane.ERROR_MESSAGE);
-		                    return; 
-		                }
+						String email = txtEmail.getText();
+						String usuario = txtUsuario.getText();
 
-		                // Crear el empleado
-		                Empleado empleado = new Empleado();
-		                empleado.setRol((EnumRoles) roles.getSelectedItem());
-		                empleado.setNombre(txtNombre.getText());
-		                empleado.setApellido(txtApellido.getText());
-		                empleado.setDomicilio(txtDomicilio.getText());
-		                empleado.setTelefono(txtTelefono.getText());
-		                empleado.setEmail(email); // Usar el email verificado
-		                empleado.setUsuario(txtUsuario.getText());
-		                empleado.setContrasenia(String.valueOf(txtContrasenia.getPassword()));
+						// Verificar si el email ya está en uso
+						if (controlador.emailEnUso(email)) {
+							JOptionPane.showMessageDialog(RegistroEmpleado.this,
+									"El email ya está en uso.Por favor utilice  otro.", "Error",
+									JOptionPane.ERROR_MESSAGE);
+							return;
+						}
 
-		                // Intentar registrar al empleado
-		                if (controlador.crearCuenta(empleado)) {
-		                    JOptionPane.showMessageDialog(RegistroEmpleado.this, "Registro exitoso!", "Exito", 
-		                            JOptionPane.INFORMATION_MESSAGE);
-		                    System.out.println("Registro exitoso!");
-		                    GestionEmpleados gestion = new GestionEmpleados();
-		                    gestion.setVisible(true);
-		                    RegistroEmpleado.this.dispose();
-		                } else {
-		                    JOptionPane.showMessageDialog(RegistroEmpleado.this, "Error al registrar empleado.", "Error", 
-		                            JOptionPane.ERROR_MESSAGE);
-		                }
-		            }
-		        } catch (Exception e2) {
-		            JOptionPane.showMessageDialog(RegistroEmpleado.this, "Error inesperado: " + e2.getMessage(), "Error", 
-		                    JOptionPane.ERROR_MESSAGE);
-		        }
-		    }
+						if (controlador.usuarioEnUso(usuario)) {
+							JOptionPane.showMessageDialog(RegistroEmpleado.this,
+									"El Usuario ya está en uso.Por favor utilice otro.", "Error",
+									JOptionPane.ERROR_MESSAGE);
+							return;
+
+						}
+
+						if (!esCorreoValido(email)) {
+							JOptionPane.showMessageDialog(null, "Correo no ingresado o Correo Invalido.");
+							return;
+						}
+
+						// Crear el empleado
+						Empleado empleado = new Empleado();
+						empleado.setRol((EnumRoles) roles.getSelectedItem());
+						empleado.setNombre(txtNombre.getText());
+						empleado.setApellido(txtApellido.getText());
+						empleado.setDomicilio(txtDomicilio.getText());
+						empleado.setTelefono(txtTelefono.getText());
+						empleado.setEmail(email); // Usar el email verificado
+						empleado.setUsuario(txtUsuario.getText());
+						empleado.setContrasenia(String.valueOf(txtContrasenia.getPassword()));
+
+						// Intentar registrar al empleado
+						if (controlador.crearCuenta(empleado)) {
+							JOptionPane.showMessageDialog(RegistroEmpleado.this, "Registro exitoso!", "Exito",
+									JOptionPane.INFORMATION_MESSAGE);
+							System.out.println("Registro exitoso!");
+							GestionEmpleados gestion = new GestionEmpleados();
+							gestion.setVisible(true);
+							RegistroEmpleado.this.dispose();
+						} else {
+							JOptionPane.showMessageDialog(RegistroEmpleado.this, "Error al registrar empleado.",
+									"Error", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(RegistroEmpleado.this, "Error inesperado: " + e2.getMessage(),
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
 		});
 
 		btnRegistro.addMouseListener(new MouseAdapter() {
@@ -274,8 +290,8 @@ public class RegistroEmpleado extends JFrame {
 		btnRegistro.setForeground(Color.BLACK);
 		btnRegistro.setBounds(276, 600, 160, 30);
 		pnlContenedor.add(btnRegistro);
-		//Boton cerrar
-		
+		// Boton cerrar
+
 		JButton btnCerrar = new JButton("X");
 		btnCerrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -318,7 +334,6 @@ public class RegistroEmpleado extends JFrame {
 		pnlContenedor.add(btnCerrar);
 	}
 
-	
 	// Funcion para verificar campos vacios
 	private boolean verificarCampos() {
 		String nombre = txtNombre.getText();
@@ -344,4 +359,12 @@ public class RegistroEmpleado extends JFrame {
 		}
 		return false;
 	}
+
+	// Metodo para verificar si esta bien el email
+	public static boolean esCorreoValido(String correo) {
+		String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+		Pattern pattern = Pattern.compile(regex);
+		return pattern.matcher(correo).matches();
+	}
+
 }

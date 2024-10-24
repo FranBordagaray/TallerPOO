@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -40,7 +41,7 @@ public class Registro extends JFrame {
 		// Configuración de la ventana principal
 		setTitle("Registro");
 		ImageIcon icon = new ImageIcon(getClass().getResource("/Img/icono general.png"));
-        setIconImage(icon.getImage());
+		setIconImage(icon.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1280, 720);
 		setLocationRelativeTo(null);
@@ -192,14 +193,16 @@ public class Registro extends JFrame {
 					} else {
 						String email = txtEmail.getText();
 
-						// Verificar si el email ya está registrado
 						if (controlador.verificarEmailExistente(email)) {
 							JOptionPane.showMessageDialog(Registro.this, "El email ya está en uso.", "Error",
 									JOptionPane.ERROR_MESSAGE);
-							return; // No se continúa con el registro
+							return;
 						}
 
-						// Si el email no está registrado, proceder con la creación de la cuenta
+						if (!esCorreoValido(email)) {
+							JOptionPane.showMessageDialog(null, "Correo no ingresado o Correo Invalido.");
+							return;
+						}
 						Cliente cliente = new Cliente();
 						cliente.setNombre(txtNombre.getText());
 						cliente.setApellido(txtApellido.getText());
@@ -273,5 +276,12 @@ public class Registro extends JFrame {
 			return true;
 		}
 		return false;
+	}
+
+	// Metodo para verificar si esta bien el email
+	public static boolean esCorreoValido(String correo) {
+		String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+		Pattern pattern = Pattern.compile(regex);
+		return pattern.matcher(correo).matches();
 	}
 }
