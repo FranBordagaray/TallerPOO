@@ -49,6 +49,7 @@ import Modelo.Cliente.HistorialReserva;
 import Modelo.Cliente.Tarjeta;
 import Modelo.Complementos.Comprobante;
 import Vista.Cliente.ModificarReserva;
+import javax.swing.ImageIcon;
 
 
 public class GestionReserva extends JPanel {
@@ -192,6 +193,7 @@ public class GestionReserva extends JPanel {
 
     // Boton para buscar reservas de clientes
     JButton btnBuscar = new JButton("BUSCAR");
+    btnBuscar.setIcon(new ImageIcon(GestionReserva.class.getResource("/Img/icono de buscar.png")));
     btnBuscar.setForeground(Color.BLACK);
     btnBuscar.setBackground(Color.WHITE);
     btnBuscar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -202,6 +204,7 @@ public class GestionReserva extends JPanel {
 		
 	// Boton cancelar reserva
 	JButton btnCancelar = new JButton("CANCELAR");
+	btnCancelar.setIcon(new ImageIcon(GestionReserva.class.getResource("/Img/icono cancelar.png")));
 	btnCancelar.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			if(idReservaSeleccionada != 0) {
@@ -240,7 +243,7 @@ public class GestionReserva extends JPanel {
 		public void mouseExited(MouseEvent e) {
 		}
 	});
-	btnCancelar.setHorizontalTextPosition(SwingConstants.CENTER);
+	btnCancelar.setHorizontalTextPosition(SwingConstants.RIGHT);
 	btnCancelar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	btnCancelar.setBorder(null);
 	btnCancelar.setBackground(Color.WHITE);
@@ -250,6 +253,7 @@ public class GestionReserva extends JPanel {
 	add(btnCancelar);
 	
 	JButton btnModificar = new JButton("MODIFICAR");
+	btnModificar.setIcon(new ImageIcon(GestionReserva.class.getResource("/Img/icono modificar.png")));
 	btnModificar.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			if(idReservaSeleccionada != 0) {
@@ -260,7 +264,7 @@ public class GestionReserva extends JPanel {
 			}
 		}
 	});
-	btnModificar.setHorizontalTextPosition(SwingConstants.CENTER);
+	btnModificar.setHorizontalTextPosition(SwingConstants.RIGHT);
 	btnModificar.setForeground(Color.BLACK);
 	btnModificar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 	btnModificar.setBorder(null);
@@ -269,6 +273,7 @@ public class GestionReserva extends JPanel {
 	add(btnModificar);
 	
 	JButton enviarRecordatorio = new JButton("ENVIAR RECORDATORIO");
+	enviarRecordatorio.setIcon(new ImageIcon(GestionReserva.class.getResource("/Img/icono de eventos especiales.png")));
 	enviarRecordatorio.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			
@@ -281,15 +286,16 @@ public class GestionReserva extends JPanel {
 			}
 		}
 	});
-	enviarRecordatorio.setHorizontalTextPosition(SwingConstants.CENTER);
+	enviarRecordatorio.setHorizontalTextPosition(SwingConstants.RIGHT);
 	enviarRecordatorio.setForeground(Color.BLACK);
 	enviarRecordatorio.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 	enviarRecordatorio.setBorder(null);
 	enviarRecordatorio.setBackground(Color.WHITE);
-	enviarRecordatorio.setBounds(437, 115, 200, 25);
+	enviarRecordatorio.setBounds(437, 115, 210, 25);
 	add(enviarRecordatorio);
 	
 	JButton btnNoConcurrio = new JButton("INASISTENCIA");
+	btnNoConcurrio.setIcon(new ImageIcon(GestionReserva.class.getResource("/Img/icono inasistido.png")));
 	btnNoConcurrio.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			if(idReservaSeleccionada != 0) {
@@ -302,7 +308,7 @@ public class GestionReserva extends JPanel {
 			}
 		}
 	});
-	btnNoConcurrio.setHorizontalTextPosition(SwingConstants.CENTER);
+	btnNoConcurrio.setHorizontalTextPosition(SwingConstants.RIGHT);
 	btnNoConcurrio.setForeground(Color.BLACK);
 	btnNoConcurrio.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 	btnNoConcurrio.setBorder(null);
@@ -311,6 +317,7 @@ public class GestionReserva extends JPanel {
 	add(btnNoConcurrio);
 	
 	JButton btnConcurrio = new JButton("CONCURRIO");
+	btnConcurrio.setIcon(new ImageIcon(GestionReserva.class.getResource("/Img/icono verificado.png")));
 	btnConcurrio.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			if(idReservaSeleccionada != 0) {
@@ -320,7 +327,7 @@ public class GestionReserva extends JPanel {
 			}
 		}
 	});
-	btnConcurrio.setHorizontalTextPosition(SwingConstants.CENTER);
+	btnConcurrio.setHorizontalTextPosition(SwingConstants.RIGHT);
 	btnConcurrio.setForeground(Color.BLACK);
 	btnConcurrio.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 	btnConcurrio.setBorder(null);

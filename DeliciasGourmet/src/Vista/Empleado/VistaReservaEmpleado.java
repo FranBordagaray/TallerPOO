@@ -389,6 +389,7 @@ public class VistaReservaEmpleado extends JPanel {
 
 		// Boton para hacer una Reserva Normal
 		btnReservar = new JButton("Reservar");
+		btnReservar.setIcon(new ImageIcon(VistaReservaEmpleado.class.getResource("/Img/icono de mesas.png")));
 		btnReservar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -423,7 +424,7 @@ public class VistaReservaEmpleado extends JPanel {
 			}
 		});
 		btnReservar.setEnabled(true);
-		btnReservar.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnReservar.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnReservar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnReservar.setBorder(null);
 		btnReservar.setForeground(Color.BLACK);
@@ -507,6 +508,7 @@ public class VistaReservaEmpleado extends JPanel {
 
 		// Boton pra agregar tarjeta
 		btnReservarLugar = new JButton("Reservar Lugar");
+		btnReservarLugar.setIcon(new ImageIcon(VistaReservaEmpleado.class.getResource("/Img/icono lugar.png")));
 		btnReservarLugar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String ubicacion = (String) comboUbicaciones.getSelectedItem();
@@ -586,7 +588,7 @@ public class VistaReservaEmpleado extends JPanel {
 				}
 			}
 		});
-		btnReservarLugar.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnReservarLugar.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnReservarLugar.setForeground(Color.BLACK);
 		btnReservarLugar.setFont(new Font("Roboto Light", Font.BOLD, 16));
 		btnReservarLugar.setBorder(null);
@@ -596,6 +598,7 @@ public class VistaReservaEmpleado extends JPanel {
 		pnlVertical.add(btnReservarLugar);
 
 		btnCrearEventoEspecial = new JButton("Evento Especial");
+		btnCrearEventoEspecial.setIcon(new ImageIcon(VistaReservaEmpleado.class.getResource("/Img/icono de eventos especiales.png")));
 		btnCrearEventoEspecial.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -672,7 +675,7 @@ public class VistaReservaEmpleado extends JPanel {
 			}
 		});
 
-		btnCrearEventoEspecial.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnCrearEventoEspecial.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnCrearEventoEspecial.setForeground(Color.BLACK);
 		btnCrearEventoEspecial.setFont(new Font("Roboto Light", Font.BOLD, 16));
 		btnCrearEventoEspecial.setEnabled(true);

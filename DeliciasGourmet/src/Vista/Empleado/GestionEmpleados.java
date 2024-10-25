@@ -24,6 +24,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Controlador.EmpleadoControlador;
 import Modelo.Empleado.Empleado;
+import javax.swing.ImageIcon;
 
 public class GestionEmpleados extends JPanel {
 
@@ -93,6 +94,7 @@ public class GestionEmpleados extends JPanel {
         
         // Boton para buscar por apellido
         JButton btnBuscar = new JButton("BUSCAR");
+        btnBuscar.setIcon(new ImageIcon(GestionEmpleados.class.getResource("/Img/icono de buscar.png")));
         btnBuscar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		buscarPorApellido(txtFiltrarApellido.getText());
@@ -145,6 +147,7 @@ public class GestionEmpleados extends JPanel {
         
         // Boton para acceder a formulario de registro de empleados
         JButton btnAgregarEmpleado = new JButton("AGREGAR");
+        btnAgregarEmpleado.setIcon(new ImageIcon(GestionEmpleados.class.getResource("/Img/icono empleado.png")));
         btnAgregarEmpleado.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RegistroEmpleado registro = new RegistroEmpleado();
@@ -170,11 +173,12 @@ public class GestionEmpleados extends JPanel {
         btnAgregarEmpleado.setBorder(null);
         btnAgregarEmpleado.setBackground(Color.WHITE);
         btnAgregarEmpleado.setAlignmentX(0.5f);
-        btnAgregarEmpleado.setBounds(889, 95, 93, 25);
+        btnAgregarEmpleado.setBounds(865, 95, 117, 25);
         add(btnAgregarEmpleado);
         
         // Botón para eliminar un empleado
         JButton btnEliminar = new JButton("ELIMINAR");
+        btnEliminar.setIcon(new ImageIcon(GestionEmpleados.class.getResource("/Img/icono eliminar.png")));
         btnEliminar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = tblEmpleados.getSelectedRow(); 
@@ -198,7 +202,7 @@ public class GestionEmpleados extends JPanel {
         btnEliminar.setBorder(null);
         btnEliminar.setBackground(Color.WHITE);
         btnEliminar.setAlignmentX(0.5f);
-        btnEliminar.setBounds(776, 95, 93, 25);
+        btnEliminar.setBounds(736, 95, 119, 25);
         add(btnEliminar);
         
     }

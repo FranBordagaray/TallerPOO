@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import Modelo.Empleado.SesionEmpleado;
+import javax.swing.ImageIcon;
 
 public class PerfilEmpleado extends JPanel {
     private JTextField txtUsuario;
@@ -40,6 +41,7 @@ public class PerfilEmpleado extends JPanel {
 
         // Etiqueta de perfil
         JLabel lblRegistro = new JLabel("PERFIL\r\n");
+        lblRegistro.setIcon(new ImageIcon(PerfilEmpleado.class.getResource("/Img/Icono pantalla empleado.png")));
         lblRegistro.setFont(new Font("Roboto Light", Font.BOLD, 32));
         lblRegistro.setBounds(433, 20, 200, 40);
         add(lblRegistro);
@@ -161,6 +163,7 @@ public class PerfilEmpleado extends JPanel {
         
         // Boton para actualizar informacion de contacto
  		JButton btnGuardar = new JButton("Guardar Cambios");
+ 		btnGuardar.setIcon(new ImageIcon(PerfilEmpleado.class.getResource("/Img/icono de guardar.png")));
  		btnGuardar.addMouseListener(new MouseAdapter() {
  			@Override
  		public void mouseEntered(MouseEvent e) {

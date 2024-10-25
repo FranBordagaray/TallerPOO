@@ -1,12 +1,20 @@
 package Vista.Cliente;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,23 +26,33 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
+import Controlador.MesaControlador;
 import Controlador.ReservaControlador;
+import Controlador.ServicioControlador;
 import Modelo.Cliente.SesionCliente;
+import Modelo.Complementos.Servicio;
 import Modelo.Cliente.HistorialReserva;
 
 import java.awt.Component;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class Dashboard extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tblResumenReserva;
 	private JLabel lblFechaHora;
+	private ServicioControlador servicioControlador;
+	private MesaControlador mesaControlador;
+	private JPanel panelNotificaciones;
 
 	@SuppressWarnings({ "static-access", "serial" })
 	public Dashboard() {
-
+		mesaControlador = new MesaControlador();
+		servicioControlador = new ServicioControlador();
+		
 		// Configuracion del panel
 		setLayout(null);
 		setPreferredSize(new Dimension(992, 679));
@@ -75,11 +93,10 @@ public class Dashboard extends JPanel {
         pnlBienvenido.add(lblFechaHora);
 
 		// Panel de Notificaciones
-		JPanel pnlNotificaciones = new JPanel();
-		pnlNotificaciones.setBorder(null);
-		pnlNotificaciones.setBounds(549, 110, 433, 150);
-		pnlNotificaciones.setLayout(null);
-		add(pnlNotificaciones);
+		panelNotificaciones = new JPanel();
+		panelNotificaciones.setBorder(null);
+		panelNotificaciones.setBounds(549, 110, 433, 150);
+		add(panelNotificaciones);
 
 		// Label Mis Reservas
 		JLabel lblMisReservas = new JLabel("Mis Reservas");
@@ -104,22 +121,24 @@ public class Dashboard extends JPanel {
 		add(menuComida);
 		menuComida.setLayout(null);
 		
+		//JLabel Comida
 		JLabel lblComida = new JLabel("");
 		lblComida.setIcon(new ImageIcon(Dashboard.class.getResource("/Img/MenuComida.png")));
 		lblComida.setBounds(0, 0, 286, 370);
 		menuComida.add(lblComida);
+		
 		//Panel Menu Bebidas
 		ImgOfertas menuBebidas = new ImgOfertas();
 		menuBebidas.setBounds(10, 298, 286, 370);
 		add(menuBebidas);
 		menuBebidas.setLayout(null);
 		
+		//JLabel Bebidas
 		JLabel lblBebidas = new JLabel("");
 		lblBebidas.setIcon(new ImageIcon(Dashboard.class.getResource("/Img/MenuBebida.png")));
 		lblBebidas.setBounds(0, 0, 286, 370);
 		menuBebidas.add(lblBebidas);
 		
-
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBorder(null);
 		scrollPane.setFont(new Font("Roboto Light", Font.PLAIN, 12));
@@ -167,9 +186,22 @@ public class Dashboard extends JPanel {
 		lblTituloNotificaciones.setIcon(new ImageIcon(Dashboard.class.getResource("/Img/ImgNotificacion.png")));
 		pnlHeaderNot.add(lblTituloNotificaciones);
 		lblTituloNotificaciones.setFont(new Font("Roboto Light", Font.BOLD, 12));
-		cargarDatos(s1.getClienteActual().getIdCliente());
 		
-		// Iniciar el Timer para actualizar la fecha y hora
+		// JScrollPane para poder deslizar las notificaciones
+		JScrollPane scrollPaneNotificaciones = new JScrollPane(panelNotificaciones);
+		scrollPaneNotificaciones.setBounds(549, 110, 433, 150);
+		add(scrollPaneNotificaciones);
+		scrollPaneNotificaciones.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPaneNotificaciones.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		this.add(scrollPaneNotificaciones, BorderLayout.CENTER);
+
+		// Centrar el contenido de la primera columna
+		DefaultTableCellRenderer centerRenderer1 = new DefaultTableCellRenderer();
+		centerRenderer1.setHorizontalAlignment(SwingConstants.CENTER);
+		List<Servicio> servicios = filtrarServiciosPorFecha(servicioControlador.buscarServiciosConEventoEspecial());
+		cargarNotificacionesVisual(servicios);
+		
+		cargarDatos(s1.getClienteActual().getIdCliente());	
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -178,6 +210,8 @@ public class Dashboard extends JPanel {
             }
         }, 0, 1000);
 	}
+	
+	
 
 	// Función para cargar tabla con datos almacenados en la base de datos
 	private void cargarDatos(int idCliente) {
@@ -195,6 +229,79 @@ public class Dashboard extends JPanel {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	//Metodo para filtrar servicio de la fecha de hoy en adelante
+	public List<Servicio> filtrarServiciosPorFecha(List<Servicio> servicios) {
+	    List<Servicio> serviciosFiltrados = new ArrayList<>();
+	    LocalDate fechaActual = LocalDate.now();
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+	    for (Servicio servicio : servicios) {
+	        try {
+	            LocalDate fechaServicio = LocalDate.parse(servicio.getFecha(), formatter);
+	            	            if (!fechaServicio.isBefore(fechaActual)) {
+	                serviciosFiltrados.add(servicio);
+	            }
+	        } catch (DateTimeParseException e) {
+	            e.printStackTrace();
+	            System.out.println("Error al analizar la fecha: " + servicio.getFecha());
+	        }
+	    }
+	    return serviciosFiltrados;
+	}
+	
+	//Metodo para cargar las notificaciones en el Panel
+	private void cargarNotificacionesVisual(List<Servicio> servicios) {
+	    panelNotificaciones.removeAll();
+	    panelNotificaciones.setLayout(new GridBagLayout());
+	    GridBagConstraints gbc = new GridBagConstraints();
+
+	    gbc.fill = GridBagConstraints.HORIZONTAL;
+	    gbc.gridx = 0;
+	    gbc.gridy = GridBagConstraints.RELATIVE;
+	    gbc.weightx = 1.0;
+	    gbc.insets = new Insets(5, 5, 5, 5);
+
+	    ImageIcon iconoNotificacion = cargarIcono("/Img/icono de reservas.png"); 
+
+	    for (Servicio servicio : servicios) {
+	        JPanel panelServicio = new JPanel();
+	        panelServicio.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+	        panelServicio.setLayout(new BoxLayout(panelServicio, BoxLayout.Y_AXIS));
+
+	        JLabel lblIcono = new JLabel(iconoNotificacion);
+	        lblIcono.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+	        JLabel lblTitulo = new JLabel("Evento Especial");
+	        lblTitulo.setFont(new Font("Roboto Light", Font.BOLD, 14));
+	        lblTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+	        JLabel lblFecha = new JLabel("Fecha: " + servicio.getFecha());
+	        lblFecha.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+	        JLabel lblHora = new JLabel("Hora: " + servicio.getHoraInicio() + " - " + servicio.getHoraFin());
+	        lblHora.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+	        JLabel lblUbicacion = new JLabel("Ubicación: " + mesaControlador.buscarUbicacionPorIdServicio(servicio.getIdServicio()));
+	        lblUbicacion.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+	        panelServicio.add(lblIcono); 
+	        panelServicio.add(lblTitulo); 
+	        panelServicio.add(Box.createRigidArea(new Dimension(0, 5)));
+	        panelServicio.add(lblFecha);
+	        panelServicio.add(lblHora);
+	        panelServicio.add(lblUbicacion);
+
+	        panelNotificaciones.add(panelServicio, gbc);
+	    }
+	    panelNotificaciones.revalidate();
+	    panelNotificaciones.repaint();
+	}
+
+	// Método para cargar un icono de imagen
+	private ImageIcon cargarIcono(String ruta) {
+	    return new ImageIcon(getClass().getResource(ruta));
 	}
 	
 	// Método para actualizar la fecha y hora

@@ -39,9 +39,8 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-
-
 import Modelo.Cliente.Cliente;
+import Modelo.Cliente.HistorialReserva;
 import Modelo.Empleado.Reportes;
 import Controlador.ClienteControlador;
 import Controlador.ReservaControlador;
@@ -59,10 +58,11 @@ public class SeleccionarCliente extends JFrame {
 	private ClienteControlador clienteControlador;
 	private ReservaControlador reservaControlador;
 
-	public SeleccionarCliente() {
+	public SeleccionarCliente(String SeleccionReporte) {
 		clienteControlador = new ClienteControlador();
 		reservaControlador = new ReservaControlador();
 		
+
 		// Configuración del panel
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationByPlatform(true);
@@ -79,31 +79,32 @@ public class SeleccionarCliente extends JFrame {
 		contentPane.setLayout(null);
 
 		// Etiqueta para el título de la ventana
-		JLabel lblTitulo = new JLabel("RESERVAS FUTURAS");
+		JLabel lblTitulo = new JLabel("SELECCIONAR CLIENTE");
 		lblTitulo.setFont(new Font("Roboto Light", Font.BOLD, 21));
-		lblTitulo.setBounds(192, 20, 215, 22);
+		lblTitulo.setBounds(166, 20, 267, 22);
 		contentPane.add(lblTitulo);
 
 		// Etiqueta y campo de correo electrónico
 		JLabel lblBuscar = new JLabel("BUSCAR POR EMAIL");
 		lblBuscar.setFont(new Font("Roboto Light", Font.BOLD, 12));
-		lblBuscar.setBounds(10, 34, 132, 30);
+		lblBuscar.setBounds(10, 42, 132, 30);
 		contentPane.add(lblBuscar);
 
 		// Boton para buscar cliente por su email
 		JButton btnBuscar = new JButton("BUSCAR");
 		btnBuscar.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        String emailBuscado = txtBuscar.getText().trim();
+			public void actionPerformed(ActionEvent e) {
+				String emailBuscado = txtBuscar.getText().trim();
 
-		        if (!emailBuscado.isEmpty()) {
-		            buscarClientesPorEmail(emailBuscado);
-		        } else {
-		            JOptionPane.showMessageDialog(null, "Por favor, ingrese un correo electrónico para buscar.", "Error", JOptionPane.ERROR_MESSAGE);
-		        }
-		    }
+				if (!emailBuscado.isEmpty()) {
+					buscarClientesPorEmail(emailBuscado);
+				} else {
+					JOptionPane.showMessageDialog(null, "Por favor, ingrese un correo electrónico para buscar.",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
 		});
-		btnBuscar.setIcon(new ImageIcon(RecuperarCuenta.class.getResource("/Img/icono enviar.png")));
+		btnBuscar.setIcon(new ImageIcon(SeleccionarCliente.class.getResource("/Img/icono de buscar.png")));
 
 		btnBuscar.addMouseListener(new MouseAdapter() {
 			@Override
@@ -162,28 +163,49 @@ public class SeleccionarCliente extends JFrame {
 		contentPane.add(txtBuscar);
 		txtBuscar.setColumns(10);
 
-		//Boton para generar el PDF
+		// Boton para generar el PDF
 		JButton btnGenerar = new JButton("GENERAR");
+		btnGenerar.setIcon(new ImageIcon(SeleccionarCliente.class.getResource("/Img/icono de reportes.png")));
 		btnGenerar.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    	
-		        int filaSeleccionada = tblClientes.getSelectedRow();
-		        if (filaSeleccionada != -1) {
-		            int idCliente = (int) tblClientes.getValueAt(filaSeleccionada, 0);
-		            String nombre = (String) tblClientes.getValueAt(filaSeleccionada, 1);
-		            String apellido = (String) tblClientes.getValueAt(filaSeleccionada, 2);
+			public void actionPerformed(ActionEvent e) {
 
-		            List<Reportes> reportesCliente = filtrarReservasFuturas(reservaControlador.obtenerReservasFuturasPorCliente(idCliente));
-		            
-		            if (reportesCliente.isEmpty()) {
-		                JOptionPane.showMessageDialog(null, "Este cliente no tiene reservas futuras.");
-		            } else {
-		                generarPDFCliente(reportesCliente, nombre, apellido);
-		            }
-		        } else {
-		            JOptionPane.showMessageDialog(null, "Seleccione un cliente de la tabla para generar el PDF.");
-		        }
-		    }
+				if (SeleccionReporte.equals("Reservas Futuras")) {
+					int filaSeleccionada = tblClientes.getSelectedRow();
+					if (filaSeleccionada != -1) {
+						int idCliente = (int) tblClientes.getValueAt(filaSeleccionada, 0);
+						String nombre = (String) tblClientes.getValueAt(filaSeleccionada, 1);
+						String apellido = (String) tblClientes.getValueAt(filaSeleccionada, 2);
+
+						List<Reportes> reportesCliente = filtrarReservasFuturas(
+								reservaControlador.obtenerReservasFuturasPorCliente(idCliente));
+
+						if (reportesCliente.isEmpty()) {
+							JOptionPane.showMessageDialog(null, "Este cliente no tiene reservas futuras.");
+						} else {
+							generarPDFReservasFuturas(reportesCliente, nombre, apellido);
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "Seleccione un cliente de la tabla para generar el PDF.");
+					}
+				} else if(SeleccionReporte.equals("Reserva Historial")) {
+					int filaSeleccionada = tblClientes.getSelectedRow();
+					if (filaSeleccionada != -1) {
+						int idCliente = (int) tblClientes.getValueAt(filaSeleccionada, 0);
+						String nombre = (String) tblClientes.getValueAt(filaSeleccionada, 1);
+						String apellido = (String) tblClientes.getValueAt(filaSeleccionada, 2);
+
+						List<HistorialReserva> historialReserva = reservaControlador.obtenerHistorialPorCliente(idCliente);
+						
+						if (historialReserva.isEmpty()) {
+							JOptionPane.showMessageDialog(null, "Este cliente no tiene reservas.");
+						} else {
+							generarPDFHistorial(historialReserva, nombre, apellido);
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "Seleccione un cliente de la tabla para generar el PDF.");
+					}
+				}
+			}
 		});
 		btnGenerar.setForeground(Color.BLACK);
 		btnGenerar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
@@ -196,24 +218,31 @@ public class SeleccionarCliente extends JFrame {
 		// Inicialización de la tabla
 		tblClientes = new JTable();
 		model = new DefaultTableModel(new Object[][] {},
-				new String[] { "ID", "Nombre", "Apellido", "Domicilio", "Teléfono", "Email" } 
-		);
+				new String[] { "ID", "Nombre", "Apellido", "Domicilio", "Teléfono", "Email" });
 		tblClientes.setModel(model);
 		tblClientes.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		        int filaSeleccionada = tblClientes.getSelectedRow();
-		        if (filaSeleccionada != -1) {
-		            int idCliente = (int) tblClientes.getValueAt(filaSeleccionada, 0);
-		            String nombre = (String) tblClientes.getValueAt(filaSeleccionada, 1);
-		            String apellido = (String) tblClientes.getValueAt(filaSeleccionada, 2);
-		            
-		        }
-		    }
+			@Override
+			public void mouseClicked(MouseEvent e) {			
+			}
 		});
 		JScrollPane scrollPane = new JScrollPane(tblClientes);
 		scrollPane.setBounds(192, 62, 398, 254);
 		contentPane.add(scrollPane);
+		
+		JButton btnActualizar = new JButton("ACTUALIZAR");
+		btnActualizar.setIcon(new ImageIcon(SeleccionarCliente.class.getResource("/Img/icono de historial.png")));
+		btnActualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cargarDatosClientes();
+			}
+		});
+		btnActualizar.setForeground(Color.BLACK);
+		btnActualizar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+		btnActualizar.setBorder(null);
+		btnActualizar.setBackground(Color.WHITE);
+		btnActualizar.setAlignmentX(0.5f);
+		btnActualizar.setBounds(10, 275, 160, 30);
+		contentPane.add(btnActualizar);
 		cargarDatosClientes();
 
 	}
@@ -229,102 +258,156 @@ public class SeleccionarCliente extends JFrame {
 
 			for (Cliente cliente : clientes) {
 				model.addRow(new Object[] { cliente.getIdCliente(), cliente.getNombre(), cliente.getApellido(),
-						cliente.getDomicilio(), cliente.getTelefono(), cliente.getEmail()
-				});
+						cliente.getDomicilio(), cliente.getTelefono(), cliente.getEmail() });
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error al cargar los datos de los clientes.");
 		}
 	}
-	
-	//Metodo para busar clientes por su email
+
+	// Metodo para busar clientes por su email
 	private void buscarClientesPorEmail(String emailBuscado) {
-	    List<Cliente> clientesFiltrados = new ArrayList<>();
-	    try {
-	        List<Cliente> clientes = clienteControlador.obtenerTodosLosClientes();
-	        for (Cliente cliente : clientes) {
-	            if (cliente.getEmail().toLowerCase().contains(emailBuscado.toLowerCase())) {
-	                clientesFiltrados.add(cliente);
-	            }
-	        }
-	        if (!clientesFiltrados.isEmpty()) {
-	            model.setRowCount(0);
-	            for (Cliente cliente : clientesFiltrados) {
-	                model.addRow(new Object[] {
-	                    cliente.getIdCliente(),
-	                    cliente.getNombre(),
-	                    cliente.getApellido(),
-	                    cliente.getDomicilio(),
-	                    cliente.getTelefono(),
-	                    cliente.getEmail()
-	                });
-	            }
-	        } else {
-	            JOptionPane.showMessageDialog(null, "No se encontraron clientes con ese correo.", "Sin resultados", JOptionPane.INFORMATION_MESSAGE);
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(null, "Error al buscar los clientes.", "Error", JOptionPane.ERROR_MESSAGE);
-	    }
+		List<Cliente> clientesFiltrados = new ArrayList<>();
+		try {
+			List<Cliente> clientes = clienteControlador.obtenerTodosLosClientes();
+			for (Cliente cliente : clientes) {
+				if (cliente.getEmail().toLowerCase().contains(emailBuscado.toLowerCase())) {
+					clientesFiltrados.add(cliente);
+				}
+			}
+			if (!clientesFiltrados.isEmpty()) {
+				model.setRowCount(0);
+				for (Cliente cliente : clientesFiltrados) {
+					model.addRow(new Object[] { cliente.getIdCliente(), cliente.getNombre(), cliente.getApellido(),
+							cliente.getDomicilio(), cliente.getTelefono(), cliente.getEmail() });
+				}
+			} else {
+				JOptionPane.showMessageDialog(null, "No se encontraron clientes con ese correo.", "Sin resultados",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Error al buscar los clientes.", "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
-	
-	//Metodo para que retorne solo las reservas futuras
+
+	// Metodo para que retorne solo las reservas futuras
 	public List<Reportes> filtrarReservasFuturas(List<Reportes> listaReportes) {
-	    LocalDate fechaHoy = LocalDate.now();
-	   
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-	    List<Reportes> reportesFuturos = listaReportes.stream()
-	        .filter(reporte -> {
-	            LocalDate fechaReporte = LocalDate.parse(reporte.getFecha(), formatter);
-	            return !fechaReporte.isBefore(fechaHoy);
-	        })
-	        .collect(Collectors.toList());
-	    
-	    return reportesFuturos;
+		LocalDate fechaHoy = LocalDate.now();
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		List<Reportes> reportesFuturos = listaReportes.stream().filter(reporte -> {
+			LocalDate fechaReporte = LocalDate.parse(reporte.getFecha(), formatter);
+			return !fechaReporte.isBefore(fechaHoy);
+		}).collect(Collectors.toList());
+
+		return reportesFuturos;
 	}
+
+	// Metodo para generar el PDF de reservas futuras
+	public void generarPDFReservasFuturas(List<Reportes> reportesCliente, String nombre, String apellido) {
+		Document documento = new Document();
+		String ruta = System.getProperty("user.home") + "\\Desktop\\Reservas_Cliente.pdf";
+		File archivo = new File(ruta);
+		if (archivo.exists()) {
+			String nuevoNombre = "Reservas_Cliente_" + System.currentTimeMillis() + ".pdf";
+			ruta = System.getProperty("user.home") + "\\Desktop\\" + nuevoNombre;
+		}
+
+		try {
+			PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(ruta));
+
+			documento.open();
+			documento.add(new Paragraph("Reporte de Reservas futuras del Cliente",
+					FontFactory.getFont("Roboto Light", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD)));
+			documento.add(new Paragraph(" "));
+			documento.add(new Paragraph("Información del cliente:"));
+			documento.add(new Paragraph("Nombre: " + nombre + " " + apellido));
+			documento.add(new Paragraph(" "));
+
+			if (reportesCliente != null && !reportesCliente.isEmpty()) {
+				PdfPTable table = new PdfPTable(4);
+				table.setWidthPercentage(100);
+				table.setSpacingBefore(10f);
+				table.setSpacingAfter(10f);
+
+				table.addCell(
+						new PdfPCell(new Paragraph("Fecha", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12))));
+				table.addCell(new PdfPCell(new Paragraph("Hora", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12))));
+				table.addCell(new PdfPCell(new Paragraph("Mesa", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12))));
+				table.addCell(
+						new PdfPCell(new Paragraph("Ubicación", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12))));
+
+				for (Reportes reporte : reportesCliente) {
+					table.addCell(reporte.getFecha());
+					table.addCell(reporte.getHora());
+					table.addCell(String.valueOf(reporte.getCapacidad()));
+					table.addCell(reporte.getUbicacion());
+				}
+				documento.add(table);
+			} else {
+				documento.add(new Paragraph("No hay reservas futuras para este cliente."));
+			}
+
+			JOptionPane.showMessageDialog(null, "PDF generado con éxito en el escritorio: " + ruta);
+		} catch (DocumentException | IOException ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + ex.getMessage());
+		} finally {
+			if (documento.isOpen()) {
+				documento.close();
+			}
+		}
+	}
+
 	
-	//Metodo para generar el PDF de reservas futuras
-	public void generarPDFCliente(List<Reportes> reportesCliente, String nombre, String apellido) {
+	public void generarPDFHistorial(List<HistorialReserva> historialReservas, String nombre, String apellido) {
 	    Document documento = new Document();
-	    String ruta = System.getProperty("user.home") + "\\Desktop\\Reservas_Cliente.pdf";
+	    String ruta = System.getProperty("user.home") + "\\Desktop\\Historial_Reservas_" + nombre + "_" + apellido + ".pdf";
 	    File archivo = new File(ruta);
+	    
+	    // Si el archivo ya existe, se crea uno nuevo con un timestamp
 	    if (archivo.exists()) {
-	        String nuevoNombre = "Reservas_Cliente_" + System.currentTimeMillis() + ".pdf";
+	        String nuevoNombre = "Historial_Reservas_" + System.currentTimeMillis() + ".pdf";
 	        ruta = System.getProperty("user.home") + "\\Desktop\\" + nuevoNombre;
 	    }
 
 	    try {
 	        PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(ruta));
-	        
+
 	        documento.open();
-	        documento.add(new Paragraph("Reporte de Reservas futuras del Cliente", 
-	            FontFactory.getFont("Roboto Light", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD)));
-	        documento.add(new Paragraph(" "));	       
+	        documento.add(new Paragraph("Historial de Reservas del Cliente",
+	                FontFactory.getFont("Roboto Light", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD)));
+	        documento.add(new Paragraph(" "));
 	        documento.add(new Paragraph("Información del cliente:"));
 	        documento.add(new Paragraph("Nombre: " + nombre + " " + apellido));
 	        documento.add(new Paragraph(" "));
 
-	        if (reportesCliente != null && !reportesCliente.isEmpty()) {
-	            PdfPTable table = new PdfPTable(4);
+	        if (historialReservas != null && !historialReservas.isEmpty()) {
+	            PdfPTable table = new PdfPTable(5); // Cambiar el número de columnas según los datos
 	            table.setWidthPercentage(100);
-	            table.setSpacingBefore(10f); 
-	            table.setSpacingAfter(10f); 
+	            table.setSpacingBefore(10f);
+	            table.setSpacingAfter(10f);
 
+	            // Encabezados de la tabla
+	            table.addCell(new PdfPCell(new Paragraph("ID Reserva", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12))));
 	            table.addCell(new PdfPCell(new Paragraph("Fecha", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12))));
 	            table.addCell(new PdfPCell(new Paragraph("Hora", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12))));
 	            table.addCell(new PdfPCell(new Paragraph("Mesa", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12))));
 	            table.addCell(new PdfPCell(new Paragraph("Ubicación", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12))));
-	            
-	            for (Reportes reporte : reportesCliente) {
-	                table.addCell(reporte.getFecha());
-	                table.addCell(reporte.getHora());
-	                table.addCell(String.valueOf(reporte.getCapacidad()));
-	                table.addCell(reporte.getUbicacion());
-	            }	            
+
+	            // Agregar cada reserva a la tabla
+	            for (HistorialReserva reserva : historialReservas) {
+	                table.addCell(String.valueOf(reserva.getIdReserva())); // ID Reserva
+	                table.addCell(reserva.getFecha());                   // Fecha
+	                table.addCell(reserva.getHora());                    // Hora
+	                table.addCell(String.valueOf(reserva.getIdMesa()));  // ID Mesa (puedes cambiar a capacidad si deseas)
+	                table.addCell(reserva.getUbicacion());               // Ubicación
+	            }
 	            documento.add(table);
 	        } else {
-	            documento.add(new Paragraph("No hay reservas futuras para este cliente."));
+	            documento.add(new Paragraph("No hay reservas en el historial para este cliente."));
 	        }
 
 	        JOptionPane.showMessageDialog(null, "PDF generado con éxito en el escritorio: " + ruta);
@@ -337,5 +420,4 @@ public class SeleccionarCliente extends JFrame {
 	        }
 	    }
 	}
-
 }

@@ -88,7 +88,7 @@ public class ModificarReserva extends JFrame {
 		setBounds(100, 100, 992, 679);
 		setLocationRelativeTo(null);
 		setResizable(false);
-        setLayout(null);
+        getContentPane().setLayout(null);
         setPreferredSize(new Dimension(992, 679));
         setBackground(new Color(222, 184, 135));
 
@@ -99,7 +99,7 @@ public class ModificarReserva extends JFrame {
         pnlVertical.setBorder(null);
         pnlVertical.setBackground(new Color(222, 184, 135));
         pnlVertical.setBounds(0, 0, 232, 679);
-        add(pnlVertical);
+        getContentPane().add(pnlVertical);
         pnlVertical.setLayout(null);
 
         // Etiqueta de Ubicaciones
@@ -299,6 +299,7 @@ public class ModificarReserva extends JFrame {
 
      // Botón Modificar
         btnSiguiente = new JButton("MODIFICAR");
+        btnSiguiente.setIcon(new ImageIcon(ModificarReserva.class.getResource("/Img/icono modificar.png")));
         btnSiguiente.addActionListener(new ActionListener() {
            
             public void actionPerformed(ActionEvent e) {
@@ -420,7 +421,7 @@ public class ModificarReserva extends JFrame {
                 btnSiguiente.setForeground(Color.BLACK);
             }
         });
-        btnSiguiente.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnSiguiente.setHorizontalTextPosition(SwingConstants.RIGHT);
         btnSiguiente.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnSiguiente.setBorder(null);
         btnSiguiente.setForeground(Color.BLACK);
@@ -432,7 +433,7 @@ public class ModificarReserva extends JFrame {
         // Panel Mapas
         Mapas = new JPanel(new CardLayout());
         Mapas.setBounds(232, 0, 760, 679);
-        add(Mapas);
+        getContentPane().add(Mapas);
 
         // Panel Comedor Principal
         JPanel panelComedor = new JPanel();

@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import Conexion.Conexion;
 import Modelo.Complementos.Reserva;
 import Modelo.Complementos.Servicio;
@@ -232,6 +235,45 @@ public class ServicioControlador {
 		    }
 		    return servicio;
 		}
+		
+		// Método para buscar todos los servicios con evento especial
+		public List<Servicio> buscarServiciosConEventoEspecial() {
+		    PreparedStatement ps = null;
+		    ResultSet rs = null;
+		    List<Servicio> servicios = new ArrayList<>();
+
+		    try {
+		        ps = connection.prepareStatement("SELECT * FROM Servicio WHERE eventoPrivado = 1");
+		        rs = ps.executeQuery();
+
+		        while (rs.next()) {
+		            Servicio servicio = new Servicio();
+		            servicio.setIdServicio(rs.getInt("idServicio"));
+		            servicio.setFecha(rs.getString("fecha"));
+		            servicio.setHoraInicio(rs.getString("horaInicio"));
+		            servicio.setHoraFin(rs.getString("horaFin"));
+		            servicio.setEventoPrivado(rs.getInt("eventoPrivado"));
+
+		            servicios.add(servicio);
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        System.out.println("Error al buscar los servicios con evento especial.");
+		    } finally {
+		        try {
+		            if (rs != null) {
+		                rs.close();
+		            }
+		            if (ps != null) {
+		                ps.close();
+		            }
+		        } catch (SQLException e) {
+		            e.printStackTrace();
+		        }
+		    }
+		    return servicios;
+		}
+
 
 
 		// Método para registrar un servicio con verificación de solapamiento

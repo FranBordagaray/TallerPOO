@@ -175,6 +175,7 @@ public class DashboardEmpleado extends JPanel {
 
         // Boton para buscar reservas de clientes
         JButton btnBuscar = new JButton("BUSCAR");
+        btnBuscar.setIcon(new ImageIcon(DashboardEmpleado.class.getResource("/Img/icono de buscar.png")));
         btnBuscar.setForeground(Color.BLACK);
         btnBuscar.setBackground(Color.WHITE);
         btnBuscar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

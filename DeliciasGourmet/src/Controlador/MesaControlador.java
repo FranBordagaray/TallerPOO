@@ -315,4 +315,34 @@ public class MesaControlador {
 			}
 		return mesas;
 	 	}
+	
+	// Método para buscar la ubicación de la mesa por idServicio
+	public String buscarUbicacionPorIdServicio(int idServicio) {
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+
+	    try {
+	        ps = connection.prepareStatement("SELECT ubicacion FROM Mesa WHERE idServicio = ? LIMIT 1");
+	        ps.setInt(1, idServicio);
+	        rs = ps.executeQuery();
+	        
+	        if (rs.next()) {
+	            return rs.getString("ubicacion");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (rs != null) {
+	                rs.close();
+	            }
+	            if (ps != null) {
+	                ps.close();
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    return null;
+	}
 }

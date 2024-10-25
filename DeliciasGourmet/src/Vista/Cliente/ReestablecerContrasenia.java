@@ -22,6 +22,7 @@ import Modelo.Cliente.Cliente;
 
 import java.awt.Cursor;
 import java.awt.Component;
+import javax.swing.ImageIcon;
 
 @SuppressWarnings("unused")
 public class ReestablecerContrasenia extends JDialog {
@@ -94,6 +95,7 @@ public class ReestablecerContrasenia extends JDialog {
         
         // Boton para actualizar la contraseña
         JButton btnActualizar = new JButton("ACTUALIZAR");
+        btnActualizar.setIcon(new ImageIcon(ReestablecerContrasenia.class.getResource("/Img/icono verificado.png")));
         btnActualizar.setBackground(Color.WHITE);
         btnActualizar.setForeground(Color.BLACK);
         btnActualizar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

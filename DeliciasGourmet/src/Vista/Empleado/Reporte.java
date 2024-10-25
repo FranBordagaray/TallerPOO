@@ -37,6 +37,7 @@ import Modelo.Empleado.Reportes;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
 
 public class Reporte extends JPanel {
     private JDateChooser dateDesde;
@@ -61,7 +62,7 @@ public class Reporte extends JPanel {
         // Etiqueta y separador de reservas futuras de cliente
         JLabel lblReservasFuturasCliente = new JLabel("Reservas Futuras por Cliente");
         lblReservasFuturasCliente.setFont(new Font("Roboto Light", Font.BOLD, 22));
-        lblReservasFuturasCliente.setBounds(346, 90, 300, 27);
+        lblReservasFuturasCliente.setBounds(346, 95, 300, 27);
         add(lblReservasFuturasCliente);
 
         JSeparator separadorCliente = new JSeparator();
@@ -90,6 +91,7 @@ public class Reporte extends JPanel {
         add(lblClienteMasFrecuente);
         
         JButton btnClienteFrecuente = new JButton("BUSCAR");
+        btnClienteFrecuente.setIcon(new ImageIcon(Reporte.class.getResource("/Img/icono de buscar.png")));
         btnClienteFrecuente.addActionListener(new ActionListener() {
         	@SuppressWarnings("unused")
 			public void actionPerformed(ActionEvent e) {
@@ -140,7 +142,7 @@ public class Reporte extends JPanel {
             	btnClienteFrecuente.setForeground(Color.BLACK);
             }
         });
-        btnClienteFrecuente.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnClienteFrecuente.setHorizontalTextPosition(SwingConstants.RIGHT);
         btnClienteFrecuente.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnClienteFrecuente.setBorder(null);
         btnClienteFrecuente.setForeground(Color.BLACK);
@@ -207,6 +209,7 @@ public class Reporte extends JPanel {
 
         // Boton para buscar reservas entre fechas
         JButton btnBuscarReservas = new JButton("BUSCAR");
+        btnBuscarReservas.setIcon(new ImageIcon(Reporte.class.getResource("/Img/icono de buscar.png")));
         btnBuscarReservas.addActionListener(new ActionListener() {
             @SuppressWarnings("unused")
             public void actionPerformed(ActionEvent e) {
@@ -294,7 +297,7 @@ public class Reporte extends JPanel {
         });
         btnBuscarReservas.setForeground(Color.BLACK);
         btnBuscarReservas.setBackground(Color.WHITE);
-        btnBuscarReservas.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnBuscarReservas.setHorizontalTextPosition(SwingConstants.RIGHT);
         btnBuscarReservas.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnBuscarReservas.setBorder(null);
         btnBuscarReservas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -316,6 +319,7 @@ public class Reporte extends JPanel {
 
         // Boton para temporada primavera
 		JButton btnPrimavera = new JButton("PRIMAVERA");
+		btnPrimavera.setIcon(null);
 		btnPrimavera.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				generarReportePorTemporada("PRIMAVERA");
@@ -331,7 +335,7 @@ public class Reporte extends JPanel {
 				btnPrimavera.setBackground(Color.WHITE);
 			}
 		});
-		btnPrimavera.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnPrimavera.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnPrimavera.setForeground(Color.BLACK);
 		btnPrimavera.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnPrimavera.setFont(new Font("Roboto Light", Font.PLAIN, 16));
@@ -438,19 +442,36 @@ public class Reporte extends JPanel {
         add(btnInvierno);
         
         JButton btnReservasFuturas = new JButton("BUSCAR");
+        btnReservasFuturas.setIcon(new ImageIcon(Reporte.class.getResource("/Img/icono de buscar.png")));
         btnReservasFuturas.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		seleccionarCliente = new SeleccionarCliente();
+        		seleccionarCliente = new SeleccionarCliente("Reservas Futuras");
         		seleccionarCliente.setVisible(true);
         	}
         });
-        btnReservasFuturas.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnReservasFuturas.setHorizontalTextPosition(SwingConstants.RIGHT);
         btnReservasFuturas.setForeground(Color.BLACK);
         btnReservasFuturas.setFont(new Font("Roboto Light", Font.PLAIN, 16));
         btnReservasFuturas.setBorder(null);
         btnReservasFuturas.setBackground(Color.WHITE);
         btnReservasFuturas.setBounds(421, 140, 150, 30);
         add(btnReservasFuturas);
+        
+        JButton btnReservasHistorial = new JButton("BUSCAR");
+        btnReservasHistorial.setIcon(new ImageIcon(Reporte.class.getResource("/Img/icono de buscar.png")));
+        btnReservasHistorial.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		seleccionarCliente = new SeleccionarCliente("Reserva Historial");
+        		seleccionarCliente.setVisible(true);
+        	}
+        });
+        btnReservasHistorial.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnReservasHistorial.setForeground(Color.BLACK);
+        btnReservasHistorial.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        btnReservasHistorial.setBorder(null);
+        btnReservasHistorial.setBackground(Color.WHITE);
+        btnReservasHistorial.setBounds(421, 240, 150, 30);
+        add(btnReservasHistorial);
     }
     
     //Metodo para generar los reportes por temporada

@@ -26,6 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.ImageIcon;
 @SuppressWarnings("unused")
 public class IngresoCodVerificacion extends JDialog {
 
@@ -86,6 +87,7 @@ public class IngresoCodVerificacion extends JDialog {
 		
 		// Boton para verificar el codigo ingresado
 		JButton btnVerificar = new JButton("VERIFICAR");
+		btnVerificar.setIcon(new ImageIcon(IngresoCodVerificacion.class.getResource("/Img/icono verificado.png")));
 		btnVerificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -126,7 +128,7 @@ public class IngresoCodVerificacion extends JDialog {
 		btnVerificar.setBackground(Color.WHITE);
 		btnVerificar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnVerificar.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnVerificar.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnVerificar.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnVerificar.setFont(new Font("Roboto Light", Font.PLAIN, 18));
 		btnVerificar.setBounds(175, 285, 250, 30);
 		contentPanel.add(btnVerificar);

@@ -149,7 +149,7 @@ public class InicioEmpleado extends JFrame {
 		
 		//Boton para ver pantalla gestion de reservas
 		JButton btnGestionReserva = new JButton("GESTION DE RESERVAS");
-		btnGestionReserva.setIcon(new ImageIcon());
+		btnGestionReserva.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de eventos especiales.png")));
 		btnGestionReserva.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 					tabbedPane.setSelectedIndex(3);

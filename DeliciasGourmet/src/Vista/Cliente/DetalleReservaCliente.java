@@ -37,6 +37,7 @@ import Modelo.Complementos.Mesa;
 import Modelo.Complementos.Reserva;
 import Modelo.Complementos.Servicio;
 import Modelo.Empleado.SesionEmpleado;
+import javax.swing.ImageIcon;
 
 @SuppressWarnings("unused")
 public class DetalleReservaCliente extends JFrame {
@@ -205,6 +206,7 @@ public class DetalleReservaCliente extends JFrame {
 
 		// Boton de Confirmar
 		JButton btnConfirmar = new JButton("Confirmar");
+		btnConfirmar.setIcon(new ImageIcon(DetalleReservaCliente.class.getResource("/Img/icono verificado.png")));
 		btnConfirmar.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        int idServicio;
@@ -352,6 +354,7 @@ public class DetalleReservaCliente extends JFrame {
 
 		// Boton para Cancelar
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.setIcon(new ImageIcon(DetalleReservaCliente.class.getResource("/Img/icono cancelar.png")));
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -380,7 +383,7 @@ public class DetalleReservaCliente extends JFrame {
 		btnCancelar.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnCancelar.setBorder(null);
 		btnCancelar.setForeground(Color.BLACK);
-		btnCancelar.setBounds(50, 500, 120, 30);
+		btnCancelar.setBounds(52, 494, 120, 30);
 		pnlContenedor.add(btnCancelar);
 
 	}

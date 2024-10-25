@@ -48,6 +48,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import javax.swing.ImageIcon;
 
 @SuppressWarnings("static-access")
 public class Historial extends JPanel {
@@ -238,6 +239,7 @@ public class Historial extends JPanel {
 		
 		// Boton cancelar reserva
 		JButton btnCancelar = new JButton("CANCELAR");
+		btnCancelar.setIcon(new ImageIcon(Historial.class.getResource("/Img/icono cancelar.png")));
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -275,7 +277,7 @@ public class Historial extends JPanel {
 			public void mouseExited(MouseEvent e) {
 			}
 		});
-		btnCancelar.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnCancelar.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnCancelar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnCancelar.setBorder(null);
 		btnCancelar.setBackground(Color.WHITE);
@@ -286,6 +288,7 @@ public class Historial extends JPanel {
 		
 		// Boton para modificar
         JButton btnModificar = new JButton("MODIFICAR");
+        btnModificar.setIcon(new ImageIcon(Historial.class.getResource("/Img/icono modificar.png")));
         btnModificar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -304,7 +307,7 @@ public class Historial extends JPanel {
             public void mouseExited(MouseEvent e) {
             }
         });
-        btnModificar.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnModificar.setHorizontalTextPosition(SwingConstants.RIGHT);
         btnModificar.setForeground(Color.BLACK);
         btnModificar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
         btnModificar.setBorder(null);

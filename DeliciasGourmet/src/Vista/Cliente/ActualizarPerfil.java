@@ -50,8 +50,9 @@ public class ActualizarPerfil extends JPanel {
 
 		// Etiqueta de perfil
 		JLabel lblRegistro = new JLabel("PERFIL");
+		lblRegistro.setIcon(null);
 		lblRegistro.setFont(new Font("Roboto Light", Font.BOLD, 32));
-		lblRegistro.setBounds(427, 10, 138, 33);
+		lblRegistro.setBounds(438, 10, 116, 33);
 		add(lblRegistro);
 
 		// Etiqueta y campo de texto de nombre
@@ -140,7 +141,7 @@ public class ActualizarPerfil extends JPanel {
 		// Imagen del perfil
 		JLabel lblFotoPerfil = new JLabel("");
 		lblFotoPerfil.setIcon(new ImageIcon(ActualizarPerfil.class.getResource("/Img/ImgPerfil (1).jpg")));
-		lblFotoPerfil.setBounds(405, 38, 160, 176);
+		lblFotoPerfil.setBounds(416, 38, 160, 176);
 		add(lblFotoPerfil);
 
 		// Botón para subir la foto
@@ -177,7 +178,7 @@ public class ActualizarPerfil extends JPanel {
 				btnCargarFoto.setForeground(Color.BLACK);
 			}
 		});
-		btnCargarFoto.setBounds(405, 220, 160, 30);
+		btnCargarFoto.setBounds(416, 220, 160, 30);
 		btnCargarFoto.setForeground(Color.BLACK);
 		btnCargarFoto.setFont(new Font("Roboto Light", Font.BOLD, 16));
 		btnCargarFoto.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

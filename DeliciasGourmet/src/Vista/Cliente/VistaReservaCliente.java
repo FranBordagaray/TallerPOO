@@ -248,6 +248,8 @@ public class VistaReservaCliente extends JPanel {
 
         // Boton agregar Tarjeta
         JButton btnAgregarTarjeta = new JButton("Agregar Tarjeta");
+        btnAgregarTarjeta.setIcon(new ImageIcon(VistaReservaCliente.class.getResource("/Img/icono tarjeta.png")));
+        btnAgregarTarjeta.setSelectedIcon(new ImageIcon(VistaReservaCliente.class.getResource("/Img/icono tarjeta.png")));
         btnAgregarTarjeta.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -269,7 +271,7 @@ public class VistaReservaCliente extends JPanel {
                 btnAgregarTarjeta.setForeground(Color.BLACK);
             }
         });
-        btnAgregarTarjeta.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnAgregarTarjeta.setHorizontalTextPosition(SwingConstants.RIGHT);
         btnAgregarTarjeta.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnAgregarTarjeta.setBorder(null);
         btnAgregarTarjeta.setForeground(Color.BLACK);
@@ -280,6 +282,7 @@ public class VistaReservaCliente extends JPanel {
 
         // Boton Siguiente P
         btnSiguiente = new JButton("Siguiente");
+        btnSiguiente.setIcon(new ImageIcon(VistaReservaCliente.class.getResource("/Img/icono de siguiente.png")));
         btnSiguiente.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	
@@ -310,7 +313,7 @@ public class VistaReservaCliente extends JPanel {
             }
         });
         btnSiguiente.setEnabled(false);
-        btnSiguiente.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnSiguiente.setHorizontalTextPosition(SwingConstants.RIGHT);
         btnSiguiente.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnSiguiente.setBorder(null);
         btnSiguiente.setForeground(Color.BLACK);

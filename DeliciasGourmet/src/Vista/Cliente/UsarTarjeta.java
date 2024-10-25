@@ -28,6 +28,7 @@ import Modelo.Cliente.Tarjeta;
 import Modelo.Complementos.Reserva;
 import Vista.Empleado.VistaReservaEmpleado;
 import javax.swing.JComboBox;
+import javax.swing.ImageIcon;
 
 public class UsarTarjeta extends JFrame {
 
@@ -158,6 +159,7 @@ public class UsarTarjeta extends JFrame {
 
 		// Boton Confirmar
 		JButton btnConfirmar = new JButton("Confirmar");
+		btnConfirmar.setIcon(new ImageIcon(UsarTarjeta.class.getResource("/Img/icono verificado.png")));
 		btnConfirmar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -172,7 +174,7 @@ public class UsarTarjeta extends JFrame {
 			}
 		});
 		btnConfirmar.setForeground(Color.BLACK);
-		btnConfirmar.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnConfirmar.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnConfirmar.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        if (seleccion) {
@@ -226,6 +228,7 @@ public class UsarTarjeta extends JFrame {
 
 		// Boton para volver a la pantalla reservas
 		JButton btnAtras = new JButton("Volver");
+		btnAtras.setIcon(new ImageIcon(UsarTarjeta.class.getResource("/Img/icono de volver.png")));
 		btnAtras.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				VistaReservaCliente reserva = new VistaReservaCliente();
@@ -246,7 +249,7 @@ public class UsarTarjeta extends JFrame {
 				btnAtras.setForeground(Color.BLACK);
 			}
 		});
-		btnAtras.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnAtras.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnAtras.setForeground(Color.BLACK);
 		btnAtras.setFont(new Font("Roboto Light", Font.BOLD, 16));
 		btnAtras.setBorder(null);
