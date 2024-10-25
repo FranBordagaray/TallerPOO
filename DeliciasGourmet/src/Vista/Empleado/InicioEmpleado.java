@@ -8,11 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
@@ -148,13 +146,43 @@ public class InicioEmpleado extends JFrame {
 		btnGestionDeMesas.setAlignmentX(0.5f);
 		btnGestionDeMesas.setBounds(0, 195, 271, 35);
 		panelMenu.add(btnGestionDeMesas);
+		
+		//Boton para ver pantalla gestion de reservas
+		JButton btnGestionReserva = new JButton("GESTION DE RESERVAS");
+		btnGestionReserva.setIcon(new ImageIcon());
+		btnGestionReserva.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					tabbedPane.setSelectedIndex(3);
+					
+				}
+		});
+		btnGestionReserva.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnGestionReserva.setBackground(new Color(255, 0, 0));
+				btnGestionReserva.setForeground(Color.WHITE);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnGestionReserva.setBackground(Color.WHITE);
+				btnGestionReserva.setForeground(Color.BLACK);
+			}
+		});
+		btnGestionReserva.setFont(new Font("Roboto Light", Font.BOLD, 16));
+		btnGestionReserva.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnGestionReserva.setBorder(null);
+		btnGestionReserva.setBackground(Color.WHITE);
+		btnGestionReserva.setAlignmentX(0.5f);
+		btnGestionReserva.setBounds(0, 240, 271, 35);
+		panelMenu.add(btnGestionReserva);
 
 		// Boton para pantalla reportes
 		JButton btnReportes = new JButton("REPORTES");
 		btnReportes.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de reportes.png")));
 		btnReportes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tabbedPane.setSelectedIndex(3);
+				tabbedPane.setSelectedIndex(4);
 			}
 		});
 		btnReportes.addMouseListener(new MouseAdapter() {
@@ -175,7 +203,7 @@ public class InicioEmpleado extends JFrame {
 		btnReportes.setBorder(null);
 		btnReportes.setBackground(Color.WHITE);
 		btnReportes.setAlignmentX(0.5f);
-		btnReportes.setBounds(0, 240, 271, 35);
+		btnReportes.setBounds(0, 285, 271, 35);
 		panelMenu.add(btnReportes);
 
 		// Boton para ver pantalla perfil
@@ -183,7 +211,7 @@ public class InicioEmpleado extends JFrame {
 		btnPerfil.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de perfil.png")));
 		btnPerfil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tabbedPane.setSelectedIndex(4);
+				tabbedPane.setSelectedIndex(5);
 			}
 		});
 		btnPerfil.addMouseListener(new MouseAdapter() {
@@ -204,7 +232,7 @@ public class InicioEmpleado extends JFrame {
 		btnPerfil.setBorder(null);
 		btnPerfil.setBackground(Color.WHITE);
 		btnPerfil.setAlignmentX(0.5f);
-		btnPerfil.setBounds(0, 285, 271, 35);
+		btnPerfil.setBounds(0, 330, 271, 35);
 		panelMenu.add(btnPerfil);
 
 		// Boton para cerrar sesion
@@ -244,9 +272,13 @@ public class InicioEmpleado extends JFrame {
 			btnReportes.setEnabled(false);
 		} else if (rol.equals("MESERO")) {
 			btnGestionEmpleados.setEnabled(false);
+			btnGestionReserva.setEnabled(false);
+			btnGestionDeMesas.setEnabled(false);
 			btnReportes.setEnabled(false);
 		} else if (rol.equals("MAITRE")) {
 			btnGestionEmpleados.setEnabled(false);
+			btnGestionReserva.setEnabled(false);
+			btnGestionDeMesas.setEnabled(false);
 			btnReportes.setEnabled(false);
 		}
 
@@ -265,10 +297,10 @@ public class InicioEmpleado extends JFrame {
 		tabbedPane.addTab("MESAS", gestionMesas);
 		gestionMesas.setLayout(null);
 
-		JLabel lblComingSoonGestionMesas = new JLabel("COMING SOON GESTION MESAS");
-		lblComingSoonGestionMesas.setFont(new Font("Roboto Light", Font.BOLD, 30));
-		lblComingSoonGestionMesas.setBounds(265, 302, 457, 36);
-		gestionMesas.add(lblComingSoonGestionMesas);
+		//Panel para gestion Reserva
+		GestionReserva gestionReserva = new GestionReserva();
+		tabbedPane.addTab("GESTIONRESERVA", gestionReserva);
+		gestionReserva.setLayout(null);
 
 		// Panel para reportes
 		Reporte reporte = new Reporte();

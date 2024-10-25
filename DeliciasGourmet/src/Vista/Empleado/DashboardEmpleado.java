@@ -4,11 +4,14 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -21,14 +24,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import Controlador.ReservaControlador;
-import Modelo.Cliente.EnviarMail;
 import Modelo.Cliente.HistorialReserva;
-import Modelo.Cliente.SesionCliente;
-import Modelo.Complementos.Mesa;
-import Modelo.Complementos.Reserva;
 import Modelo.Empleado.SesionEmpleado;
 
 import javax.swing.JTextField;
@@ -40,7 +40,6 @@ public class DashboardEmpleado extends JPanel {
     private JLabel lblFechaHora;
     private JTable tblBHistorial;
     private JTextField txtBuscarCliente;
-    private SesionCliente s;
     private ReservaControlador controladorReserva;
     
 
@@ -92,40 +91,67 @@ public class DashboardEmpleado extends JPanel {
         scrollPane.setBounds(10, 369, 972, 300);
         add(scrollPane);
 
-     // Tabla para el historial personal de un cliente
-     		tblBHistorial = new JTable();
-     		tblBHistorial.setGridColor(Color.DARK_GRAY);
-     		tblBHistorial.setBackground(Color.WHITE);
-     		tblBHistorial.setBorder(null);
-     		tblBHistorial.setFont(new Font("Roboto Light", Font.PLAIN, 12));
-     		tblBHistorial.setForeground(Color.BLACK);
-     		tblBHistorial.setModel(new DefaultTableModel(
-     				new Object[][] {
-     				},
-     				new String[] {
-     						"RESERVA N°","NOMBRE","APELLIDO", "FECHA", "HORA", "MESA", "COMENSALES", "UBICACION", "ESTADO"
-     				}) {
-     			@Override
-     			public boolean isCellEditable(int row, int column) {
-     				return false;
-     			}
-     		});
-     	TableColumnModel columnModel = tblBHistorial.getColumnModel();
-     	columnModel.getColumn(0).setPreferredWidth(25);
-     	columnModel.getColumn(5).setPreferredWidth(25);
-     	columnModel.getColumn(6).setPreferredWidth(25);
-     	columnModel.getColumn(8).setPreferredWidth(50);
-     	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-     	centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        // Tabla para el historial personal de un cliente
+ 		tblBHistorial = new JTable();
+ 		tblBHistorial.setGridColor(Color.DARK_GRAY);
+ 		tblBHistorial.setBackground(Color.WHITE);
+ 	 	tblBHistorial.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+ 		tblBHistorial.setBorder(null);
+ 		tblBHistorial.setForeground(Color.BLACK);
+ 		tblBHistorial.setModel(new DefaultTableModel(
+ 			new Object[][] {},
+ 			new String[] { "ID RESERVA","NOMBRE","APELLIDO", "FECHA", "HORA", "MESA", "COMENSALES", "UBICACION", "ESTADO" , "C"}) {
+ 			@Override
+ 			public boolean isCellEditable(int row, int column) {
+ 				return false;
+ 			}
+ 		});
+ 	
+ 		tblBHistorial.addMouseListener(new MouseAdapter() {
+ 	    @Override
+ 	    public void mouseClicked(MouseEvent e) {
+ 	        int row = tblBHistorial.rowAtPoint(e.getPoint());
+ 	        int column = tblBHistorial.columnAtPoint(e.getPoint());
 
-     	// Aplicar el renderizador a la columna "ESTADO"
-     	tblBHistorial.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-     	tblBHistorial.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
-     	tblBHistorial.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
-     	
-
-     	
-     	tblBHistorial.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+ 	        if (column == 9 && row >= 0) {
+ 	            String comentario = (String) tblBHistorial.getValueAt(row, column);
+ 	            String comentarioFormateado = formatearComentario(comentario, 100); // Cambia 50 por el número de caracteres deseado
+ 	            
+ 	            JOptionPane.showMessageDialog(tblBHistorial, comentarioFormateado, "Comentario Completo", JOptionPane.INFORMATION_MESSAGE);
+ 	        }
+ 	    }
+ 		});
+ 		
+ 		TableCellRenderer comentarioRenderer = new DefaultTableCellRenderer() {
+ 		    @Override
+ 		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+ 		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+ 		        
+ 		        setText("-");
+ 		        return this;
+ 		    }
+ 		};
+ 		
+ 		tblBHistorial.getColumnModel().getColumn(9).setCellRenderer(comentarioRenderer);
+ 	
+ 		TableColumnModel columnModel = tblBHistorial.getColumnModel();
+ 	 	columnModel.getColumn(0).setPreferredWidth(75);
+ 	 	columnModel.getColumn(1).setPreferredWidth(110);
+ 	 	columnModel.getColumn(2).setPreferredWidth(110);
+ 	 	columnModel.getColumn(3).setPreferredWidth(100);
+ 	 	columnModel.getColumn(4).setPreferredWidth(100);
+ 	 	columnModel.getColumn(5).setPreferredWidth(60);
+ 	 	columnModel.getColumn(6).setPreferredWidth(90);
+ 	 	columnModel.getColumn(7).setPreferredWidth(160);
+ 	 	columnModel.getColumn(8).setPreferredWidth(100);
+ 	 	columnModel.getColumn(9).setPreferredWidth(10);
+ 	 	
+      	
+      	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+      	centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+      	tblBHistorial.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+      	tblBHistorial.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+      	tblBHistorial.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
         scrollPane.setViewportView(tblBHistorial);
 
         // Etiqueta y campo de texto para buscar reservas de clientes
@@ -177,35 +203,6 @@ public class DashboardEmpleado extends JPanel {
         SwingUtilities.invokeLater(() -> lblFechaHora.setText(fechaHoraFormateada));
     }
     
- // Metodo para enviar mail
- 	@SuppressWarnings("static-access")
- 	public void enviarDetalles(Mesa mesa, Reserva reserva) {
- 		s = new SesionCliente();
- 		String destinatario = s.getClienteActual().getEmail();
- 		String asunto = "Confirmacion de reserva - Delicias Gourmet";
- 		String mensaje = String.format(
- 			    "Estimado/a cliente,\n\n" +
- 			    "Nos complace confirmar su reserva en nuestro restaurante con los siguientes detalles:\n\n" +
- 			    "   - Número de Mesa: %d\n" +
- 			    "   - Ubicación: %s\n" +
- 			    "   - Capacidad de la Mesa: %d personas\n" +
- 			    "   - Fecha de la Reserva: %s\n" +
- 			    "   - Hora de la Reserva: %s\n" +
- 			    "   - Comentarios adicionales: %s\n\n" +
- 			    "Agradecemos su preferencia y le recordamos que estaremos encantados de recibirle.\n\n" +
- 			    "Saludos cordiales,\n" +
- 			    "Restaurante %s",
- 			    mesa.getIdMesa(),
- 			    mesa.getUbicacion(),
- 			    mesa.getCapacidad(),
- 			    reserva.getFecha(),
- 			    reserva.getHora(),
- 			    reserva.getComentario(),
- 			    "Delicias Gourmet"
- 			);
- 		 EnviarMail.enviarCorreo(destinatario, asunto, mensaje);
- 	}
- 	
  // Función para cargar tabla con datos almacenados en la base de datos
  	private void cargarDatos() {
  		List<HistorialReserva> historial;
@@ -225,11 +222,32 @@ public class DashboardEmpleado extends JPanel {
  						reserva.getIdMesa(),
  						reserva.getCapacidad(),
  						reserva.getUbicacion(),
- 						estado
+ 						estado,
+ 						reserva.getComentario()
  				});
  			}
  		} catch (Exception e) {
  			e.printStackTrace();
  		}
  	}
+ 	
+ 	// Método para formatear el comentario
+  	private String formatearComentario(String comentario, int limiteCaracteres) {
+  	    StringBuilder resultado = new StringBuilder();
+  	    String[] palabras = comentario.split(" "); // Dividir el comentario en palabras
+  	    int longitudActual = 0;
+
+  	    for (String palabra : palabras) {
+  	        // Si la longitud actual más la longitud de la nueva palabra supera el límite
+  	        if (longitudActual + palabra.length() > limiteCaracteres) {
+  	            resultado.append("\n"); // Agregar un salto de línea
+  	            longitudActual = 0; // Reiniciar la longitud actual
+  	        }
+  	        
+  	        resultado.append(palabra).append(" "); // Agregar la palabra al resultado
+  	        longitudActual += palabra.length() + 1; // Actualizar la longitud actual (+1 por el espacio)
+  	    }
+
+  	    return resultado.toString().trim(); // Retornar el resultado sin espacios al final
+  	}
 }

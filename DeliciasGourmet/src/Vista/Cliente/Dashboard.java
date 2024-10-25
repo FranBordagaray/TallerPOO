@@ -14,7 +14,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import Controlador.ReservaControlador;
 import Modelo.Cliente.SesionCliente;
@@ -125,9 +127,12 @@ public class Dashboard extends JPanel {
 		add(scrollPane);
 
 		tblResumenReserva = new JTable();
-		tblResumenReserva.setFont(new Font("Roboto Light", Font.PLAIN, 12));
-		tblResumenReserva.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		tblResumenReserva.setGridColor(Color.DARK_GRAY);
+		tblResumenReserva.setBackground(Color.WHITE);
+		tblResumenReserva.setFont(new Font("Roboto Light", Font.PLAIN, 13));
 		tblResumenReserva.setBorder(null);
+		tblResumenReserva.setForeground(Color.BLACK);
+		tblResumenReserva.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		tblResumenReserva.setModel(
 				new DefaultTableModel(new Object[][] {}, new String[] { "MESA", "FECHA", "HORA", "UBICACION" }) {
 					@Override
@@ -135,6 +140,16 @@ public class Dashboard extends JPanel {
 						return false;
 					}
 				});
+		
+		TableColumnModel columnModel = tblResumenReserva.getColumnModel();
+     	columnModel.getColumn(0).setPreferredWidth(60);
+     	columnModel.getColumn(1).setPreferredWidth(100);
+     	columnModel.getColumn(2).setPreferredWidth(100);
+     	columnModel.getColumn(3).setPreferredWidth(225);
+     	
+     	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+     	centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+     	tblResumenReserva.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 		scrollPane.setViewportView(tblResumenReserva);
 
 		// Panel Header Notificaciones

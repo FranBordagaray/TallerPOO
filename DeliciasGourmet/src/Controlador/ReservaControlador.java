@@ -598,45 +598,38 @@ public class ReservaControlador {
 	    }
 	}
 
-	// Funcion para cargar datos de la reserva Historial Empleado
-	public List<HistorialReserva> obtenerHistorialReserva() {
-	    PreparedStatement ps = null;
-	    ResultSet rs = null;
-	    List<HistorialReserva> historial = new ArrayList<>();
-	    try {
-	        ps = connection.prepareStatement(
-	                "SELECT r.idReserva, c.nombre, c.apellido, r.fecha, r.hora, r.idMesa, m.capacidad, m.ubicacion, r.estado "
-	                + "FROM Reserva r JOIN MesaPrecargada m ON r.idMesa = m.idMesa "
-	                + "JOIN Cliente c ON r.idCliente = c.idCliente");
-
-	        rs = ps.executeQuery();
-	        while (rs.next()) {
-	            HistorialReserva reserva = new HistorialReserva(rs.getInt("idReserva"), rs.getString("nombre"),
-	                    rs.getString("apellido"), rs.getString("fecha"), rs.getString("hora"), rs.getInt("idMesa"),
-	                    rs.getInt("capacidad"), rs.getString("ubicacion"), rs.getInt("estado"));
-	            historial.add(reserva);
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        System.out.println("Error al obtener el historial de reservas por cliente!");
-	    } finally {
-	        if (rs != null) {
-	            try {
-	                rs.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        if (ps != null) {
-	            try {
-	                ps.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }
-	    return historial;
-	}
+	 //Funcion para cargar datos de la reserva Historial Empleado
+    public List<HistorialReserva> obtenerHistorialReserva(){
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<HistorialReserva> historial = new ArrayList<>();
+        try {
+            ps = connection.prepareStatement( "SELECT r.idReserva, c.nombre, c.apellido, r.fecha, r.hora, r.idMesa, m.capacidad, m.ubicacion, r.estado, r.comentario FROM Reserva r JOIN MesaPrecargada m ON r.idMesa = m.idMesa \r\n"
+             + "JOIN Cliente c ON r.idCliente = c.idCliente"
+            );
+                 
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                HistorialReserva reserva = new HistorialReserva(
+                	rs.getInt("idReserva"),
+                	rs.getString("nombre"),
+                	rs.getString("apellido"),
+                    rs.getString("fecha"),
+                    rs.getString("hora"),
+                    rs.getInt("idMesa"),
+                    rs.getInt("capacidad"),
+                    rs.getString("ubicacion"),
+                    rs.getInt("estado"),
+                    rs.getString("comentario")
+                );
+                historial.add(reserva);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al obtener el historial de reservas por cliente!");
+        }
+        return historial;
+    }
 
 	//Metodo para obtener las reservas futuras del cliente
 	public List<Reportes> obtenerReservasFuturasPorCliente(int idCliente) {
@@ -850,4 +843,61 @@ public class ReservaControlador {
 			}
 		}
 	}
+	
+	// Función para obtener el email del cliente asociado a una reserva
+    public String obtenerEmailClientePorReserva(int idReserva) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String email = null;
+        
+        try {
+            ps = connection.prepareStatement("SELECT Cliente.email FROM Reserva JOIN Cliente ON Reserva.idCliente = Cliente.idCliente WHERE Reserva.idReserva = ?");
+            ps.setInt(1, idReserva);
+    
+            rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                email = rs.getString("email");
+                System.out.println("Email del cliente encontrado: " + email);
+            } else {
+                System.out.println("No se encontró un cliente asociado a la reserva.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al obtener el email del cliente.");
+        }finally {
+	        if (ps != null) {
+	            try {
+	                ps.close();
+	                } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+        
+        return email;
+    }
+    
+    // Funcion para cambiar estado de la reserva
+    public void actualizarEstadoReserva(int idSeleccionado, int nuevoEstado) {
+        PreparedStatement ps = null;
+        try {   
+            ps = connection.prepareStatement("UPDATE Reserva SET estado = ? WHERE idReserva = ?");
+            ps.setInt(1, nuevoEstado);  
+            ps.setInt(2, idSeleccionado);  
+            ps.executeUpdate();
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 }

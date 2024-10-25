@@ -34,7 +34,7 @@ public class HistorialReserva {
         this.comentario = comentario;
     }
     
-    public HistorialReserva(int idReserva,String nombre, String apellido, String fecha, String hora, int idMesa, int capacidad, String ubicacion, int estado) {
+    public HistorialReserva(int idReserva,String nombre, String apellido, String fecha, String hora, int idMesa, int capacidad, String ubicacion, int estado,String comentario) {
         this.idReserva = idReserva;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -44,6 +44,7 @@ public class HistorialReserva {
         this.capacidad = capacidad;
         this.ubicacion = ubicacion;
         this.estado = estado;
+        this.comentario = comentario;
     }
     public HistorialReserva(String ubicacion, String fecha, String hora, int capacidad, int idMesa, String comentario) {
     	this.ubicacion = ubicacion;

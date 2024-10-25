@@ -1,6 +1,7 @@
 package Vista.Cliente;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -22,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import com.itextpdf.text.Document;
@@ -145,6 +147,8 @@ public class Historial extends JPanel {
 
 		// scroll para utilizar la tabla
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBorder(null);
+		scrollPane.setFont(new Font("Roboto Light", Font.PLAIN, 12));
 		scrollPane.setBounds(16, 150, 960, 518);
 		add(scrollPane);
 
@@ -152,40 +156,67 @@ public class Historial extends JPanel {
 		tblBHistorial = new JTable();
 		tblBHistorial.setGridColor(Color.DARK_GRAY);
 		tblBHistorial.setBackground(Color.WHITE);
+		tblBHistorial.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 		tblBHistorial.setBorder(null);
-		tblBHistorial.setFont(new Font("Roboto Light", Font.PLAIN, 12));
 		tblBHistorial.setForeground(Color.BLACK);
+		tblBHistorial.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		tblBHistorial.setModel(new DefaultTableModel(
 				new Object[][] {
 				},
 				new String[] {
-						"RESEERVA N°", "FECHA", "HORA", "MESA", "COMENSALES", "UBICACION", "COMENTARIO", "ESTADO"
+						"RESERVA", "FECHA", "HORA", "MESA", "COMENSALES", "UBICACION", "COMENTARIO", "ESTADO"
 				}) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
+		@Override
+		public boolean isCellEditable(int row, int column) {
+			return false;
+		}
 		});
+		tblBHistorial.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		        int row = tblBHistorial.rowAtPoint(e.getPoint());
+		        int column = tblBHistorial.columnAtPoint(e.getPoint());
+
+		        if (column == 6 && row >= 0) {
+		            String comentario = (String) tblBHistorial.getValueAt(row, column);
+		            String comentarioFormateado = formatearComentario(comentario, 100); // Cambia 50 por el número de caracteres deseado
+		            
+		            JOptionPane.showMessageDialog(tblBHistorial, comentarioFormateado, "Comentario Completo", JOptionPane.INFORMATION_MESSAGE);
+		        }
+		    }
+		});
+		
+		TableCellRenderer reservaRenderer = new DefaultTableCellRenderer() {
+		    @Override
+		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		        
+		        setText("-");
+		        setHorizontalAlignment(SwingConstants.CENTER);
+		        return this;
+		    }
+		};
+		
+		tblBHistorial.getColumnModel().getColumn(0).setCellRenderer(reservaRenderer);
+
 		TableColumnModel columnModel = tblBHistorial.getColumnModel();
-     	columnModel.getColumn(0).setPreferredWidth(20);
-     	columnModel.getColumn(1).setPreferredWidth(25);
-     	columnModel.getColumn(2).setPreferredWidth(25);
-     	columnModel.getColumn(3).setPreferredWidth(20);
-     	columnModel.getColumn(4).setPreferredWidth(20);
-     	columnModel.getColumn(5).setPreferredWidth(60);
-     	columnModel.getColumn(6).setPreferredWidth(60);
-     	columnModel.getColumn(7).setPreferredWidth(25);
+     	columnModel.getColumn(0).setPreferredWidth(90);
+     	columnModel.getColumn(1).setPreferredWidth(100);
+     	columnModel.getColumn(2).setPreferredWidth(100);
+     	columnModel.getColumn(3).setPreferredWidth(60);
+     	columnModel.getColumn(4).setPreferredWidth(90);
+     	columnModel.getColumn(5).setPreferredWidth(170);
+     	columnModel.getColumn(6).setPreferredWidth(220);
+     	columnModel.getColumn(7).setPreferredWidth(125);
      	
      	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
      	centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-
-     	// Aplicar el renderizador a la columna "ESTADO"
-     	tblBHistorial.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
      	tblBHistorial.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
      	tblBHistorial.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
      	tblBHistorial.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
 		tblBHistorial.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-	    public void valueChanged(ListSelectionEvent event) {
+	    
+		public void valueChanged(ListSelectionEvent event) {
 	        if (!event.getValueIsAdjusting()) {
 	            int selectedRow = tblBHistorial.getSelectedRow();
 	            if (selectedRow != -1) {
@@ -219,13 +250,13 @@ public class Historial extends JPanel {
 		        
 		        try {
 		        	if(horasDiferencia >= 24) {
-		        		  reservaControlador.cancelarReserva(idReservaSeleccionada);
+		        		  reservaControlador.actualizarEstadoReserva(idReservaSeleccionada, 0);
 		        		  reservaControlador.eliminarMesa(idReservaSeleccionada);
 				          JOptionPane.showMessageDialog(null,"La cancelación se ha realizado con éxito" , "Éxito", JOptionPane.INFORMATION_MESSAGE);
 		        	}else {
 		        		generarComprobanteMail(comprobanteControlador.obtenerComprobantePorReserva(idReservaSeleccionada));
 		        		enviarMailComprobante();
-		        		reservaControlador.cancelarReserva(idReservaSeleccionada);
+		        		reservaControlador.actualizarEstadoReserva(idReservaSeleccionada, 0);
 		        		reservaControlador.eliminarMesa(idReservaSeleccionada);
 		        		JOptionPane.showMessageDialog(null,"La cancelación se ha realizado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 		        	}
@@ -385,7 +416,24 @@ public class Historial extends JPanel {
 				filtroEstado = filtro.equals("VIGENTE") ? 1 : 0;
 			}
 			for (HistorialReserva reserva : historial) {
-				String estado = reserva.getEstado() == 1 ? "VIGENTE" : "CANCELADA";
+				String estado;
+ 				switch (reserva.getEstado()) {
+ 				    case 0:
+ 				        estado = "CANCELADA";
+ 				        break;
+ 				    case 1:
+ 				        estado = "VIGENTE";
+ 				        break;
+ 				    case 2:
+ 				        estado = "COMPLETADA";
+ 				        break;
+ 				    case 3:
+ 				        estado = "NO ASISTIÓ";
+ 				        break;
+ 				    default:
+ 				        estado = "ESTADO DESCONOCIDO"; 
+ 				        break;
+ 				}
 				if (filtroEstado == null || reserva.getEstado() == filtroEstado) {
 					model.addRow(new Object[] {
 							reserva.getIdReserva(),
@@ -509,5 +557,25 @@ public class Historial extends JPanel {
             }
         }
     }
+    
+    // Método para formatear el comentario
+	private String formatearComentario(String comentario, int limiteCaracteres) {
+	    StringBuilder resultado = new StringBuilder();
+	    String[] palabras = comentario.split(" "); // Dividir el comentario en palabras
+	    int longitudActual = 0;
+
+	    for (String palabra : palabras) {
+	        // Si la longitud actual más la longitud de la nueva palabra supera el límite
+	        if (longitudActual + palabra.length() > limiteCaracteres) {
+	            resultado.append("\n"); // Agregar un salto de línea
+	            longitudActual = 0; // Reiniciar la longitud actual
+	        }
+	        
+	        resultado.append(palabra).append(" "); // Agregar la palabra al resultado
+	        longitudActual += palabra.length() + 1; // Actualizar la longitud actual (+1 por el espacio)
+	    }
+
+	    return resultado.toString().trim(); // Retornar el resultado sin espacios al final
+	}
  	
 }
