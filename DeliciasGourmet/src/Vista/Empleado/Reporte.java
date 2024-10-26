@@ -184,6 +184,10 @@ public class Reporte extends JPanel {
         add(lblDesde);
 
         dateDesde = new JDateChooser();
+        dateDesde.getCalendarButton().addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
         dateDesde.setBorder(null);
         dateDesde.setBackground(Color.WHITE);
         dateDesde.setForeground(Color.BLACK);
