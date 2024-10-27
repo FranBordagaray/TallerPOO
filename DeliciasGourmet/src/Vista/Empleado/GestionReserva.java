@@ -253,33 +253,42 @@ public class GestionReserva extends JPanel {
 	btnCancelar.setIcon(new ImageIcon(GestionReserva.class.getResource("/Img/icono cancelar.png")));
 	btnCancelar.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-			if(idReservaSeleccionada != 0) {
-				LocalDateTime ahora = LocalDateTime.now();
-				DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-				String horaSinRango = horaReservaSeleccionada.split(" - ")[0];
-				String fechaHoraSeleccionadaStr = fechaReservaSeleccionada + " " + horaSinRango;
-				LocalDateTime fechaHoraReservaSeleccionada = LocalDateTime.parse(fechaHoraSeleccionadaStr, formatoFecha);
-				long horasDiferencia = ChronoUnit.HOURS.between(ahora, fechaHoraReservaSeleccionada);
-		        try {
-		        	if(horasDiferencia >= 24) {
-		        		 reservaControlador.actualizarEstadoReserva(idReservaSeleccionada, 0);
-		        		 reservaControlador.eliminarMesa(idReservaSeleccionada);
-				          JOptionPane.showMessageDialog(null,"La cancelación se ha realizado con éxito" , "Éxito", JOptionPane.INFORMATION_MESSAGE);
-		        	}else {
-		        		generarComprobanteMail(comprobanteControlador.obtenerComprobantePorReserva(idReservaSeleccionada));
-		        		enviarMailComprobante();
-		        		reservaControlador.actualizarEstadoReserva(idReservaSeleccionada, 0);
-		        		reservaControlador.eliminarMesa(idReservaSeleccionada);
-		        		JOptionPane.showMessageDialog(null,"La cancelación se ha realizado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-		        	}
-		        } catch (Exception e2) {
-		            e2.printStackTrace();
-		            System.out.println("Error al cancelar la Reserva.");
+		    if (idReservaSeleccionada != 0) {
+		        ConfirmacionDeCancelacion confirmacionDialog = new ConfirmacionDeCancelacion();
+		        boolean confirmacion = confirmacionDialog.mostrarConfirmacion();
+		        
+		        if (confirmacion) {
+		            LocalDateTime ahora = LocalDateTime.now();
+		            DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+		            String horaSinRango = horaReservaSeleccionada.split(" - ")[0];
+		            String fechaHoraSeleccionadaStr = fechaReservaSeleccionada + " " + horaSinRango;
+		            LocalDateTime fechaHoraReservaSeleccionada = LocalDateTime.parse(fechaHoraSeleccionadaStr, formatoFecha);
+		            long horasDiferencia = ChronoUnit.HOURS.between(ahora, fechaHoraReservaSeleccionada);
+
+		            try {
+		                if (horasDiferencia >= 24) {
+		                    reservaControlador.actualizarEstadoReserva(idReservaSeleccionada, 0);
+		                    reservaControlador.eliminarMesa(idReservaSeleccionada);
+		                    JOptionPane.showMessageDialog(null, "La cancelación se ha realizado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		                } else {
+		                    generarComprobanteMail(comprobanteControlador.obtenerComprobantePorReserva(idReservaSeleccionada));
+		                    enviarMailComprobante();
+		                    reservaControlador.actualizarEstadoReserva(idReservaSeleccionada, 0);
+		                    reservaControlador.eliminarMesa(idReservaSeleccionada);
+		                    JOptionPane.showMessageDialog(null, "La cancelación se ha realizado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		                }
+		            } catch (Exception e2) {
+		                e2.printStackTrace();
+		                System.out.println("Error al cancelar la Reserva.");
+		            }
+		        } else {
+		            JOptionPane.showMessageDialog(null, "La cancelación fue cancelada por el usuario", "Cancelación", JOptionPane.INFORMATION_MESSAGE);
 		        }
-	        } else {
-	        	JOptionPane.showMessageDialog(GestionReserva.this,"No selecciono ninguna reserva","Error",JOptionPane.ERROR_MESSAGE);
-	        }
-	  }
+		    } else {
+		        JOptionPane.showMessageDialog(GestionReserva.this, "No seleccionó ninguna reserva", "Error", JOptionPane.ERROR_MESSAGE);
+		    }
+		    cargarDatos();	    
+		}	
 	});
 	btnCancelar.addMouseListener(new MouseAdapter() {
     	@Override
@@ -314,6 +323,7 @@ public class GestionReserva extends JPanel {
 			}else {
 				JOptionPane.showMessageDialog(GestionReserva.this,"No selecciono ninguna reserva","Error",JOptionPane.ERROR_MESSAGE);
 			}
+			cargarDatos(); 	
 		}
 	});
 	btnModificar.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -384,6 +394,7 @@ public class GestionReserva extends JPanel {
 			} else {
 				JOptionPane.showMessageDialog(GestionReserva.this,"No selecciono ninguna reserva","Error",JOptionPane.ERROR_MESSAGE);
 			}
+			cargarDatos();
 		}
 	});
 	btnNoConcurrio.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -416,6 +427,7 @@ public class GestionReserva extends JPanel {
 			}else {
 				JOptionPane.showMessageDialog(GestionReserva.this,"No selecciono ninguna reserva","Error",JOptionPane.ERROR_MESSAGE);
 			}
+			cargarDatos();
 		}
 	});
 	btnConcurrio.setHorizontalTextPosition(SwingConstants.RIGHT);
