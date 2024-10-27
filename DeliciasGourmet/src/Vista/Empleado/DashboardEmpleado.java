@@ -23,14 +23,17 @@ import java.time.format.DateTimeFormatter;
 
 import Vista.Cliente.Dashboard;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
-
+import Controlador.MesaControlador;
 import Controlador.ReservaControlador;
+import Controlador.ServicioControlador;
 import Modelo.Cliente.HistorialReserva;
+import Modelo.Complementos.Servicio;
 import Modelo.Empleado.SesionEmpleado;
 
 import javax.swing.JTextField;
@@ -41,14 +44,19 @@ public class DashboardEmpleado extends JPanel {
     private static final long serialVersionUID = 1L;
     private JLabel lblFechaHora;
     private JTable tblBHistorial;
+    private JTable EventosEspeciales;
     private JTextField txtBuscarCliente;
+    private ServicioControlador servicioControlador;
     private ReservaControlador controladorReserva;
+    private MesaControlador mesaControlador;
     
 
     @SuppressWarnings({ "static-access", "serial" })
     public DashboardEmpleado() {
     	
+    	servicioControlador = new ServicioControlador();
     	controladorReserva = new ReservaControlador();
+    	mesaControlador = new MesaControlador();
         // Configuración del panel
         setLayout(null);
         setPreferredSize(new Dimension(992, 679));
@@ -88,10 +96,58 @@ public class DashboardEmpleado extends JPanel {
         lblFechaHora.setFont(new Font("Roboto Light", Font.PLAIN, 16));
         lblFechaHora.setBounds(792, 12, 200, 25);
         pnlBienvenido.add(lblFechaHora);
-
+        
+        //Contenedor tabla Historial
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(10, 369, 972, 300);
+        scrollPane.setBounds(10, 97, 972, 300);
         add(scrollPane);
+        
+        //Contenedor tabla Eventos Especiales
+        JScrollPane scrollPane_EveEspecial = new JScrollPane();
+        scrollPane_EveEspecial.setBounds(10, 453, 400, 215);
+        add(scrollPane_EveEspecial);
+        
+        //Titulo tabla Eventos Especiales
+        JLabel lblNewLabel = new JLabel("EVENTOS ESPECIALES");
+        lblNewLabel.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        lblNewLabel.setBounds(10, 422, 400, 30);
+        add(lblNewLabel);
+        
+        //Separador
+        JSeparator separator = new JSeparator();
+        separator.setForeground(Color.BLACK);
+        separator.setBackground(Color.BLACK);
+        separator.setBounds(0, 408, 992, 2);
+        add(separator);
+        
+        //Tabla de eventos especiales
+        EventosEspeciales = new JTable();
+        EventosEspeciales.setGridColor(Color.DARK_GRAY);
+        EventosEspeciales.setBackground(Color.WHITE);
+        EventosEspeciales.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        EventosEspeciales.setBorder(null);
+        EventosEspeciales.setForeground(Color.BLACK);
+        EventosEspeciales.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        EventosEspeciales.setModel(new DefaultTableModel(
+        	new Object[][] {
+        	},
+        	new String[] {
+        		"UBICACION", "FECHA", "HORA"
+        		
+        	}) {
+        	@Override
+    		public boolean isCellEditable(int row, int column) {
+    			return false;
+    		}
+        });
+        
+        TableColumnModel columnModelEvento = EventosEspeciales.getColumnModel();
+        columnModelEvento.getColumn(0).setPreferredWidth(135);
+        columnModelEvento.getColumn(1).setPreferredWidth(132);
+        columnModelEvento.getColumn(2).setPreferredWidth(130);
+        EventosEspeciales.setFont(new Font("Roboto Light", Font.PLAIN, 14));
+        scrollPane_EveEspecial.setViewportView(EventosEspeciales);
 
         // Tabla para el historial personal de un cliente
  		tblBHistorial = new JTable();
@@ -100,6 +156,7 @@ public class DashboardEmpleado extends JPanel {
  	 	tblBHistorial.setFont(new Font("Roboto Light", Font.PLAIN, 16));
  		tblBHistorial.setBorder(null);
  		tblBHistorial.setForeground(Color.BLACK);
+ 		tblBHistorial.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
  		tblBHistorial.setModel(new DefaultTableModel(
  			new Object[][] {},
  			new String[] { "RESERVA","NOMBRE","APELLIDO", "FECHA", "HORA", "MESA", "COMENSALES", "UBICACION", "ESTADO" , "COMEN."}) {
@@ -117,7 +174,7 @@ public class DashboardEmpleado extends JPanel {
 
  	        if (column == 9 && row >= 0) {
  	            String comentario = (String) tblBHistorial.getValueAt(row, column);
- 	            String comentarioFormateado = formatearComentario(comentario, 100); // Cambia 50 por el número de caracteres deseado
+ 	            String comentarioFormateado = formatearComentario(comentario, 100);
  	            
  	            JOptionPane.showMessageDialog(tblBHistorial, comentarioFormateado, "Comentario Completo", JOptionPane.INFORMATION_MESSAGE);
  	        }
@@ -137,22 +194,18 @@ public class DashboardEmpleado extends JPanel {
  		
  		tblBHistorial.getColumnModel().getColumn(9).setCellRenderer(comentarioRenderer);
  		tblBHistorial.getColumnModel().getColumn(0).setCellRenderer(comentarioRenderer);
- 		
- 		
- 	
- 		TableColumnModel columnModel = tblBHistorial.getColumnModel();
- 	 	columnModel.getColumn(0).setPreferredWidth(65);
- 	 	columnModel.getColumn(1).setPreferredWidth(110);
- 	 	columnModel.getColumn(2).setPreferredWidth(110);
- 	 	columnModel.getColumn(3).setPreferredWidth(100);
- 	 	columnModel.getColumn(4).setPreferredWidth(100);
- 	 	columnModel.getColumn(5).setPreferredWidth(60);
- 	 	columnModel.getColumn(6).setPreferredWidth(90);
- 	 	columnModel.getColumn(7).setPreferredWidth(160);
- 	 	columnModel.getColumn(8).setPreferredWidth(100);
- 	 	columnModel.getColumn(9).setPreferredWidth(55);
- 	 	
-      	
+
+ 		TableColumnModel columnModelHistorial = tblBHistorial.getColumnModel();
+ 		columnModelHistorial.getColumn(0).setPreferredWidth(65);
+ 		columnModelHistorial.getColumn(1).setPreferredWidth(110);
+ 		columnModelHistorial.getColumn(2).setPreferredWidth(110);
+ 		columnModelHistorial.getColumn(3).setPreferredWidth(100);
+ 		columnModelHistorial.getColumn(4).setPreferredWidth(100);
+ 		columnModelHistorial.getColumn(5).setPreferredWidth(60);
+ 		columnModelHistorial.getColumn(6).setPreferredWidth(90);
+ 		columnModelHistorial.getColumn(7).setPreferredWidth(178);
+ 	 	columnModelHistorial.getColumn(8).setPreferredWidth(100);
+ 	 	columnModelHistorial.getColumn(9).setPreferredWidth(55);
       	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
       	centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
       	tblBHistorial.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
@@ -165,7 +218,7 @@ public class DashboardEmpleado extends JPanel {
         lblBuscarCliente.setForeground(Color.BLACK);
         lblBuscarCliente.setFont(new Font("Roboto Light", Font.PLAIN, 16));
         lblBuscarCliente.setHorizontalAlignment(SwingConstants.CENTER);
-        lblBuscarCliente.setBounds(150, 333, 200, 25);
+        lblBuscarCliente.setBounds(210, 61, 200, 25);
         add(lblBuscarCliente);
 
         txtBuscarCliente = new JTextField();
@@ -174,7 +227,7 @@ public class DashboardEmpleado extends JPanel {
         txtBuscarCliente.setBorder(null);
         txtBuscarCliente.setHorizontalAlignment(SwingConstants.CENTER);
         txtBuscarCliente.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-        txtBuscarCliente.setBounds(350, 333, 200, 25);
+        txtBuscarCliente.setBounds(420, 61, 200, 25);
         add(txtBuscarCliente);
         txtBuscarCliente.setColumns(10);
 
@@ -191,7 +244,7 @@ public class DashboardEmpleado extends JPanel {
         btnBuscar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBuscar.setBorder(null);
         btnBuscar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-        btnBuscar.setBounds(560, 333, 150, 25);
+        btnBuscar.setBounds(630, 61, 150, 25);
         btnBuscar.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseEntered(MouseEvent e) {
@@ -206,6 +259,36 @@ public class DashboardEmpleado extends JPanel {
             }
     	});
         add(btnBuscar);
+        
+        JButton btnActualizarTabla = new JButton("ACTUALIZAR TABLAS");
+        btnActualizarTabla.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		cargarDatos();
+        		cargarServicioEspecial();
+        	}
+        });
+        btnActualizarTabla.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnActualizarTabla.setBackground(new Color(255, 0, 0));
+				btnActualizarTabla.setForeground(Color.WHITE);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnActualizarTabla.setForeground(Color.BLACK);
+				btnActualizarTabla.setBackground(Color.WHITE);
+			}
+		});
+        btnActualizarTabla.setIcon(new ImageIcon(GestionEmpleados.class.getResource("/Img/icono verificado.png")));
+        btnActualizarTabla.setForeground(Color.BLACK);
+        btnActualizarTabla.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        btnActualizarTabla.setBorder(null);
+        btnActualizarTabla.setBackground(Color.WHITE);
+        btnActualizarTabla.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnActualizarTabla.setAlignmentX(0.5f);
+        btnActualizarTabla.setBounds(10, 62, 200, 25);
+        add(btnActualizarTabla);
 
         // Iniciar el Timer para actualizar la fecha y hora
         Timer timer = new Timer();
@@ -217,6 +300,7 @@ public class DashboardEmpleado extends JPanel {
         }, 0, 1000);
         
         cargarDatos();
+        cargarServicioEspecial();
     }
 
     // Método para actualizar la fecha y hora
@@ -236,6 +320,9 @@ public class DashboardEmpleado extends JPanel {
  			model.setRowCount(0);
  		
  			for (HistorialReserva reserva : historial) {
+ 				if (reserva.getEstado() == 0 || reserva.getEstado() == 2 || reserva.getEstado() == 3) {
+ 				    continue;  
+ 				}
  				String estado;
  				switch (reserva.getEstado()) {
  				    case 0:
@@ -272,6 +359,27 @@ public class DashboardEmpleado extends JPanel {
  		}
  	}
  	
+ 	// Función para cargar tabla con datos almacenados en la base de datos
+ 		private void cargarServicioEspecial() {
+ 	 		List<Servicio> servicios;
+ 	 		try {
+ 	 			servicios = servicioControlador.buscarServiciosConEventoEspecial(); 	        		
+ 	 			
+ 	 			DefaultTableModel model = (DefaultTableModel) EventosEspeciales.getModel();
+ 	 			model.setRowCount(0);
+ 	 		
+ 	 			for (Servicio servicio : servicios) {
+ 					model.addRow(new Object[] {
+ 							mesaControlador.buscarUbicacionPorIdServicio(servicio.getIdServicio()),
+ 	 						servicio.getFecha(),
+ 	 						servicio.getHoraInicio()
+ 	 				});
+ 	 			}
+ 	 		} catch (Exception e) {
+ 	 			e.printStackTrace();
+ 	 		}
+ 	 	}
+ 	
  	// Función para filtrar la busqueda por apellido
   	private void buscarPorApellido(String apellido) {
   		List<HistorialReserva> historial;
@@ -281,6 +389,9 @@ public class DashboardEmpleado extends JPanel {
   			model.setRowCount(0);
   		
   			for (HistorialReserva reserva : historial) {
+  				if (reserva.getEstado() == 0 || reserva.getEstado() == 2 || reserva.getEstado() == 3) {
+ 				    continue;  
+ 				}
   				if (reserva.getApellido().toLowerCase().contains(apellido.toLowerCase())) {
   					String estado;
   	 				switch (reserva.getEstado()) {

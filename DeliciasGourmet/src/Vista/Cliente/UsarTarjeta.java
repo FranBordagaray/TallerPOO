@@ -183,34 +183,34 @@ public class UsarTarjeta extends JFrame {
 		    	if (seleccion) {
 		            if (numeroTarjetaSeleccionada.equals((String)txtCodVerificacion.getText())) {
 		            	vistaReserva.habilitarBoton(true);
-		                }
-                        JOptionPane.showMessageDialog(UsarTarjeta.this, "Tarjeta ingresada con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		            	JOptionPane.showMessageDialog(UsarTarjeta.this, "Tarjeta ingresada con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 		                dispose();
-		            } else {
-		                JOptionPane.showMessageDialog(UsarTarjeta.this, "El código de verificación no coincide con el número de tarjeta seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
+		            }else {
+		            	JOptionPane.showMessageDialog(UsarTarjeta.this, "El código de verificación no coincide con el número de tarjeta seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
 		            }
+		        } else {
+		        	 try {
+			                if (verificarCampos()) {
+			                    return;
+			                } else {
+			                    tarjeta.setTitular(txtTitular.getText());
+			                    tarjeta.setEmisor(txtEmisor.getText());
+			                    tarjeta.setNroTarjeta(txtNroTarjeta.getText());
+			                    tarjeta.setCodVerificacion(Integer.parseInt(txtCodVerificacion.getText()));
+
+			                    if (controlador.ingresarTarjeta(tarjeta)) {
+			                        JOptionPane.showMessageDialog(UsarTarjeta.this, "Tarjeta ingresada con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);		                        
+			                        vistaReserva.habilitarBoton(true);
+			                        dispose();
+			                    } else {
+			                        JOptionPane.showMessageDialog(UsarTarjeta.this, "Error al ingresar la tarjeta", "Error", JOptionPane.ERROR_MESSAGE);
+			                    }
+			                }
+			            } catch (Exception e2) {
+			                JOptionPane.showMessageDialog(UsarTarjeta.this, "Error inesperado: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			            }
+		        }
 		       
-		            try {
-		                if (verificarCampos()) {
-		                    return;
-		                } else {
-		                    tarjeta.setTitular(txtTitular.getText());
-		                    tarjeta.setEmisor(txtEmisor.getText());
-		                    tarjeta.setNroTarjeta(txtNroTarjeta.getText());
-		                    tarjeta.setCodVerificacion(Integer.parseInt(txtCodVerificacion.getText()));
-
-		                    if (controlador.ingresarTarjeta(tarjeta)) {
-		                        JOptionPane.showMessageDialog(UsarTarjeta.this, "Tarjeta ingresada con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);		                        
-		                        vistaReserva.habilitarBoton(true);
-		                        dispose();
-		                    } else {
-		                        JOptionPane.showMessageDialog(UsarTarjeta.this, "Error al ingresar la tarjeta", "Error", JOptionPane.ERROR_MESSAGE);
-		                    }
-		                }
-		            } catch (Exception e2) {
-		                JOptionPane.showMessageDialog(UsarTarjeta.this, "Error inesperado: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-		            }
-
 		    }
 		});
 		btnConfirmar.setBackground(Color.WHITE);

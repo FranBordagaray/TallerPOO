@@ -367,6 +367,8 @@ public class Historial extends JPanel {
         btnActualizarTabla.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		cargarDatos(s.getClienteActual().getIdCliente());
+        		cargarComboMesas(s.getClienteActual().getIdCliente());
+        		cargarComboEstados(s.getClienteActual().getIdCliente());
         	}
         });
         btnActualizarTabla.addMouseListener(new MouseAdapter() {

@@ -615,7 +615,7 @@ public class VistaReservaCliente extends JPanel {
             System.out.println("El JComboBox 'comboCapacidad' no está inicializado.");
         }
         
-        idMesaSeleccionada = -1;
+        idMesaSeleccionada = 1;
     }
     
 }

@@ -596,40 +596,52 @@ public class ReservaControlador {
 	            }
 	        }
 	    }
-	}
+	 }
 
 	 //Funcion para cargar datos de la reserva Historial Empleado
-    public List<HistorialReserva> obtenerHistorialReserva(){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        List<HistorialReserva> historial = new ArrayList<>();
-        try {
-            ps = connection.prepareStatement( "SELECT r.idReserva, c.nombre, c.apellido, r.fecha, r.hora, r.idMesa, m.capacidad, m.ubicacion, r.estado, r.comentario FROM Reserva r JOIN MesaPrecargada m ON r.idMesa = m.idMesa \r\n"
-             + "JOIN Cliente c ON r.idCliente = c.idCliente"
-            );
-                 
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                HistorialReserva reserva = new HistorialReserva(
-                	rs.getInt("idReserva"),
-                	rs.getString("nombre"),
-                	rs.getString("apellido"),
-                    rs.getString("fecha"),
-                    rs.getString("hora"),
-                    rs.getInt("idMesa"),
-                    rs.getInt("capacidad"),
-                    rs.getString("ubicacion"),
-                    rs.getInt("estado"),
-                    rs.getString("comentario")
-                );
-                historial.add(reserva);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Error al obtener el historial de reservas por cliente!");
-        }
-        return historial;
-    }
+	 public List<HistorialReserva> obtenerHistorialReserva() {
+		    PreparedStatement ps = null;
+		    ResultSet rs = null;
+		    List<HistorialReserva> historial = new ArrayList<>();
+		    try {
+		    	ps = connection.prepareStatement(
+		    		    "SELECT r.idReserva, c.nombre, c.apellido, r.fecha, r.hora, r.idMesa, m.capacidad, m.ubicacion, r.estado, r.comentario " +
+		    		    "FROM Reserva r " +
+		    		    "JOIN MesaPrecargada m ON r.idMesa = m.idMesa " +
+		    		    "JOIN Cliente c ON r.idCliente = c.idCliente " +
+		    		    "WHERE DATE(substr(r.fecha, 7, 4) || '-' || substr(r.fecha, 4, 2) || '-' || substr(r.fecha, 1, 2)) >= DATE('now') " +
+		    		    "ORDER BY DATE(substr(r.fecha, 7, 4) || '-' || substr(r.fecha, 4, 2) || '-' || substr(r.fecha, 1, 2)) ASC, r.hora ASC"
+		    		);
+
+		        rs = ps.executeQuery();
+		        while (rs.next()) {
+		            HistorialReserva reserva = new HistorialReserva(
+		                rs.getInt("idReserva"),
+		                rs.getString("nombre"),
+		                rs.getString("apellido"),
+		                rs.getString("fecha"),
+		                rs.getString("hora"),
+		                rs.getInt("idMesa"),
+		                rs.getInt("capacidad"),
+		                rs.getString("ubicacion"),
+		                rs.getInt("estado"),
+		                rs.getString("comentario")
+		            );
+		            historial.add(reserva);
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        System.out.println("Error al obtener el historial de reservas por cliente!");
+		    } finally {
+		        try {
+		            if (rs != null) rs.close();
+		            if (ps != null) ps.close();
+		        } catch (SQLException e) {
+		            e.printStackTrace();
+		        }
+		    }
+		    return historial;
+		}
 
 	//Metodo para obtener las reservas futuras del cliente
 	public List<Reportes> obtenerReservasFuturasPorCliente(int idCliente) {

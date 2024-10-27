@@ -481,6 +481,9 @@ public class GestionReserva extends JPanel {
  			model.setRowCount(0);
  		
  			for (HistorialReserva reserva : historial) {
+ 				if (reserva.getEstado() == 0) {
+ 				    continue;  
+ 				}
  				String estado;
  				switch (reserva.getEstado()) {
  				    case 0:
@@ -526,6 +529,9 @@ public class GestionReserva extends JPanel {
    		
    			for (HistorialReserva reserva : historial) {
    				if (reserva.getApellido().toLowerCase().contains(apellido.toLowerCase())) {
+   					if (reserva.getEstado() == 0) {
+   	 				    continue;  
+   	 				}
    					String estado;
    	 				switch (reserva.getEstado()) {
    	 				    case 0:

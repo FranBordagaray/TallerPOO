@@ -298,7 +298,7 @@ public class ModificarReserva extends JFrame {
         CampoComentario.setWrapStyleWord(true);
         pnlVertical.add(CampoComentario);
 
-        // Botón Modificar
+     // Botón Modificar
         btnModificar = new JButton("MODIFICAR");
         btnModificar.setIcon(new ImageIcon(ModificarReserva.class.getResource("/Img/icono modificar.png")));
         btnModificar.addActionListener(new ActionListener() {
@@ -375,10 +375,9 @@ public class ModificarReserva extends JFrame {
                 }
 
                 // Verificar si solo ha cambiado la mesa
-                if (siCambioMesa) {
+                if (siCambioMesa && siCambioFecha || siCambioHorario ) {
                     reservaAux = Reserva.convertirAReserva(reserva);
                     int idServicioReserva = servicioControlador.buscarServicioPorReserva(reservaAux);
-
                     if (mesaControlador.eliminarMesa(reserva.getIdMesa(), idServicioReserva)) {
                         System.out.println("Se eliminó la mesa con éxito.");
                     } else {
@@ -390,6 +389,22 @@ public class ModificarReserva extends JFrame {
                     } else {
                         System.out.println("Ocurrió un error al registrar la mesa.");
                     }
+                    
+                }else if(siCambioMesa){
+                	reservaAux = Reserva.convertirAReserva(reserva);
+                    int idServicioReserva = servicioControlador.buscarServicioPorReserva(reservaAux);
+                    if (mesaControlador.eliminarMesa(reserva.getIdMesa(), idServicioReserva)) {
+                        System.out.println("Se eliminó la mesa con éxito.");
+                    } else {
+                        System.out.println("Ocurrió un error al eliminar la mesa.");
+                    }
+
+                    if (mesaControlador.crearMesa(mesa)) {
+                        System.out.println("Mesa registrada con éxito.");
+                    } else {
+                        System.out.println("Ocurrió un error al registrar la mesa.");
+                    }
+                    reservaN.setIdServicio(idServicio);
                 } else {
                     // Si no hay cambios en la mesa o en la hora, solo actualiza la reserva
                 	idServicio = servicioControlador.buscarServicioPorReserva(reservaAux);
