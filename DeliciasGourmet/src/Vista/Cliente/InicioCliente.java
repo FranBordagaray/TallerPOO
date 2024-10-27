@@ -25,6 +25,7 @@ public class InicioCliente extends JFrame {
 	private Historial historial;
 	private Dashboard dashboard;
 	private SesionCliente s;
+	private VistaReservaCliente Reserva;
 	
 	@SuppressWarnings("static-access")
 	public InicioCliente() {
@@ -76,6 +77,8 @@ public class InicioCliente extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(0);
 				dashboard.cargarDatos(s.getClienteActual().getIdCliente());
+				Reserva.resetearCampos();
+				Reserva.habilitarBoton(false);
 			}
 		});
 		btnInicio.addMouseListener(new MouseAdapter() {
@@ -136,6 +139,8 @@ public class InicioCliente extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(2);
 				historial.cargarDatos(s.getClienteActual().getIdCliente());
+				Reserva.resetearCampos();
+				Reserva.habilitarBoton(false);
 			}
 		});
 		btnHistorial.addActionListener(new ActionListener() {
@@ -168,6 +173,8 @@ public class InicioCliente extends JFrame {
 		btnPerfil.setIcon(new ImageIcon(InicioCliente.class.getResource("/Img/icono de perfil.png")));
 		btnPerfil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Reserva.resetearCampos();
+				Reserva.habilitarBoton(false);
 				tabbedPane.setSelectedIndex(3);
 			}
 		});
@@ -229,7 +236,7 @@ public class InicioCliente extends JFrame {
 		dashboard.setBorder(null);
 
 		// Panel reservas
-		VistaReservaCliente Reserva = new VistaReservaCliente();
+		Reserva = new VistaReservaCliente();
 		tabbedPane.addTab("Reserva", Reserva);
 		dashboard.setBorder(null);
 

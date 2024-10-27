@@ -19,6 +19,7 @@ public class InicioEmpleado extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private VistaReservaEmpleado gestionMesas;
 	
 	public InicioEmpleado(String rol) {
 
@@ -65,6 +66,7 @@ public class InicioEmpleado extends JFrame {
 		btnInicio.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de inicio.png")));
 		btnInicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				gestionMesas.resetearCampos();
 				tabbedPane.setSelectedIndex(0);
 			}
 		});
@@ -94,6 +96,7 @@ public class InicioEmpleado extends JFrame {
 		btnGestionEmpleados.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono empleado.png")));
 		btnGestionEmpleados.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				gestionMesas.resetearCampos();
 				tabbedPane.setSelectedIndex(1);
 			}
 		});
@@ -152,6 +155,7 @@ public class InicioEmpleado extends JFrame {
 		btnGestionReserva.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de eventos especiales.png")));
 		btnGestionReserva.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+					gestionMesas.resetearCampos();
 					tabbedPane.setSelectedIndex(3);
 					
 				}
@@ -182,6 +186,7 @@ public class InicioEmpleado extends JFrame {
 		btnReportes.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de reportes.png")));
 		btnReportes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				gestionMesas.resetearCampos();
 				tabbedPane.setSelectedIndex(4);
 			}
 		});
@@ -265,7 +270,7 @@ public class InicioEmpleado extends JFrame {
 		gestionEmpleado.setLayout(null);
 
 		// Panel para gestion de mesas
-		VistaReservaEmpleado gestionMesas = new VistaReservaEmpleado();
+		gestionMesas = new VistaReservaEmpleado();
 		tabbedPane.addTab("MESAS", gestionMesas);
 		gestionMesas.setLayout(null);
 

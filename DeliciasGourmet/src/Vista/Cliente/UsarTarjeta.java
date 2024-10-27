@@ -46,13 +46,14 @@ public class UsarTarjeta extends JFrame {
 	private ComprobanteControlador comprobanteControlador;
 	private String numeroTarjetaSeleccionada;
 	private boolean seleccion;
+	private VistaReservaCliente vistaReserva;
 
 	TarjetaControlador controlador = new TarjetaControlador();
-
 	Tarjeta tarjeta = new Tarjeta();
 	
-	public UsarTarjeta(JPanel vistaReserva) {
+	public UsarTarjeta(VistaReservaCliente vistaReserva) {
 
+		this.vistaReserva = vistaReserva; 
 		this.reservaControlador = new ReservaControlador();
 		this.comprobanteControlador = new ComprobanteControlador();
 
@@ -179,19 +180,16 @@ public class UsarTarjeta extends JFrame {
 		btnConfirmar.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnConfirmar.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		        if (seleccion) {
+		    	if (seleccion) {
 		            if (numeroTarjetaSeleccionada.equals((String)txtCodVerificacion.getText())) {
-		                if (vistaReserva instanceof VistaReservaEmpleado) {
-		                    ((VistaReservaEmpleado) vistaReserva).habilitarBoton();
-		                } else if (vistaReserva instanceof VistaReservaCliente) {
-		                    ((VistaReservaCliente) vistaReserva).habilitarBoton();
+		            	vistaReserva.habilitarBoton(true);
 		                }
                         JOptionPane.showMessageDialog(UsarTarjeta.this, "Tarjeta ingresada con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 		                dispose();
 		            } else {
 		                JOptionPane.showMessageDialog(UsarTarjeta.this, "El código de verificación no coincide con el número de tarjeta seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
 		            }
-		        } else {
+		       
 		            try {
 		                if (verificarCampos()) {
 		                    return;
@@ -203,12 +201,7 @@ public class UsarTarjeta extends JFrame {
 
 		                    if (controlador.ingresarTarjeta(tarjeta)) {
 		                        JOptionPane.showMessageDialog(UsarTarjeta.this, "Tarjeta ingresada con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);		                        
-		                        if (vistaReserva instanceof VistaReservaEmpleado) {
-		                            ((VistaReservaEmpleado) vistaReserva).habilitarBoton();
-		                        } else if (vistaReserva instanceof VistaReservaCliente) {
-		                            ((VistaReservaCliente) vistaReserva).habilitarBoton();
-		                        }
-		                        
+		                        vistaReserva.habilitarBoton(true);
 		                        dispose();
 		                    } else {
 		                        JOptionPane.showMessageDialog(UsarTarjeta.this, "Error al ingresar la tarjeta", "Error", JOptionPane.ERROR_MESSAGE);
@@ -217,7 +210,7 @@ public class UsarTarjeta extends JFrame {
 		            } catch (Exception e2) {
 		                JOptionPane.showMessageDialog(UsarTarjeta.this, "Error inesperado: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		            }
-		        }
+
 		    }
 		});
 		btnConfirmar.setBackground(Color.WHITE);

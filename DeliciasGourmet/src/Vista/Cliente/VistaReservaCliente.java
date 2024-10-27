@@ -294,7 +294,7 @@ public class VistaReservaCliente extends JPanel {
                 recopilarDatosMesa(mesa);
                 recopilarDatosServicio(servicio);
                 recopilarDatosComprobante(comprobante);
-                detalle = new DetalleReservaCliente(reserva, mesa, servicio, comprobante);
+                detalle = new DetalleReservaCliente(reserva, mesa, servicio, comprobante, VistaReservaCliente.this);
                 detalle.setVisible(true);
             }
         });
@@ -565,9 +565,57 @@ public class VistaReservaCliente extends JPanel {
         return mesa;
     }
     
-    // Metodo que habilita el boton siguiente depues de confirmar la tarjeta
-    public void habilitarBoton() {
-    	btnSiguiente.setEnabled(true); 
+ // Metodo que habilita el boton siguiente depues de confirmar la tarjeta
+    public void habilitarBoton(boolean valor) {
+    	btnSiguiente.setEnabled(valor); 
+    }
+    
+    //Metodo para resetear Campos
+    public void resetearCampos() {
+    	System.out.println("Este metodo se esta ejecutando");
+        if (calendario2 != null) {
+            calendario2.setDate(new Date());
+            calendario2.repaint(); 
+        } else {
+            System.out.println("El JDateChooser 'calendario2' no está inicializado.");
+        }
+
+        if (comboHora != null && comboHora.getItemCount() > 0) {
+            comboHora.setSelectedIndex(0);
+            comboHora.repaint();
+        } else {
+            System.out.println("El JComboBox 'comboHora' no está inicializado o no tiene elementos.");
+        }
+
+        if (comboUbicaciones != null && comboUbicaciones.getItemCount() > 0) {
+            comboUbicaciones.setSelectedIndex(0);
+            comboUbicaciones.repaint();
+        } else {
+            System.out.println("El JComboBox 'comboUbicaciones' no está inicializado o no tiene elementos.");
+        }
+
+        if (CampoComentario != null) {
+            CampoComentario.setText("");
+            CampoComentario.repaint();
+        } else {
+            System.out.println("El campo de texto 'CampoComentario' no está inicializado.");
+        }
+
+        if (comboMesa != null && comboMesa.getItemCount() > 0) {
+            comboMesa.setSelectedIndex(0);
+            comboMesa.repaint();
+        } else {
+            System.out.println("El JComboBox 'comboMesa' no está inicializado o no tiene elementos.");
+        }
+
+        if (comboCapacidad != null) {
+            comboCapacidad.setSelectedIndex(0);
+            comboCapacidad.repaint();
+        } else {
+            System.out.println("El JComboBox 'comboCapacidad' no está inicializado.");
+        }
+        
+        idMesaSeleccionada = -1;
     }
     
 }

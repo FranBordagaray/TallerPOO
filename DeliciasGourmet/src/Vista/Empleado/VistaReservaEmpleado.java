@@ -80,7 +80,7 @@ public class VistaReservaEmpleado extends JPanel {
 	private Comprobante comprobante;
 	private Servicio servicio;
 	private DetalleReservaEmpleado detalle_2;
-	private DetalleReservaCliente detalles_1;
+	private DetalleReservaClienteParaEmpleado detalles_1;
 
 	public VistaReservaEmpleado() {
 
@@ -390,7 +390,6 @@ public class VistaReservaEmpleado extends JPanel {
 		btnReservar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-
 				comprobante = new Comprobante();
 				mesa = new Mesa();
 				reserva = new Reserva();
@@ -399,7 +398,7 @@ public class VistaReservaEmpleado extends JPanel {
 				recopilarDatosMesaNormal(mesa);
 				recopilarDatosServicioNormal(servicio);
 				recopilarDatosComprobante(comprobante);
-				detalles_1 = new DetalleReservaCliente(reserva, mesa, servicio, comprobante);
+				detalles_1 = new DetalleReservaClienteParaEmpleado(reserva, mesa, servicio, comprobante, VistaReservaEmpleado.this);
 				detalles_1.setVisible(true);
 
 			}
@@ -542,7 +541,7 @@ public class VistaReservaEmpleado extends JPanel {
 						recopilarDatosReservaEventoEspecial(reserva, horaInicio, horaFinal);
 
 						detalle_2 = new DetalleReservaEmpleado(reserva, mesa, servicio, comprobante,
-								mesasSeleccionadas);
+								mesasSeleccionadas, VistaReservaEmpleado.this);
 
 						if (!detalle_2.verificarDisponibilidadMesas()) {
 							JOptionPane.showMessageDialog(null,
@@ -571,7 +570,7 @@ public class VistaReservaEmpleado extends JPanel {
 						recopilarDatosReservaEventoEspecial(reserva, horaInicio, horaFinal);
 
 						detalle_2 = new DetalleReservaEmpleado(reserva, mesa, servicio, comprobante,
-								mesasSeleccionadas);
+								mesasSeleccionadas, VistaReservaEmpleado.this);
 
 						detalle_2.crearMesas(servicioCreado);
 					}
@@ -628,7 +627,7 @@ public class VistaReservaEmpleado extends JPanel {
 						recopilarDatosReservaEventoEspecial(reserva, horaInicio, horaFinal);
 
 						detalle_2 = new DetalleReservaEmpleado(reserva, mesa, servicio, comprobante,
-								mesasSeleccionadas);
+								mesasSeleccionadas, VistaReservaEmpleado.this);
 
 						if (!detalle_2.verificarDisponibilidadMesas()) {
 							JOptionPane.showMessageDialog(null,
@@ -657,7 +656,7 @@ public class VistaReservaEmpleado extends JPanel {
 						recopilarDatosReservaEventoEspecial(reserva, horaInicio, horaFinal);
 
 						detalle_2 = new DetalleReservaEmpleado(reserva, mesa, servicio, comprobante,
-								mesasSeleccionadas);
+								mesasSeleccionadas, VistaReservaEmpleado.this);
 
 						detalle_2.crearMesas(servicioCreado);
 					}
@@ -1057,8 +1056,60 @@ public class VistaReservaEmpleado extends JPanel {
 	}
 
 
-	// Metodo que habilita el boton siguiente depues de confirmar la tarjeta
-	public void habilitarBoton() {
-		btnReservar.setEnabled(true);
-	}
+	//Metodo para resetear los campos
+		public void resetearCampos() {
+		    if (calendario2 != null) {
+		        calendario2.setDate(new Date());
+		        calendario2.repaint();
+		    } else {
+		        System.out.println("El JDateChooser 'calendario2' no está inicializado.");
+		    }
+
+		    if (horarioComboBox != null && horarioComboBox.getItemCount() > 0) {
+		        horarioComboBox.setSelectedIndex(0);
+		        horarioComboBox.repaint();
+		    } else {
+		        System.out.println("El JComboBox 'comboHora' no está inicializado o no tiene elementos.");
+		    }
+
+		    if (comboUbicaciones != null && comboUbicaciones.getItemCount() > 0) {
+		        comboUbicaciones.setSelectedIndex(0);
+		        comboUbicaciones.repaint();
+		    } else {
+		        System.out.println("El JComboBox 'comboUbicaciones' no está inicializado o no tiene elementos.");
+		    }
+
+		    if (comboCapacidad != null) {
+		        comboCapacidad.setSelectedIndex(0);
+		        comboCapacidad.repaint();
+		    } else {
+		        System.out.println("El JComboBox 'comboCapacidad' no está inicializado.");
+		    }
+
+		    if (CampoComentario != null) {
+		        CampoComentario.setText("");
+		        CampoComentario.repaint();
+		    } else {
+		        System.out.println("El campo de texto 'CampoComentario' no está inicializado.");
+		    }
+
+		    if (horaInicioComboBox != null && horaInicioComboBox.getItemCount() > 0) {
+		        horaInicioComboBox.setSelectedIndex(0);
+		        horaInicioComboBox.repaint();
+		    } else {
+		        System.out.println("El JComboBox 'horaInicioComboBox' no está inicializado o no tiene elementos.");
+		    }
+
+		    if (listModel != null) {
+		        listModel.clear();
+		    }
+		    if (listaMesas != null) {
+		        listaMesas.clearSelection();
+		        listaMesas.repaint();
+		    } else {
+		        System.out.println("La JList 'listaMesas' no está inicializada.");
+		    }
+
+		    idMesaSeleccionada = -1;
+		}
 }

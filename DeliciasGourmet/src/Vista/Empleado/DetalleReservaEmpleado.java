@@ -64,18 +64,20 @@ public class DetalleReservaEmpleado extends JFrame {
 	private String horaFin;
 	private String comentario;
 	private String[] mesasSeleccionadasEvento;
+	private VistaReservaEmpleado reservaCliente;
 
 	/**
 	 * @wbp.parser.constructor
 	 */
 	public DetalleReservaEmpleado(Reserva reserva, Mesa mesa, Servicio servicio, Comprobante comprobante, 
-		String[] mesasSeleccionadasEvento) {
+		String[] mesasSeleccionadasEvento, VistaReservaEmpleado reservaCliente) {
 		
 		this.reserva = reserva;
 		this.mesa = mesa;
 		this.servicio = servicio;
 		this.comprobante = comprobante;
 		this.mesasSeleccionadasEvento = mesasSeleccionadasEvento;
+		this.reservaCliente = reservaCliente;
 
 
 		this.servicioControlador = new ServicioControlador();
@@ -222,6 +224,8 @@ public class DetalleReservaEmpleado extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				EnviarEmail enviar = new EnviarEmail(DetalleReservaEmpleado.this);
 				enviar.setVisible(true);
+				reservaCliente.resetearCampos();
+                dispose();
 				
 			}
 		});
@@ -251,10 +255,8 @@ public class DetalleReservaEmpleado extends JFrame {
 		JButton btnCerrar = new JButton("Cerrar");
 		btnCerrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				VistaReservaEmpleado reserva = new VistaReservaEmpleado();
-				reserva.setVisible(true);
-				DetalleReservaEmpleado.this.dispose();
+				reservaCliente.resetearCampos();
+                dispose();
 
 			}
 		});
