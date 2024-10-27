@@ -58,6 +58,7 @@ public class SeleccionarCliente extends JFrame {
 	private ClienteControlador clienteControlador;
 	private ReservaControlador reservaControlador;
 
+	@SuppressWarnings("serial")
 	public SeleccionarCliente(String SeleccionReporte) {
 		clienteControlador = new ClienteControlador();
 		reservaControlador = new ReservaControlador();
@@ -222,7 +223,12 @@ public class SeleccionarCliente extends JFrame {
 		// Inicialización de la tabla
 		tblClientes = new JTable();
 		model = new DefaultTableModel(new Object[][] {},
-				new String[] { "ID", "Nombre", "Apellido", "Domicilio", "Teléfono", "Email" });
+				 new String[] { "ID", "Nombre", "Apellido", "Domicilio", "Teléfono", "Email" }) {
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		tblClientes.setModel(model);
 		tblClientes.addMouseListener(new MouseAdapter() {
 			@Override

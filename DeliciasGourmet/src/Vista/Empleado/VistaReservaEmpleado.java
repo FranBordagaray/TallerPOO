@@ -1008,7 +1008,7 @@ public class VistaReservaEmpleado extends JPanel {
 
 	// Metodo que Almacena los datos seleccionados para el objeto de Mesa
 	public Mesa recopilarDatosMesaNormal(Mesa mesa) {
-		mesa.setIdMesa(idMesaSeleccionadaEvento);
+		mesa.setIdMesa(idMesaSeleccionada);
 		mesa.setUbicacion(SeleccionarUbicacion);
 
 		if (capacidadSeleccionada == 0) {
