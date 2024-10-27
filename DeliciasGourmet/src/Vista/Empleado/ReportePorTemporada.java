@@ -217,8 +217,29 @@ public class ReportePorTemporada extends JFrame {
         getContentPane().add(btnInvierno);
 		
 		JButton btnTodas = new JButton("TODAS LAS TEMPORADAS");
-		btnTodas.setHorizontalTextPosition(SwingConstants.RIGHT);
+		btnTodas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				generarReportePorDeTodasTemporadas();
+			}
+		});
+		btnTodas.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        btnTodas.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                btnTodas.setBackground(new Color(100, 149, 180));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnTodas.setBackground(Color.WHITE);
+            }
+        });
+		btnTodas.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnTodas.setForeground(Color.BLACK);
+        btnTodas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnTodas.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 		btnTodas.setBorder(null);
 		btnTodas.setBackground(Color.WHITE);
@@ -265,6 +286,64 @@ public class ReportePorTemporada extends JFrame {
             }
 
             documento.add(table);
+            JOptionPane.showMessageDialog(null, "PDF generado con éxito en: " + ruta);
+        } catch (DocumentException | IOException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + ex.getMessage());
+        } finally {
+            if (documento.isOpen()) {
+                documento.close();
+            }
+        }
+    }
+    
+    // Método para generar el reporte de todas las temporadas
+    @SuppressWarnings("unused")
+    private void generarReportePorDeTodasTemporadas() {
+        String[] temporadas = {"PRIMAVERA", "VERANO", "OTOÑO", "INVIERNO"};
+        Document documento = new Document();
+        String ruta = "src\\ReportesPDF\\Concurrencia_TodasLasTemporadas.pdf";
+        File archivo = new File(ruta);
+
+        if (archivo.exists()) {
+            String nuevoNombre = "Concurrencia_TodasLasTemporadas_" + System.currentTimeMillis() + ".pdf";
+            ruta = "src\\ReportesPDF\\" + nuevoNombre;
+        }
+
+        try {
+            PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(ruta));
+            documento.open();
+            documento.add(new Paragraph("Reporte de Reservas por Todas las Temporadas", FontFactory.getFont("Roboto Light", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD)));
+            documento.add(new Paragraph(" "));
+            
+            for (String temporada : temporadas) {
+                List<Reportes> reporteReservas = controlador.obtenerHistorialComensalesPorTemporada(temporada);
+                System.out.println("Temporada: " + temporada + ", Total de reservas: " + reporteReservas.size());
+                for (Reportes reserva : reporteReservas) {
+                    System.out.println("Total Reservas: " + reserva.getTotalReservas() + ", Total Capacidad: " + reserva.getTotalCapacidad());
+                }
+            }
+
+            for (String temporada : temporadas) {
+                List<Reportes> reporteReservas = controlador.obtenerHistorialComensalesPorTemporada(temporada);
+
+                documento.add(new Paragraph("Temporada: " + temporada, FontFactory.getFont("Roboto Light", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 14, Font.BOLD)));
+                documento.add(new Paragraph(" "));
+
+                PdfPTable table = new PdfPTable(2);
+                table.setWidthPercentage(100);
+                table.addCell("Total de reservas");
+                table.addCell("Cantidad de comensales");
+
+                for (Reportes reserva : reporteReservas) {
+                    table.addCell(String.valueOf(reserva.getTotalReservas()));
+                    table.addCell(String.valueOf(reserva.getTotalCapacidad()));
+                }
+
+                documento.add(table);
+                documento.add(new Paragraph(" "));
+            }
+
             JOptionPane.showMessageDialog(null, "PDF generado con éxito en: " + ruta);
         } catch (DocumentException | IOException ex) {
             ex.printStackTrace();

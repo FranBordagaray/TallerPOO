@@ -18,15 +18,23 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import Controlador.ClienteControlador;
 import Controlador.ReservaControlador;
+import Modelo.Cliente.Cliente;
+import Modelo.Complementos.Reserva;
 import Modelo.Empleado.Reportes;
 
 import java.awt.event.ActionListener;
@@ -35,11 +43,15 @@ import javax.swing.ImageIcon;
 
 public class Reporte extends JPanel {
     private ReservaControlador controlador;
+    private ClienteControlador controladorCliente;
     private SeleccionarCliente seleccionarCliente;
 
     private static final long serialVersionUID = 1L;
     public Reporte() {
         controlador = new ReservaControlador();
+        controladorCliente = new ClienteControlador();
+        
+        
         // Configuración del panel
         setLayout(null);
         setPreferredSize(new Dimension(992, 679));
@@ -214,7 +226,42 @@ public class Reporte extends JPanel {
         btnClienteAusente.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnClienteAusente.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        	    List<Cliente> clientesFiltrados = new ArrayList<>();
+        	    
+        	    try {
+        	        List<Cliente> todosLosClientes = controladorCliente.obtenerTodosLosClientes();
+
+        	        for (Cliente cliente : todosLosClientes) {
+        	            List<Reserva> reservasCliente = controlador.obtenerHistorialDeReservasCompleta(cliente.getIdCliente());
+
+        	            LocalDate haceUnAnio = LocalDate.now().minusYears(1);
+        	            boolean tieneEstado2 = false;
+
+        	            for (Reserva reserva : reservasCliente) {       	                
+        	                LocalDate fechaReserva = LocalDate.parse(reserva.getFecha(), formatoFecha);
+
+        	                if (fechaReserva.isAfter(haceUnAnio)) {
+        	                    if (reserva.getEstado() == 2) {
+        	                        tieneEstado2 = true;
+        	                        break; 
+        	                    }
+        	                }
+        	                
+        	            }
+        	            if (!tieneEstado2) {
+        	                clientesFiltrados.add(cliente);
+        	            }
+        	        }
+        	    } catch (Exception ex) {
+        	        ex.printStackTrace();
+        	        JOptionPane.showMessageDialog(null, "Error al procesar los clientes y reservas: " + ex.getMessage());
+        	    }
+        	    
+        	    generarReporteClientesInasistentes(clientesFiltrados);
         	}
+        	
+        	
         });
         btnClienteAusente.addMouseListener(new MouseAdapter() {
 			@Override
@@ -326,5 +373,51 @@ public class Reporte extends JPanel {
         add(btnTemporadas);
         
         
+        
     }
+    
+ // Método para generar el reporte de clientes que no asistieron el ultimo año
+    @SuppressWarnings("unused")
+    private void generarReporteClientesInasistentes(List<Cliente> clientesFiltrados) {
+        Document documento = new Document();
+        String ruta = "src\\ReportesPDF\\Clientes_No_Asistentes_del_Último_Año.pdf"; 
+        File archivo = new File(ruta);
+
+        if (archivo.exists()) {
+            String nuevoNombre = "Clientes_No_Asistentes_del_Último_Año_" + System.currentTimeMillis() + ".pdf";
+            ruta = "src\\ReportesPDF\\" + nuevoNombre;
+        }
+
+        try {
+            PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(ruta));
+            documento.open();
+            documento.add(new Paragraph("Reporte de Clientes No Asistidos del Último Año", FontFactory.getFont("Roboto Light", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD)));
+            documento.add(new Paragraph(" "));
+            
+            PdfPTable table = new PdfPTable(4);
+            table.setWidthPercentage(100);
+            table.addCell("Nombre");
+            table.addCell("Apellido");
+            table.addCell("Email");
+            table.addCell("Teléfono");
+
+            for (Cliente cliente : clientesFiltrados) {
+                table.addCell(cliente.getNombre());
+                table.addCell(cliente.getApellido());
+                table.addCell(cliente.getEmail());
+                table.addCell(cliente.getTelefono());
+            }
+
+            documento.add(table);
+            JOptionPane.showMessageDialog(null, "PDF generado con éxito en: " + ruta);
+        } catch (DocumentException | IOException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + ex.getMessage());
+        } finally {
+            if (documento.isOpen()) {
+                documento.close();
+            }
+        }
+    }
+        
 }
