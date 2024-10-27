@@ -16,15 +16,21 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
-
+import Modelo.Cliente.SesionCliente;
 
 public class InicioCliente extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private Historial historial;
-
+	private Dashboard dashboard;
+	private SesionCliente s;
+	
+	@SuppressWarnings("static-access")
 	public InicioCliente() {
+		
+		s = new SesionCliente();
+		
 		// Configuración de la ventana principal
 		setTitle("Cliente");
 		ImageIcon icon = new ImageIcon(getClass().getResource("/Img/icono de inicio.png"));
@@ -69,6 +75,7 @@ public class InicioCliente extends JFrame {
 		btnInicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(0);
+				dashboard.cargarDatos(s.getClienteActual().getIdCliente());
 			}
 		});
 		btnInicio.addMouseListener(new MouseAdapter() {
@@ -125,8 +132,10 @@ public class InicioCliente extends JFrame {
 		JButton btnHistorial = new JButton("HISTORIAL");
 		btnHistorial.setIcon(new ImageIcon(InicioCliente.class.getResource("/Img/icono de historial.png")));
 		btnHistorial.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(2);
+				historial.cargarDatos(s.getClienteActual().getIdCliente());
 			}
 		});
 		btnHistorial.addActionListener(new ActionListener() {
@@ -215,7 +224,7 @@ public class InicioCliente extends JFrame {
 		panelMenu.add(btnCerrarSesion);
 
 		// Panel inicio
-		Dashboard dashboard = new Dashboard();
+		dashboard = new Dashboard();
 		tabbedPane.addTab("Inicio", dashboard);
 		dashboard.setBorder(null);
 

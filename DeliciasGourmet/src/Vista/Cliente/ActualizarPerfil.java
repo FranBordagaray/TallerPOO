@@ -17,16 +17,10 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import java.io.File;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.imageio.ImageIO;
-import java.awt.Image;
 
 import Controlador.ClienteControlador;
 import Modelo.Cliente.SesionCliente;
 import Modelo.Cliente.Cliente;
-
 
 public class ActualizarPerfil extends JPanel {
 
@@ -109,7 +103,6 @@ public class ActualizarPerfil extends JPanel {
 		txtTelefono.setColumns(10);
 		txtTelefono.setBounds(687, 498, 295, 39);
 		add(txtTelefono);
-			
 
 		// Etiqueta y campo de texto de email
 		JLabel lblEmail = new JLabel("EMAIL: ");
@@ -143,48 +136,6 @@ public class ActualizarPerfil extends JPanel {
 		lblFotoPerfil.setIcon(new ImageIcon(ActualizarPerfil.class.getResource("/Img/ImgPerfil (1).jpg")));
 		lblFotoPerfil.setBounds(416, 38, 160, 176);
 		add(lblFotoPerfil);
-
-		// Botón para subir la foto
-		JButton btnCargarFoto = new JButton("Cargar foto");
-		btnCargarFoto.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        JFileChooser selectorArchivos = new JFileChooser();
-		        FileNameExtensionFilter filtroImagenes = new FileNameExtensionFilter("Imágenes", "jpg", "png", "jpeg");
-		        selectorArchivos.setFileFilter(filtroImagenes);
-		        
-		        int seleccion = selectorArchivos.showOpenDialog(null);
-		        if (seleccion == JFileChooser.APPROVE_OPTION) {
-		            File archivoSeleccionado = selectorArchivos.getSelectedFile();
-		            try {
-		                Image imagen = ImageIO.read(archivoSeleccionado);
-		                Image imagenRedimensionada = imagen.getScaledInstance(lblFotoPerfil.getWidth(), lblFotoPerfil.getHeight(), Image.SCALE_SMOOTH);
-		                lblFotoPerfil.setIcon(new ImageIcon(imagenRedimensionada));
-		            } catch (Exception ex) {
-		                JOptionPane.showMessageDialog(null, "Error al cargar la imagen", "Error", JOptionPane.ERROR_MESSAGE);
-		                ex.printStackTrace();
-		            }
-		        }
-		    }
-		});
-		btnCargarFoto.addMouseListener(new MouseAdapter() {
-		@Override
-		public void mouseEntered(MouseEvent e) {
-				btnCargarFoto.setBackground(new Color(255, 0, 0));
-				btnCargarFoto.setForeground(Color.WHITE);
-			}
-		@Override
-		public void mouseExited(MouseEvent e) {
-				btnCargarFoto.setBackground(Color.WHITE);
-				btnCargarFoto.setForeground(Color.BLACK);
-			}
-		});
-		btnCargarFoto.setBounds(416, 220, 160, 30);
-		btnCargarFoto.setForeground(Color.BLACK);
-		btnCargarFoto.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		btnCargarFoto.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnCargarFoto.setBorder(null);
-		btnCargarFoto.setBackground(Color.WHITE);
-		add(btnCargarFoto);
 				
 		// Separador 
 		JSeparator separator = new JSeparator();

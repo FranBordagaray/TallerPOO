@@ -899,5 +899,38 @@ public class ReservaControlador {
             }
         }
     }
+    
+    //Funcion para verificar el estado de una Reserva ante una cancelacion
+    public boolean verificarEstadoReserva(int idSeleccionado) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean puedeCancelar = false;
+        
+        try {
+            ps = connection.prepareStatement("SELECT estado = 1 AS puedeCancelar FROM Reserva WHERE idReserva = ?");
+            ps.setInt(1, idSeleccionado);
+            
+            rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                puedeCancelar = rs.getBoolean("puedeCancelar");
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        return puedeCancelar;
+    }
+
+    
+    
 
 }

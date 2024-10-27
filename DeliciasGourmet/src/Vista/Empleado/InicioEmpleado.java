@@ -206,35 +206,6 @@ public class InicioEmpleado extends JFrame {
 		btnReportes.setBounds(0, 285, 271, 35);
 		panelMenu.add(btnReportes);
 
-		// Boton para ver pantalla perfil
-		JButton btnPerfil = new JButton("PERFIL");
-		btnPerfil.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de perfil.png")));
-		btnPerfil.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				tabbedPane.setSelectedIndex(5);
-			}
-		});
-		btnPerfil.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				btnPerfil.setBackground(new Color(255, 0, 0));
-				btnPerfil.setForeground(Color.WHITE);
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				btnPerfil.setBackground(Color.WHITE);
-				btnPerfil.setForeground(Color.BLACK);
-			}
-		});
-		btnPerfil.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		btnPerfil.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnPerfil.setBorder(null);
-		btnPerfil.setBackground(Color.WHITE);
-		btnPerfil.setAlignmentX(0.5f);
-		btnPerfil.setBounds(0, 330, 271, 35);
-		panelMenu.add(btnPerfil);
-
 		// Boton para cerrar sesion
 		JButton btnCerrarSesion = new JButton("CERRAR SESION");
 		btnCerrarSesion.setIcon(new ImageIcon(InicioEmpleado.class.getResource("/Img/icono de cerrar sesion.png")));
@@ -269,6 +240,7 @@ public class InicioEmpleado extends JFrame {
 		// Deshabilitar botones según el rol
 		if (rol.equals("RECEPCIONISTA")) {
 			btnGestionEmpleados.setEnabled(false);
+			btnGestionDeMesas.setEnabled(false);
 			btnReportes.setEnabled(false);
 		} else if (rol.equals("MESERO")) {
 			btnGestionEmpleados.setEnabled(false);
@@ -307,9 +279,5 @@ public class InicioEmpleado extends JFrame {
 		tabbedPane.addTab("REPORTES", reporte);
 		reporte.setLayout(null);
 
-		// Panel para perfil
-		PerfilEmpleado perfil = new PerfilEmpleado();
-		tabbedPane.addTab("PERFIL", perfil);
-		perfil.setLayout(null);
 	}
 }

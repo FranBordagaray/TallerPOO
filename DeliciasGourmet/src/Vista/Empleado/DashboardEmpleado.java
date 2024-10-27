@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -100,7 +102,7 @@ public class DashboardEmpleado extends JPanel {
  		tblBHistorial.setForeground(Color.BLACK);
  		tblBHistorial.setModel(new DefaultTableModel(
  			new Object[][] {},
- 			new String[] { "ID RESERVA","NOMBRE","APELLIDO", "FECHA", "HORA", "MESA", "COMENSALES", "UBICACION", "ESTADO" , "C"}) {
+ 			new String[] { "RESERVA","NOMBRE","APELLIDO", "FECHA", "HORA", "MESA", "COMENSALES", "UBICACION", "ESTADO" , "COMEN."}) {
  			@Override
  			public boolean isCellEditable(int row, int column) {
  				return false;
@@ -128,14 +130,18 @@ public class DashboardEmpleado extends JPanel {
  		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
  		        
  		        setText("-");
+ 		       setHorizontalAlignment(SwingConstants.CENTER);
  		        return this;
  		    }
  		};
  		
  		tblBHistorial.getColumnModel().getColumn(9).setCellRenderer(comentarioRenderer);
+ 		tblBHistorial.getColumnModel().getColumn(0).setCellRenderer(comentarioRenderer);
+ 		
+ 		
  	
  		TableColumnModel columnModel = tblBHistorial.getColumnModel();
- 	 	columnModel.getColumn(0).setPreferredWidth(75);
+ 	 	columnModel.getColumn(0).setPreferredWidth(65);
  	 	columnModel.getColumn(1).setPreferredWidth(110);
  	 	columnModel.getColumn(2).setPreferredWidth(110);
  	 	columnModel.getColumn(3).setPreferredWidth(100);
@@ -144,12 +150,11 @@ public class DashboardEmpleado extends JPanel {
  	 	columnModel.getColumn(6).setPreferredWidth(90);
  	 	columnModel.getColumn(7).setPreferredWidth(160);
  	 	columnModel.getColumn(8).setPreferredWidth(100);
- 	 	columnModel.getColumn(9).setPreferredWidth(10);
+ 	 	columnModel.getColumn(9).setPreferredWidth(55);
  	 	
       	
       	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
       	centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-      	tblBHistorial.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
       	tblBHistorial.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
       	tblBHistorial.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
         scrollPane.setViewportView(tblBHistorial);
@@ -175,6 +180,11 @@ public class DashboardEmpleado extends JPanel {
 
         // Boton para buscar reservas de clientes
         JButton btnBuscar = new JButton("BUSCAR");
+        btnBuscar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		buscarPorApellido(txtBuscarCliente.getText());
+        	}
+        });
         btnBuscar.setIcon(new ImageIcon(DashboardEmpleado.class.getResource("/Img/icono de buscar.png")));
         btnBuscar.setForeground(Color.BLACK);
         btnBuscar.setBackground(Color.WHITE);
@@ -182,6 +192,19 @@ public class DashboardEmpleado extends JPanel {
         btnBuscar.setBorder(null);
         btnBuscar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
         btnBuscar.setBounds(560, 333, 150, 25);
+        btnBuscar.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnBuscar.setBackground(new Color(64, 224, 208));
+        		btnBuscar.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            	btnBuscar.setBackground(Color.WHITE);
+            	btnBuscar.setForeground(Color.BLACK);
+            }
+    	});
         add(btnBuscar);
 
         // Iniciar el Timer para actualizar la fecha y hora
@@ -204,7 +227,7 @@ public class DashboardEmpleado extends JPanel {
         SwingUtilities.invokeLater(() -> lblFechaHora.setText(fechaHoraFormateada));
     }
     
- // Función para cargar tabla con datos almacenados en la base de datos
+    // Función para cargar tabla con datos almacenados en la base de datos
  	private void cargarDatos() {
  		List<HistorialReserva> historial;
  		try {
@@ -213,7 +236,24 @@ public class DashboardEmpleado extends JPanel {
  			model.setRowCount(0);
  		
  			for (HistorialReserva reserva : historial) {
- 				String estado = reserva.getEstado() == 1 ? "VIGENTE" : "CANCELADA";
+ 				String estado;
+ 				switch (reserva.getEstado()) {
+ 				    case 0:
+ 				        estado = "CANCELADA";
+ 				        break;
+ 				    case 1:
+ 				        estado = "VIGENTE";
+ 				        break;
+ 				    case 2:
+ 				        estado = "COMPLETADA";
+ 				        break;
+ 				    case 3:
+ 				        estado = "NO ASISTIÓ";
+ 				        break;
+ 				    default:
+ 				        estado = "ESTADO DESCONOCIDO"; 
+ 				        break;
+ 				}
  				model.addRow(new Object[] {
  						reserva.getIdReserva(),
  						reserva.getNombre(),
@@ -232,23 +272,66 @@ public class DashboardEmpleado extends JPanel {
  		}
  	}
  	
+ 	// Función para filtrar la busqueda por apellido
+  	private void buscarPorApellido(String apellido) {
+  		List<HistorialReserva> historial;
+  		try {
+  			historial = controladorReserva.obtenerHistorialReserva();
+  			DefaultTableModel model = (DefaultTableModel) tblBHistorial.getModel();
+  			model.setRowCount(0);
+  		
+  			for (HistorialReserva reserva : historial) {
+  				if (reserva.getApellido().toLowerCase().contains(apellido.toLowerCase())) {
+  					String estado;
+  	 				switch (reserva.getEstado()) {
+  	 				    case 0:
+  	 				        estado = "CANCELADA";
+  	 				        break;
+  	 				    case 1:
+  	 				        estado = "VIGENTE";
+  	 				        break;
+  	 				    case 2:
+  	 				        estado = "COMPLETADA";
+  	 				        break;
+  	 				    case 3:
+  	 				        estado = "NO ASISTIÓ";
+  	 				        break;
+  	 				    default:
+  	 				        estado = "ESTADO DESCONOCIDO"; 
+  	 				        break;
+  	 				}
+  	  				model.addRow(new Object[] {
+  	  						reserva.getIdReserva(),
+  	  						reserva.getNombre(),
+  	  						reserva.getApellido(),
+  	  						reserva.getFecha(),
+  	  						reserva.getHora(),
+  	  						reserva.getIdMesa(),
+  	  						reserva.getCapacidad(),
+  	  						reserva.getUbicacion(),
+  	  						estado,
+  	  						reserva.getComentario()
+  	  				});
+				}
+  			}
+  		} catch (Exception e) {
+  			e.printStackTrace();
+  		}
+  	}
+ 	
  	// Método para formatear el comentario
   	private String formatearComentario(String comentario, int limiteCaracteres) {
   	    StringBuilder resultado = new StringBuilder();
-  	    String[] palabras = comentario.split(" "); // Dividir el comentario en palabras
+  	    String[] palabras = comentario.split(" "); 
   	    int longitudActual = 0;
-
-  	    for (String palabra : palabras) {
-  	        // Si la longitud actual más la longitud de la nueva palabra supera el límite
+  	    for (String palabra : palabras) {  
   	        if (longitudActual + palabra.length() > limiteCaracteres) {
-  	            resultado.append("\n"); // Agregar un salto de línea
-  	            longitudActual = 0; // Reiniciar la longitud actual
+  	            resultado.append("\n"); 
+  	            longitudActual = 0; 
   	        }
-  	        
-  	        resultado.append(palabra).append(" "); // Agregar la palabra al resultado
-  	        longitudActual += palabra.length() + 1; // Actualizar la longitud actual (+1 por el espacio)
+  	        resultado.append(palabra).append(" "); 
+  	        longitudActual += palabra.length() + 1; 
   	    }
-
-  	    return resultado.toString().trim(); // Retornar el resultado sin espacios al final
+  	    return resultado.toString().trim(); 
   	}
 }

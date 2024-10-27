@@ -1,5 +1,6 @@
 package Vista.Empleado;
 
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -32,6 +33,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import com.itextpdf.text.Document;
@@ -50,7 +52,6 @@ import Modelo.Cliente.Tarjeta;
 import Modelo.Complementos.Comprobante;
 import Vista.Cliente.ModificarReserva;
 import javax.swing.ImageIcon;
-
 
 public class GestionReserva extends JPanel {
 
@@ -112,8 +113,22 @@ public class GestionReserva extends JPanel {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBorder(null);
 		scrollPane.setFont(new Font("Roboto Light", Font.PLAIN, 12));
-		scrollPane.setBounds(20, 150, 960, 518);
+		scrollPane.setBounds(16, 150, 960, 518);
 		add(scrollPane);
+		scrollPane.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {   
+		        if (tblRecepcionista.rowAtPoint(e.getPoint()) == -1) {
+		        	tblRecepcionista.clearSelection();
+		            idReservaSeleccionada = 0;
+		            fechaReservaSeleccionada = "";
+		            horaReservaSeleccionada = "";
+		            mesaSeleccionada = "";
+		            capacidadSeleccionada = "";
+		            ubicacionSeleccionada = "";
+		        }
+		    }
+		});
 
 	    // Tabla para el Recepcionista
  		tblRecepcionista = new JTable();
@@ -127,15 +142,29 @@ public class GestionReserva extends JPanel {
  				new Object[][] {
  				},
  				new String[] {
- 						"RESERVA N°","NOMBRE","APELLIDO", "FECHA", "HORA", "MESA", "COMENSALES","UBICACION", "ESTADO"
+ 						"RESERVA","NOMBRE","APELLIDO", "FECHA", "HORA", "MESA", "COMENSALES","UBICACION", "ESTADO"
  				}) {
 		@Override
 		public boolean isCellEditable(int row, int column) {
 			return false;
 		}
  		});
+ 		
+ 		TableCellRenderer reservaRenderer = new DefaultTableCellRenderer() {
+		    @Override
+		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		        
+		        setText("-");
+		        setHorizontalAlignment(SwingConstants.CENTER);
+		        return this;
+		    }
+		};
+		
+		tblRecepcionista.getColumnModel().getColumn(0).setCellRenderer(reservaRenderer);
+		
  		TableColumnModel columnModel = tblRecepcionista.getColumnModel();
-     	columnModel.getColumn(0).setPreferredWidth(85);
+     	columnModel.getColumn(0).setPreferredWidth(80);
      	columnModel.getColumn(1).setPreferredWidth(110);
      	columnModel.getColumn(2).setPreferredWidth(110);
      	columnModel.getColumn(3).setPreferredWidth(100);
@@ -147,7 +176,6 @@ public class GestionReserva extends JPanel {
  	
  	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
  	centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
- 	tblRecepcionista.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
  	tblRecepcionista.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
  	tblRecepcionista.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
  	tblRecepcionista.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -190,9 +218,14 @@ public class GestionReserva extends JPanel {
     txtBuscarCliente.setBounds(147, 115, 150, 25);
     add(txtBuscarCliente);
     txtBuscarCliente.setColumns(10);
-
+ 
     // Boton para buscar reservas de clientes
     JButton btnBuscar = new JButton("BUSCAR");
+    btnBuscar.addActionListener(new ActionListener() {
+    	public void actionPerformed(ActionEvent e) {
+    		buscarPorApellido(txtBuscarCliente.getText());
+    	}
+    });
     btnBuscar.setIcon(new ImageIcon(GestionReserva.class.getResource("/Img/icono de buscar.png")));
     btnBuscar.setForeground(Color.BLACK);
     btnBuscar.setBackground(Color.WHITE);
@@ -200,6 +233,19 @@ public class GestionReserva extends JPanel {
     btnBuscar.setBorder(null);
     btnBuscar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
     btnBuscar.setBounds(307, 115, 120, 25);
+    btnBuscar.addMouseListener(new MouseAdapter() {
+    	@Override
+    	public void mouseEntered(MouseEvent e) {
+    		btnBuscar.setBackground(new Color(64, 224, 208));
+    		btnBuscar.setForeground(Color.WHITE);
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+        	btnBuscar.setBackground(Color.WHITE);
+        	btnBuscar.setForeground(Color.BLACK);
+        }
+	});
     add(btnBuscar);
 		
 	// Boton cancelar reserva
@@ -236,18 +282,24 @@ public class GestionReserva extends JPanel {
 	  }
 	});
 	btnCancelar.addMouseListener(new MouseAdapter() {
-		@Override
-		public void mouseEntered(MouseEvent e) {
-		}
-		@Override
-		public void mouseExited(MouseEvent e) {
-		}
+    	@Override
+    	public void mouseEntered(MouseEvent e) {
+    		btnCancelar.setBackground(new Color(255, 0, 0));
+    		btnCancelar.setForeground(Color.WHITE);
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+        	btnCancelar.setBackground(Color.WHITE);
+        	btnCancelar.setForeground(Color.BLACK);
+        }
 	});
 	btnCancelar.setHorizontalTextPosition(SwingConstants.RIGHT);
 	btnCancelar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	btnCancelar.setBorder(null);
 	btnCancelar.setBackground(Color.WHITE);
 	btnCancelar.setForeground(Color.BLACK);
+	btnCancelar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	btnCancelar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 	btnCancelar.setBounds(826, 115, 150, 25);
 	add(btnCancelar);
@@ -269,7 +321,20 @@ public class GestionReserva extends JPanel {
 	btnModificar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 	btnModificar.setBorder(null);
 	btnModificar.setBackground(Color.WHITE);
+	btnModificar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	btnModificar.setBounds(826, 80, 150, 25);
+	btnModificar.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        	btnModificar.setBackground(new Color(255, 255, 100));
+        	btnModificar.setForeground(Color.BLACK);
+        }
+        @Override
+        public void mouseExited(MouseEvent e) {
+        	btnModificar.setBackground(Color.WHITE);
+        	btnModificar.setForeground(Color.BLACK);
+        }
+    });
 	add(btnModificar);
 	
 	JButton enviarRecordatorio = new JButton("ENVIAR RECORDATORIO");
@@ -291,7 +356,20 @@ public class GestionReserva extends JPanel {
 	enviarRecordatorio.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 	enviarRecordatorio.setBorder(null);
 	enviarRecordatorio.setBackground(Color.WHITE);
+	enviarRecordatorio.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	enviarRecordatorio.setBounds(437, 115, 210, 25);
+	enviarRecordatorio.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        	enviarRecordatorio.setBackground(new Color(33, 150, 243));
+        	enviarRecordatorio.setForeground(Color.BLACK);
+        }
+        @Override
+        public void mouseExited(MouseEvent e) {
+        	enviarRecordatorio.setBackground(Color.WHITE);
+        	enviarRecordatorio.setForeground(Color.BLACK);
+        }
+    });
 	add(enviarRecordatorio);
 	
 	JButton btnNoConcurrio = new JButton("INASISTENCIA");
@@ -312,8 +390,21 @@ public class GestionReserva extends JPanel {
 	btnNoConcurrio.setForeground(Color.BLACK);
 	btnNoConcurrio.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 	btnNoConcurrio.setBorder(null);
+	btnNoConcurrio.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	btnNoConcurrio.setBackground(Color.WHITE);
 	btnNoConcurrio.setBounds(669, 80, 150, 25);
+	btnNoConcurrio.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        	btnNoConcurrio.setBackground(new Color(220, 20, 60));
+        	btnNoConcurrio.setForeground(Color.WHITE);
+        }
+        @Override
+        public void mouseExited(MouseEvent e) {
+        	btnNoConcurrio.setBackground(Color.WHITE);
+        	btnNoConcurrio.setForeground(Color.BLACK);
+        }
+    });
 	add(btnNoConcurrio);
 	
 	JButton btnConcurrio = new JButton("CONCURRIO");
@@ -331,8 +422,21 @@ public class GestionReserva extends JPanel {
 	btnConcurrio.setForeground(Color.BLACK);
 	btnConcurrio.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 	btnConcurrio.setBorder(null);
+	btnConcurrio.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	btnConcurrio.setBackground(Color.WHITE);
 	btnConcurrio.setBounds(669, 115, 150, 25);
+	btnConcurrio.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        		btnConcurrio.setBackground(new Color(0, 200, 100));
+        		btnConcurrio.setForeground(Color.WHITE);
+        }
+        @Override
+        public void mouseExited(MouseEvent e) {
+        		btnConcurrio.setBackground(Color.WHITE);
+        		btnConcurrio.setForeground(Color.BLACK);
+        }
+    });
 	add(btnConcurrio);
 	
 	// Iniciar el Timer para actualizar la fecha y hora
@@ -400,6 +504,52 @@ public class GestionReserva extends JPanel {
  		}
  	}
 	
+ 	// Función para filtrar la busqueda por apellido
+   	private void buscarPorApellido(String apellido) {
+   		List<HistorialReserva> historial;
+   		try {
+   			historial = reservaControlador.obtenerHistorialReserva();
+   			DefaultTableModel model = (DefaultTableModel) tblRecepcionista.getModel();
+   			model.setRowCount(0);
+   		
+   			for (HistorialReserva reserva : historial) {
+   				if (reserva.getApellido().toLowerCase().contains(apellido.toLowerCase())) {
+   					String estado;
+   	 				switch (reserva.getEstado()) {
+   	 				    case 0:
+   	 				        estado = "CANCELADA";
+   	 				        break;
+   	 				    case 1:
+   	 				        estado = "VIGENTE";
+   	 				        break;
+   	 				    case 2:
+   	 				        estado = "COMPLETADA";
+   	 				        break;
+   	 				    case 3:
+   	 				        estado = "NO ASISTIÓ";
+   	 				        break;
+   	 				    default:
+   	 				        estado = "ESTADO DESCONOCIDO"; 
+   	 				        break;
+   	 				}
+   	  				model.addRow(new Object[] {
+   	  						reserva.getIdReserva(),
+   	  						reserva.getNombre(),
+   	  						reserva.getApellido(),
+   	  						reserva.getFecha(),
+   	  						reserva.getHora(),
+   	  						reserva.getIdMesa(),
+   	  						reserva.getCapacidad(),
+   	  						reserva.getUbicacion(),
+   	  						estado,
+   	  						reserva.getComentario()
+   	  				});
+ 				}
+   			}
+   		} catch (Exception e) {
+   			e.printStackTrace();
+   		}
+   	}
 	// Metodo para enviar mail con Comprobante
  	public void enviarMailComprobante() {
  		String asunto = "Comprobante de Pago - Multa por Cancelación o No Concurrencia - Delicias Gourmet";
@@ -509,5 +659,6 @@ public class GestionReserva extends JPanel {
  			);
  		 EnviarMail.enviarCorreo(email, asunto, mensaje);
  	}
+ 	
  	
 }

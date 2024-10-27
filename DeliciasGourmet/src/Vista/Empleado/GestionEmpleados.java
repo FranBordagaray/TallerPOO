@@ -19,8 +19,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import Controlador.EmpleadoControlador;
 import Modelo.Empleado.Empleado;
@@ -33,12 +35,15 @@ public class GestionEmpleados extends JPanel {
     private JTable tblEmpleados;
     private DefaultTableModel model;
     private JComboBox<String> roles;
+    private EmpleadoControlador controlador;
 
     /**
      * Create the panel.
      */
     @SuppressWarnings("serial")
     public GestionEmpleados() {
+    	
+    	controlador = new EmpleadoControlador();
         // Configuración del panel
         setLayout(null);
         setPreferredSize(new Dimension(992, 679));
@@ -50,10 +55,17 @@ public class GestionEmpleados extends JPanel {
         add(scrollPane);
         
         // Modelo de tabla de empleados
+        tblEmpleados = new JTable();
+        tblEmpleados.setGridColor(Color.DARK_GRAY);
+        tblEmpleados.setBackground(Color.WHITE);
+        tblEmpleados.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        tblEmpleados.setBorder(null);
+        tblEmpleados.setForeground(Color.BLACK);
+        tblEmpleados.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         model = new DefaultTableModel(
             new Object[][] {},
             new String[] {
-                "ROL", "NOMBRE", "APELLIDO", "DOMICILIO", "TELEFONO", "MAIL", "USUARIO", "CONTRASEÑA"
+                "N°","ROL", "NOMBRE", "APELLIDO", "DOMICILIO", "TELEFONO", "MAIL", "USUARIO", "ESTADO"
             }
         ) {
             @Override
@@ -61,13 +73,23 @@ public class GestionEmpleados extends JPanel {
                 return false;
             }
         };
-        
-        tblEmpleados = new JTable();
-        tblEmpleados.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         tblEmpleados.setModel(model);
-        tblEmpleados.setBorder(null);
-        tblEmpleados.setCellSelectionEnabled(true);
-        tblEmpleados.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+		
+		TableColumnModel columnModel = tblEmpleados.getColumnModel();
+		columnModel.getColumn(0).setPreferredWidth(30);
+     	columnModel.getColumn(1).setPreferredWidth(90);
+     	columnModel.getColumn(2).setPreferredWidth(105);
+     	columnModel.getColumn(3).setPreferredWidth(105);
+     	columnModel.getColumn(4).setPreferredWidth(130);
+     	columnModel.getColumn(5).setPreferredWidth(135);
+     	columnModel.getColumn(6).setPreferredWidth(225);
+     	columnModel.getColumn(7).setPreferredWidth(90);
+     	columnModel.getColumn(8).setPreferredWidth(90);
+     	
+     	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+     	centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+     	tblEmpleados.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        
         scrollPane.setViewportView(tblEmpleados);
         cargarDatos();
         
@@ -103,7 +125,7 @@ public class GestionEmpleados extends JPanel {
         btnBuscar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                btnBuscar.setBackground(new Color(255, 0, 0));
+                btnBuscar.setBackground(new Color(64, 224, 208));
                 btnBuscar.setForeground(Color.WHITE);
             }
 
@@ -177,38 +199,47 @@ public class GestionEmpleados extends JPanel {
         add(btnAgregarEmpleado);
         
         // Botón para eliminar un empleado
-        JButton btnEliminar = new JButton("ELIMINAR");
-        btnEliminar.setIcon(new ImageIcon(GestionEmpleados.class.getResource("/Img/icono eliminar.png")));
-        btnEliminar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int selectedRow = tblEmpleados.getSelectedRow(); 
-                if (selectedRow != -1) { 
-                    String usuario = (String) model.getValueAt(selectedRow, 6); 
-                    EmpleadoControlador controlador = new EmpleadoControlador();
-                    boolean eliminado = controlador.eliminarEmpleado(usuario); 
+        JButton btnModificar = new JButton("MODIFICAR");
+        btnModificar.setIcon(new ImageIcon(GestionEmpleados.class.getResource("/Img/icono de perfil.png")));
+        btnModificar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+                int selectedRow = tblEmpleados.getSelectedRow();
+                if (selectedRow != -1) {
+                    int idEmpleado = (int) model.getValueAt(selectedRow, 0);
+                    System.out.println("ID del empleado seleccionado: " + idEmpleado);
 
-                    if (eliminado) {
-                        cargarDatos(); 
-                    } else {                      
-                        System.out.println("Error al eliminar el empleado.");
-                    }
-                } else {                   
-                    System.out.println("Por favor, selecciona un empleado para eliminar.");
+                    ModificarEmpleado modificar = new ModificarEmpleado(controlador.obtenerEmpleadoPorId(idEmpleado));
+                    modificar.setVisible(true);
+                } else {
+                    System.out.println("Por favor, selecciona un empleado para modificar.");
                 }
             }
         });
-        btnEliminar.setForeground(Color.BLACK);
-        btnEliminar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-        btnEliminar.setBorder(null);
-        btnEliminar.setBackground(Color.WHITE);
-        btnEliminar.setAlignmentX(0.5f);
-        btnEliminar.setBounds(736, 95, 119, 25);
-        add(btnEliminar);
+        btnModificar.setForeground(Color.BLACK);
+        btnModificar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        btnModificar.setBorder(null);
+        btnModificar.setBackground(Color.WHITE);
+        btnModificar.setAlignmentX(0.5f);
+        btnModificar.setBounds(736, 95, 119, 25);
+        btnModificar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            	btnModificar.setBackground(new Color(76, 175, 80));
+            	btnModificar.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            	btnModificar.setBackground(Color.WHITE);
+            	btnModificar.setForeground(Color.BLACK);
+            }
+        });
+        add(btnModificar);
         
     }
     
     // Funcion para cargar tabla con datos almacenados en base de datos 
-    private void cargarDatos() {
+    public void cargarDatos() {
         EmpleadoControlador controlador = new EmpleadoControlador();
         List<Empleado> empleados = controlador.obtenerEmpleados();
 
@@ -216,6 +247,7 @@ public class GestionEmpleados extends JPanel {
 
         for (Empleado empleado : empleados) {
             model.addRow(new Object[]{
+            	empleado.getIdEmpleado(),
                 empleado.getRol().name(),
                 empleado.getNombre(),
                 empleado.getApellido(),
@@ -223,7 +255,7 @@ public class GestionEmpleados extends JPanel {
                 empleado.getTelefono(),
                 empleado.getEmail(),
                 empleado.getUsuario(),
-                empleado.getContrasenia()
+                empleado.getEstado()
             });
         }
     }
@@ -237,6 +269,7 @@ public class GestionEmpleados extends JPanel {
         for (Empleado empleado : empleados) {
             if (estado.equals("TODOS") || empleado.getRol().name().equals(estado)) {
                 model.addRow(new Object[]{
+                	empleado.getIdEmpleado(),
                     empleado.getRol().name(),
                     empleado.getNombre(),
                     empleado.getApellido(),
@@ -244,7 +277,7 @@ public class GestionEmpleados extends JPanel {
                     empleado.getTelefono(),
                     empleado.getEmail(),
                     empleado.getUsuario(),
-                    empleado.getContrasenia()
+                    empleado.getEstado()
                 });
             }
         }
@@ -260,6 +293,7 @@ public class GestionEmpleados extends JPanel {
         for (Empleado empleado : empleados) {
             if (empleado.getApellido().toLowerCase().contains(apellido.toLowerCase())) {
                 model.addRow(new Object[]{
+                	empleado.getIdEmpleado(),
                     empleado.getRol().name(),
                     empleado.getNombre(),
                     empleado.getApellido(),
@@ -267,7 +301,7 @@ public class GestionEmpleados extends JPanel {
                     empleado.getTelefono(),
                     empleado.getEmail(),
                     empleado.getUsuario(),
-                    empleado.getContrasenia()
+                    empleado.getEstado()
                 });
             }
         }

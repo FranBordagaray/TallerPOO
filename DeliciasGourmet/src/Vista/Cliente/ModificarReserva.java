@@ -48,7 +48,7 @@ public class ModificarReserva extends JFrame {
     private JPanel Mapas;
     private JDateChooser calendario2;
     private JComboBox<String> comboHora;
-    JButton btnSiguiente;
+    JButton btnModificar;
     private LocalDate hoy;
     private LocalDate unAnoFuturo;
     private JComboBox<String> comboUbicaciones;
@@ -91,6 +91,7 @@ public class ModificarReserva extends JFrame {
         getContentPane().setLayout(null);
         setPreferredSize(new Dimension(992, 679));
         setBackground(new Color(222, 184, 135));
+        setUndecorated(true);
 
         mesaControlador = new MesaControlador();
 
@@ -297,10 +298,10 @@ public class ModificarReserva extends JFrame {
         CampoComentario.setWrapStyleWord(true);
         pnlVertical.add(CampoComentario);
 
-     // Botón Modificar
-        btnSiguiente = new JButton("MODIFICAR");
-        btnSiguiente.setIcon(new ImageIcon(ModificarReserva.class.getResource("/Img/icono modificar.png")));
-        btnSiguiente.addActionListener(new ActionListener() {
+        // Botón Modificar
+        btnModificar = new JButton("MODIFICAR");
+        btnModificar.setIcon(new ImageIcon(ModificarReserva.class.getResource("/Img/icono modificar.png")));
+        btnModificar.addActionListener(new ActionListener() {
            
             public void actionPerformed(ActionEvent e) {
             	 idMesaSeleccionada = obtenerIdMesa((String) comboMesa.getSelectedItem());
@@ -408,35 +409,68 @@ public class ModificarReserva extends JFrame {
         });
 
 
-        btnSiguiente.addMouseListener(new MouseAdapter() {
+        btnModificar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                btnSiguiente.setBackground(new Color(255, 0, 0));
-                btnSiguiente.setForeground(Color.WHITE);
+                btnModificar.setBackground(new Color(40, 180, 99));
+                btnModificar.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                btnSiguiente.setBackground(Color.WHITE);
-                btnSiguiente.setForeground(Color.BLACK);
+                btnModificar.setBackground(Color.WHITE);
+                btnModificar.setForeground(Color.BLACK);
             }
         });
-        btnSiguiente.setHorizontalTextPosition(SwingConstants.RIGHT);
-        btnSiguiente.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnSiguiente.setBorder(null);
-        btnSiguiente.setForeground(Color.BLACK);
-        btnSiguiente.setBackground(Color.WHITE);
-        btnSiguiente.setFont(new Font("Roboto Light", Font.BOLD, 16));
-        btnSiguiente.setBounds(41, 630, 150, 25);
-        pnlVertical.add(btnSiguiente);
+        btnModificar.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnModificar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnModificar.setBorder(null);
+        btnModificar.setForeground(Color.BLACK);
+        btnModificar.setBackground(Color.WHITE);
+        btnModificar.setFont(new Font("Roboto Light", Font.BOLD, 16));
+        btnModificar.setBounds(41, 593, 150, 25);
+        pnlVertical.add(btnModificar);
+        
+        // Boton para cancelar modificacion
+        JButton btnCancelar = new JButton("CANCELAR");
+        btnCancelar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnCancelar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		dispose();
+        	}
+        });
+        btnCancelar.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnCancelar.setBackground(new Color(255, 0, 0));
+        		btnCancelar.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            	btnCancelar.setBackground(Color.WHITE);
+            	btnCancelar.setForeground(Color.BLACK);
+            }
+        });
+        btnCancelar.setIcon(new ImageIcon(ModificarReserva.class.getResource("/Img/icono cancelar.png")));
+        
+        btnCancelar.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnCancelar.setForeground(Color.BLACK);
+        btnCancelar.setFont(new Font("Roboto Light", Font.BOLD, 16));
+        btnCancelar.setBorder(null);
+        btnCancelar.setBackground(Color.WHITE);
+        btnCancelar.setBounds(41, 643, 150, 25);
+        pnlVertical.add(btnCancelar);
 
         // Panel Mapas
         Mapas = new JPanel(new CardLayout());
+        Mapas.setBackground(new Color(222, 184, 135));
         Mapas.setBounds(232, 0, 760, 679);
         getContentPane().add(Mapas);
 
         // Panel Comedor Principal
         JPanel panelComedor = new JPanel();
+        panelComedor.setBackground(new Color(222, 184, 135));
         Mapas.add(panelComedor, "COMEDOR PRINCIPAL");
 
         // Imagen Comedor Principal
@@ -447,6 +481,7 @@ public class ModificarReserva extends JFrame {
 
         // Panel Terraza
         JPanel panelTerraza = new JPanel();
+        panelTerraza.setBackground(new Color(222, 184, 135));
         Mapas.add(panelTerraza, "TERRAZA");
 
         // Imagen Terraza
@@ -457,6 +492,7 @@ public class ModificarReserva extends JFrame {
 
         // Panel Bar
         JPanel panelBar = new JPanel();
+        panelBar.setBackground(new Color(222, 184, 135));
         Mapas.add(panelBar, "BAR");
 
         // Imagen Bar
@@ -467,6 +503,7 @@ public class ModificarReserva extends JFrame {
 
         // Panel Sala Privada
         JPanel panelSalaPrivada = new JPanel();
+        panelSalaPrivada.setBackground(new Color(222, 184, 135));
         Mapas.add(panelSalaPrivada, "SALA PRIVADA");
 
         // Imagen Sala Privada
@@ -477,6 +514,7 @@ public class ModificarReserva extends JFrame {
 
         // Panel Patio
         JPanel panelPatio = new JPanel();
+        panelPatio.setBackground(new Color(222, 184, 135));
         Mapas.add(panelPatio, "PATIO");
 
         // Imagen Patio
@@ -609,5 +647,4 @@ public class ModificarReserva extends JFrame {
             return -1;
         }
     }
-   
 }

@@ -36,7 +36,6 @@ import javax.swing.JLabel;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import Modelo.Cliente.Cliente;
@@ -44,9 +43,10 @@ import Modelo.Cliente.HistorialReserva;
 import Modelo.Empleado.Reportes;
 import Controlador.ClienteControlador;
 import Controlador.ReservaControlador;
-import Vista.Cliente.RecuperarCuenta;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.LineBorder;
+import javax.swing.SwingConstants;
 
 public class SeleccionarCliente extends JFrame {
 
@@ -62,32 +62,33 @@ public class SeleccionarCliente extends JFrame {
 		clienteControlador = new ClienteControlador();
 		reservaControlador = new ReservaControlador();
 		
-
 		// Configuración del panel
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationByPlatform(true);
 		setUndecorated(true);
 		setResizable(false);
-		setBounds(100, 100, 600, 326);
+		setBounds(100, 100, 800, 400);
 		setLocationRelativeTo(null);
 
 		// Creación del panel
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(1, 1, 1, 1));
+		contentPane.setBorder(new LineBorder(Color.BLACK));
 		contentPane.setBackground(new Color(195, 155, 107));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		// Etiqueta para el título de la ventana
 		JLabel lblTitulo = new JLabel("SELECCIONAR CLIENTE");
+		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitulo.setFont(new Font("Roboto Light", Font.BOLD, 21));
-		lblTitulo.setBounds(166, 20, 267, 22);
+		lblTitulo.setBounds(0, 20, 800, 30);
 		contentPane.add(lblTitulo);
 
 		// Etiqueta y campo de correo electrónico
 		JLabel lblBuscar = new JLabel("BUSCAR POR EMAIL");
-		lblBuscar.setFont(new Font("Roboto Light", Font.BOLD, 12));
-		lblBuscar.setBounds(10, 42, 132, 30);
+		lblBuscar.setHorizontalAlignment(SwingConstants.CENTER);
+		lblBuscar.setFont(new Font("Roboto Light", Font.PLAIN, 14));
+		lblBuscar.setBounds(17, 94, 250, 30);
 		contentPane.add(lblBuscar);
 
 		// Boton para buscar cliente por su email
@@ -125,7 +126,7 @@ public class SeleccionarCliente extends JFrame {
 		btnBuscar.setBorder(null);
 		btnBuscar.setBackground(Color.WHITE);
 		btnBuscar.setAlignmentX(0.5f);
-		btnBuscar.setBounds(10, 110, 160, 30);
+		btnBuscar.setBounds(34, 171, 200, 30);
 		contentPane.add(btnBuscar);
 
 		// Boton x para cerrar el frame
@@ -154,17 +155,20 @@ public class SeleccionarCliente extends JFrame {
 		btnCerrar.setBorder(null);
 		btnCerrar.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnCerrar.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		btnCerrar.setBounds(555, 0, 45, 30);
+		btnCerrar.setBounds(754, 1, 45, 30);
 		contentPane.add(btnCerrar);
 
 		txtBuscar = new JTextField();
+		txtBuscar.setBackground(Color.WHITE);
+		txtBuscar.setBorder(null);
 		txtBuscar.setFont(new Font("Roboto Light", Font.BOLD, 13));
-		txtBuscar.setBounds(10, 70, 160, 30);
+		txtBuscar.setBounds(17, 130, 250, 30);
 		contentPane.add(txtBuscar);
 		txtBuscar.setColumns(10);
 
 		// Boton para generar el PDF
 		JButton btnGenerar = new JButton("GENERAR");
+		btnGenerar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnGenerar.setIcon(new ImageIcon(SeleccionarCliente.class.getResource("/Img/icono de reportes.png")));
 		btnGenerar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -212,7 +216,7 @@ public class SeleccionarCliente extends JFrame {
 		btnGenerar.setBorder(null);
 		btnGenerar.setBackground(Color.WHITE);
 		btnGenerar.setAlignmentX(0.5f);
-		btnGenerar.setBounds(10, 150, 160, 30);
+		btnGenerar.setBounds(34, 359, 200, 30);
 		contentPane.add(btnGenerar);
 
 		// Inicialización de la tabla
@@ -226,10 +230,12 @@ public class SeleccionarCliente extends JFrame {
 			}
 		});
 		JScrollPane scrollPane = new JScrollPane(tblClientes);
-		scrollPane.setBounds(192, 62, 398, 254);
+		scrollPane.setBorder(null);
+		scrollPane.setBounds(284, 94, 499, 295);
 		contentPane.add(scrollPane);
 		
-		JButton btnActualizar = new JButton("ACTUALIZAR");
+		JButton btnActualizar = new JButton("VER TODOS");
+		btnActualizar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnActualizar.setIcon(new ImageIcon(SeleccionarCliente.class.getResource("/Img/icono de historial.png")));
 		btnActualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -241,7 +247,7 @@ public class SeleccionarCliente extends JFrame {
 		btnActualizar.setBorder(null);
 		btnActualizar.setBackground(Color.WHITE);
 		btnActualizar.setAlignmentX(0.5f);
-		btnActualizar.setBounds(10, 275, 160, 30);
+		btnActualizar.setBounds(34, 212, 200, 30);
 		contentPane.add(btnActualizar);
 		cargarDatosClientes();
 
@@ -306,13 +312,14 @@ public class SeleccionarCliente extends JFrame {
 	}
 
 	// Metodo para generar el PDF de reservas futuras
+	@SuppressWarnings("unused")
 	public void generarPDFReservasFuturas(List<Reportes> reportesCliente, String nombre, String apellido) {
 		Document documento = new Document();
-		String ruta = System.getProperty("user.home") + "\\Desktop\\Reservas_Cliente.pdf";
+		String ruta = "src\\ReportesPDF\\Reservas_Cliente.pdf";
 		File archivo = new File(ruta);
 		if (archivo.exists()) {
 			String nuevoNombre = "Reservas_Cliente_" + System.currentTimeMillis() + ".pdf";
-			ruta = System.getProperty("user.home") + "\\Desktop\\" + nuevoNombre;
+			ruta = "src\\ReportesPDF\\" + nuevoNombre;
 		}
 
 		try {
@@ -350,7 +357,7 @@ public class SeleccionarCliente extends JFrame {
 				documento.add(new Paragraph("No hay reservas futuras para este cliente."));
 			}
 
-			JOptionPane.showMessageDialog(null, "PDF generado con éxito en el escritorio: " + ruta);
+			JOptionPane.showMessageDialog(null, "PDF generado con éxito en: " + ruta);
 		} catch (DocumentException | IOException ex) {
 			ex.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + ex.getMessage());
@@ -362,17 +369,16 @@ public class SeleccionarCliente extends JFrame {
 	}
 
 	
+	@SuppressWarnings("unused")
 	public void generarPDFHistorial(List<HistorialReserva> historialReservas, String nombre, String apellido) {
 	    Document documento = new Document();
-	    String ruta = System.getProperty("user.home") + "\\Desktop\\Historial_Reservas_" + nombre + "_" + apellido + ".pdf";
+	    String ruta = "src\\ReportesPDF\\Historial_Reservas_" + nombre + "_" + apellido + ".pdf";
 	    File archivo = new File(ruta);
 	    
-	    // Si el archivo ya existe, se crea uno nuevo con un timestamp
 	    if (archivo.exists()) {
 	        String nuevoNombre = "Historial_Reservas_" + System.currentTimeMillis() + ".pdf";
-	        ruta = System.getProperty("user.home") + "\\Desktop\\" + nuevoNombre;
+	        ruta = "src\\ReportesPDF\\" + nuevoNombre;
 	    }
-
 	    try {
 	        PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(ruta));
 
@@ -385,25 +391,23 @@ public class SeleccionarCliente extends JFrame {
 	        documento.add(new Paragraph(" "));
 
 	        if (historialReservas != null && !historialReservas.isEmpty()) {
-	            PdfPTable table = new PdfPTable(5); // Cambiar el número de columnas según los datos
+	            PdfPTable table = new PdfPTable(5);
 	            table.setWidthPercentage(100);
 	            table.setSpacingBefore(10f);
 	            table.setSpacingAfter(10f);
 
-	            // Encabezados de la tabla
 	            table.addCell(new PdfPCell(new Paragraph("ID Reserva", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12))));
 	            table.addCell(new PdfPCell(new Paragraph("Fecha", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12))));
 	            table.addCell(new PdfPCell(new Paragraph("Hora", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12))));
 	            table.addCell(new PdfPCell(new Paragraph("Mesa", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12))));
 	            table.addCell(new PdfPCell(new Paragraph("Ubicación", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12))));
 
-	            // Agregar cada reserva a la tabla
 	            for (HistorialReserva reserva : historialReservas) {
-	                table.addCell(String.valueOf(reserva.getIdReserva())); // ID Reserva
-	                table.addCell(reserva.getFecha());                   // Fecha
-	                table.addCell(reserva.getHora());                    // Hora
-	                table.addCell(String.valueOf(reserva.getIdMesa()));  // ID Mesa (puedes cambiar a capacidad si deseas)
-	                table.addCell(reserva.getUbicacion());               // Ubicación
+	                table.addCell(String.valueOf(reserva.getIdReserva()));
+	                table.addCell(reserva.getFecha());
+	                table.addCell(reserva.getHora());
+	                table.addCell(String.valueOf(reserva.getIdMesa()));
+	                table.addCell(reserva.getUbicacion());
 	            }
 	            documento.add(table);
 	        } else {

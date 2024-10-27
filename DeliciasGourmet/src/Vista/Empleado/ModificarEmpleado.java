@@ -26,9 +26,9 @@ import javax.swing.border.LineBorder;
 import Controlador.EmpleadoControlador;
 import Modelo.Empleado.Empleado;
 import Modelo.Empleado.EnumRoles;
+import javax.swing.DefaultComboBoxModel;
 
-
-public class RegistroEmpleado extends JFrame {
+public class ModificarEmpleado extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -39,13 +39,16 @@ public class RegistroEmpleado extends JFrame {
 	private JTextField txtApellido;
 	private JTextField txtUsuario;
 	private JPasswordField txtContrasenia;
-	private JPasswordField txtRepetirContrasenia;
-	EmpleadoControlador controlador = new EmpleadoControlador();
+	EmpleadoControlador controlador;
 
-	public RegistroEmpleado() {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public ModificarEmpleado(Empleado empleado) {
+		
+		controlador = new EmpleadoControlador();
+		
 		// Configuración de la ventana principal
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 712, 679);
+		setBounds(100, 100, 712, 660);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setUndecorated(true);
@@ -61,15 +64,16 @@ public class RegistroEmpleado extends JFrame {
 		JPanel pnlContenedor = new JPanel();
 		pnlContenedor.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pnlContenedor.setBackground(new Color(222, 184, 135));
-		pnlContenedor.setBounds(0, 0, 712, 679);
+		pnlContenedor.setBounds(0, 0, 712, 660);
 		contentPane.add(pnlContenedor);
 		pnlContenedor.setLayout(null);
 
 		// Etiqueta de iniciar sesión
-		JLabel lblRegistro = new JLabel("REGISTRO");
-		lblRegistro.setFont(new Font("Roboto Light", Font.BOLD, 28));
-		lblRegistro.setBounds(287, 10, 138, 33);
-		pnlContenedor.add(lblRegistro);
+		JLabel lblModificar = new JLabel("MODIFICAR");
+		lblModificar.setHorizontalAlignment(SwingConstants.CENTER);
+		lblModificar.setFont(new Font("Roboto Light", Font.BOLD, 28));
+		lblModificar.setBounds(0, 10, 712, 33);
+		pnlContenedor.add(lblModificar);
 
 		// Etiqueta y combobox de roles
 		JLabel lblRol = new JLabel("ROL:");
@@ -80,6 +84,7 @@ public class RegistroEmpleado extends JFrame {
 		pnlContenedor.add(lblRol);
 
 		JComboBox<EnumRoles> roles = new JComboBox<>(EnumRoles.values());
+		roles.setSelectedItem(empleado.getRol());
 		roles.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		roles.setBorder(null);
 		roles.setBackground(Color.WHITE);
@@ -94,7 +99,7 @@ public class RegistroEmpleado extends JFrame {
 		lblNombre.setBounds(53, 120, 248, 27);
 		pnlContenedor.add(lblNombre);
 
-		txtNombre = new JTextField();
+		txtNombre = new JTextField(empleado.getNombre());
 		txtNombre.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		txtNombre.setColumns(10);
 		txtNombre.setBorder(null);
@@ -109,7 +114,7 @@ public class RegistroEmpleado extends JFrame {
 		lblApellido.setBounds(53, 180, 248, 27);
 		pnlContenedor.add(lblApellido);
 
-		txtApellido = new JTextField();
+		txtApellido = new JTextField(empleado.getApellido());
 		txtApellido.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		txtApellido.setColumns(10);
 		txtApellido.setBorder(null);
@@ -124,7 +129,7 @@ public class RegistroEmpleado extends JFrame {
 		lblDomicilio.setBounds(53, 240, 248, 27);
 		pnlContenedor.add(lblDomicilio);
 
-		txtDomicilio = new JTextField();
+		txtDomicilio = new JTextField(empleado.getDomicilio());
 		txtDomicilio.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		txtDomicilio.setColumns(10);
 		txtDomicilio.setBorder(null);
@@ -139,7 +144,7 @@ public class RegistroEmpleado extends JFrame {
 		lblTelefono.setBounds(53, 300, 248, 27);
 		pnlContenedor.add(lblTelefono);
 
-		txtTelefono = new JTextField();
+		txtTelefono = new JTextField(empleado.getTelefono());
 		txtTelefono.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		txtTelefono.setColumns(10);
 		txtTelefono.setBorder(null);
@@ -154,7 +159,7 @@ public class RegistroEmpleado extends JFrame {
 		lblEmail.setBounds(53, 360, 248, 27);
 		pnlContenedor.add(lblEmail);
 
-		txtEmail = new JTextField();
+		txtEmail = new JTextField(empleado.getEmail());
 		txtEmail.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		txtEmail.setColumns(10);
 		txtEmail.setBorder(null);
@@ -169,7 +174,7 @@ public class RegistroEmpleado extends JFrame {
 		lblUsuario.setBounds(53, 420, 248, 27);
 		pnlContenedor.add(lblUsuario);
 
-		txtUsuario = new JTextField();
+		txtUsuario = new JTextField(empleado.getUsuario());
 		txtUsuario.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		txtUsuario.setColumns(10);
 		txtUsuario.setBorder(null);
@@ -184,114 +189,81 @@ public class RegistroEmpleado extends JFrame {
 		lblContrasenia.setBounds(53, 480, 248, 27);
 		pnlContenedor.add(lblContrasenia);
 
-		txtContrasenia = new JPasswordField();
+		txtContrasenia = new JPasswordField("*******");
 		txtContrasenia.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		txtContrasenia.setBorder(null);
 		txtContrasenia.setBounds(300, 480, 300, 30);
 		pnlContenedor.add(txtContrasenia);
+		
+		// Combobox estado del empleado
+		JLabel lblEstado = new JLabel("ESTADO:");
+		lblEstado.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEstado.setFont(new Font("Roboto Light", Font.PLAIN, 22));
+		lblEstado.setAlignmentX(0.5f);
+		lblEstado.setBounds(53, 540, 248, 27);
+		pnlContenedor.add(lblEstado);
+		
+		JComboBox estado = new JComboBox();
+		estado.setModel(new DefaultComboBoxModel(new String[] {"ALTA", "BAJA"}));
+		estado.setSelectedItem(empleado.getEstado());
+		estado.setFont(new Font("Roboto Light", Font.PLAIN, 20));
+		estado.setBorder(null);
+		estado.setBackground(Color.WHITE);
+		estado.setBounds(300, 540, 137, 30);
+		pnlContenedor.add(estado);
 
-		// Etiqueta y campo de texto de repetir contrasenia
-		JLabel lblRepetirContrasea = new JLabel("REPETIR CONTRASEÑA:");
-		lblRepetirContrasea.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRepetirContrasea.setFont(new Font("Roboto Light", Font.PLAIN, 22));
-		lblRepetirContrasea.setAlignmentX(0.5f);
-		lblRepetirContrasea.setBounds(53, 540, 248, 27);
-		pnlContenedor.add(lblRepetirContrasea);
-
-		txtRepetirContrasenia = new JPasswordField();
-		txtRepetirContrasenia.setFont(new Font("Roboto Light", Font.PLAIN, 20));
-		txtRepetirContrasenia.setBorder(null);
-		txtRepetirContrasenia.setBounds(300, 540, 300, 30);
-		pnlContenedor.add(txtRepetirContrasenia);
-
-		// Botón para crear cuenta
-		JButton btnRegistro = new JButton("Crear cuenta");
-		btnRegistro.setIcon(new ImageIcon(RegistroEmpleado.class.getResource("/Img/icono de crear cuenta.png")));
-		btnRegistro.addActionListener(new ActionListener() {
+		// Botón para modificar empleado
+		JButton btnModificar = new JButton("MODIFICAR");
+		btnModificar.setIcon(new ImageIcon(ModificarEmpleado.class.getResource("/Img/icono de crear cuenta.png")));
+		btnModificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				empleado.setRol((EnumRoles) roles.getSelectedItem());
+				empleado.setNombre(txtNombre.getText());
+				empleado.setApellido(txtApellido.getText());
+				empleado.setDomicilio(txtDomicilio.getText());
+				empleado.setTelefono(txtTelefono.getText());
+				empleado.setEmail(txtEmail.getText());
+				empleado.setUsuario(txtUsuario.getText());
+				//empleado.setContrasenia(String.valueOf(txtContrasenia.getPassword()));
+				empleado.setEstado((String)estado.getSelectedItem());
 				try {
 					if (verificarCampos()) {
 						return;
 					} else {
-
-						String email = txtEmail.getText();
-						String usuario = txtUsuario.getText();
-
-						// Verificar si el email ya está en uso
-						if (controlador.emailEnUso(email)) {
-							JOptionPane.showMessageDialog(RegistroEmpleado.this,
-									"El email ya está en uso.Por favor utilice  otro.", "Error",
-									JOptionPane.ERROR_MESSAGE);
-							return;
-						}
-
-						if (controlador.usuarioEnUso(usuario)) {
-							JOptionPane.showMessageDialog(RegistroEmpleado.this,
-									"El Usuario ya está en uso.Por favor utilice otro.", "Error",
-									JOptionPane.ERROR_MESSAGE);
-							return;
-
-						}
-
-						if (!esCorreoValido(email)) {
-							JOptionPane.showMessageDialog(null, "Correo no ingresado o Correo Invalido.");
-							return;
-						}
-
-						// Crear el empleado
-						Empleado empleado = new Empleado();
-						empleado.setRol((EnumRoles) roles.getSelectedItem());
-						empleado.setNombre(txtNombre.getText());
-						empleado.setApellido(txtApellido.getText());
-						empleado.setDomicilio(txtDomicilio.getText());
-						empleado.setTelefono(txtTelefono.getText());
-						empleado.setEmail(email); // Usar el email verificado
-						empleado.setUsuario(txtUsuario.getText());
-						empleado.setContrasenia(String.valueOf(txtContrasenia.getPassword()));
-
-						// Intentar registrar al empleado
-						if (controlador.crearCuenta(empleado)) {
-							JOptionPane.showMessageDialog(RegistroEmpleado.this, "Registro exitoso!", "Exito",
-									JOptionPane.INFORMATION_MESSAGE);
-							System.out.println("Registro exitoso!");
-							GestionEmpleados gestion = new GestionEmpleados();
-							gestion.setVisible(true);
-							RegistroEmpleado.this.dispose();
-						} else {
-							JOptionPane.showMessageDialog(RegistroEmpleado.this, "Error al registrar empleado.",
-									"Error", JOptionPane.ERROR_MESSAGE);
-						}
+		            controlador.actualizarEmpleado(empleado);
+		            JOptionPane.showMessageDialog(null, "Cambios realizados con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		            dispose();
+		            GestionEmpleados gestion = new GestionEmpleados();
+		            gestion.cargarDatos();
 					}
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(RegistroEmpleado.this, "Error inesperado: " + e2.getMessage(),
-							"Error", JOptionPane.ERROR_MESSAGE);
-				}
+		        } catch (Exception e2) {
+		            e2.printStackTrace();
+		            System.out.println("Error al actualizar: " + e2.getMessage());
+		        }
 			}
 		});
-
-		btnRegistro.addMouseListener(new MouseAdapter() {
+		btnModificar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				btnRegistro.setBackground(new Color(255, 0, 0));
-				btnRegistro.setForeground(Color.WHITE);
+				btnModificar.setBackground(new Color(255, 0, 0));
+				btnModificar.setForeground(Color.WHITE);
 			}
-
 			@Override
 			public void mouseExited(MouseEvent e) {
-				btnRegistro.setBackground(Color.WHITE);
-				btnRegistro.setForeground(Color.BLACK);
+				btnModificar.setBackground(Color.WHITE);
+				btnModificar.setForeground(Color.BLACK);
 			}
 		});
-		btnRegistro.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-		btnRegistro.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnRegistro.setBackground(Color.WHITE);
-		btnRegistro.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnRegistro.setBorder(null);
-		btnRegistro.setForeground(Color.BLACK);
-		btnRegistro.setBounds(276, 600, 160, 30);
-		pnlContenedor.add(btnRegistro);
+		btnModificar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+		btnModificar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnModificar.setBackground(Color.WHITE);
+		btnModificar.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btnModificar.setBorder(null);
+		btnModificar.setForeground(Color.BLACK);
+		btnModificar.setBounds(271, 600, 160, 30);
+		pnlContenedor.add(btnModificar);
+		
 		// Boton cerrar
-
 		JButton btnCerrar = new JButton("X");
 		btnCerrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -332,6 +304,8 @@ public class RegistroEmpleado extends JFrame {
 		btnCerrar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 		btnCerrar.setBounds(666, 1, 45, 30);
 		pnlContenedor.add(btnCerrar);
+		
+		
 	}
 
 	// Funcion para verificar campos vacios
@@ -343,14 +317,10 @@ public class RegistroEmpleado extends JFrame {
 		String mail = txtEmail.getText();
 		String usuario = txtUsuario.getText();
 		String contrasenia = String.valueOf(txtContrasenia.getPassword());
-		String repetirContrasenia = String.valueOf(txtRepetirContrasenia.getPassword());
 
 		if (nombre.isEmpty() || apellido.isEmpty() || domicilio.isEmpty() || telefono.isEmpty() || mail.isEmpty()
-				|| usuario.isEmpty() || contrasenia.isEmpty() || repetirContrasenia.isEmpty()) {
+				|| usuario.isEmpty() || contrasenia.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Complete todos los campos", "Advertencia", JOptionPane.ERROR_MESSAGE);
-			return true;
-		} else if (!contrasenia.equals(repetirContrasenia)) {
-			JOptionPane.showMessageDialog(this, "Las contraseñas no son iguales", "Error", JOptionPane.ERROR_MESSAGE);
 			return true;
 		} else if (contrasenia.length() < 8) {
 			JOptionPane.showMessageDialog(this, "Las contraseñas debe contener minimo 8 caracteres", "Error",
@@ -366,5 +336,4 @@ public class RegistroEmpleado extends JFrame {
 		Pattern pattern = Pattern.compile(regex);
 		return pattern.matcher(correo).matches();
 	}
-
 }

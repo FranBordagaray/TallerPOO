@@ -7,6 +7,7 @@ public class Empleado extends Persona{
 	// Variables de clase
 	private int idEmpleado;
 	private EnumRoles rol;
+	private String estado;
 	
 	// Constructor de clase
 	public Empleado() {
@@ -25,5 +26,13 @@ public class Empleado extends Persona{
 	}
 	public void setIdEmpleado(int idEmpleado) {
 		this.idEmpleado = idEmpleado;
+	}
+	
+	public String getEstado() {
+		return estado;
+	}
+	
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 }

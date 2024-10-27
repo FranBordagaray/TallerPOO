@@ -548,7 +548,7 @@ public class VistaReservaCliente extends JPanel {
         
         comprobante.setFecha(fechaActualFormateada);
         comprobante.setHora(horaActualFormateada);
-        comprobante.setImporte(500);
+        comprobante.setImporte(50);
         return comprobante;
     }
 

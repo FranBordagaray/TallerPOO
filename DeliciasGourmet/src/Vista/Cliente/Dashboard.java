@@ -214,7 +214,7 @@ public class Dashboard extends JPanel {
 	
 
 	// Función para cargar tabla con datos almacenados en la base de datos
-	private void cargarDatos(int idCliente) {
+	public void cargarDatos(int idCliente) {
 		ReservaControlador controlador = new ReservaControlador();
 		List<HistorialReserva> historial;
 		try {

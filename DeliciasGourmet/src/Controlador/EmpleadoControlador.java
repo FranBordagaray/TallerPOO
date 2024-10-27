@@ -312,4 +312,83 @@ public class EmpleadoControlador {
 		}
 		return sb.toString();
 	}
+	
+	// Funcion para obtener datos de un empleado
+	public Empleado obtenerEmpleadoPorId(int idEmpleado) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Empleado empleado = null;
+	try {
+		ps = connection.prepareStatement(
+                "SELECT e.idEmpleado, e.Rol, e.nombre, e.apellido, e.domicilio, e.telefono, e.email, e.usuario, e.estado "
+                + "FROM Empleado e "
+                + "WHERE e.idEmpleado = ?");
+		ps.setInt(1, idEmpleado);
+        rs = ps.executeQuery();
+        if (rs.next()) {
+        	empleado = new Empleado();
+        	empleado.setIdEmpleado(rs.getInt("idEmpleado"));
+            empleado.setRol(EnumRoles.valueOf(rs.getString("Rol")));
+            empleado.setNombre(rs.getString("nombre"));
+            empleado.setApellido(rs.getString("apellido"));
+            empleado.setDomicilio(rs.getString("domicilio"));
+            empleado.setTelefono(rs.getString("telefono"));
+            empleado.setEmail(rs.getString("email"));
+            empleado.setUsuario(rs.getString("usuario"));
+            empleado.setEstado(rs.getString("estado"));
+        } else {
+            System.out.println("No se encontró un empleado con el ID: " + idEmpleado);
+        }
+	} catch (Exception e) {
+		e.printStackTrace();
+        System.out.println("Error: "+ e.getMessage());
+	} finally {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (ps != null) {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+	return empleado;	
+	}
+	
+	// Actualizar datos de empleado
+	public void actualizarEmpleado(Empleado empleado) {
+		PreparedStatement ps = null;
+		try {
+			ps = connection.prepareStatement("UPDATE Empleado SET Rol = ?, nombre = ?, apellido = ?, domicilio = ?, telefono = ?, "
+											+ "email = ?, usuario = ?, estado = ? WHERE idEmpleado = ?");
+			ps.setString(1, empleado.getRol().name());
+			ps.setString(2, empleado.getNombre());
+			ps.setString(3, empleado.getApellido());
+			ps.setString(4, empleado.getDomicilio());
+			ps.setString(5, empleado.getTelefono());
+			ps.setString(6, empleado.getEmail());
+			ps.setString(7, empleado.getUsuario());
+			ps.setString(8, empleado.getEstado());
+			ps.setInt(9, empleado.getIdEmpleado());
+			ps.executeUpdate();
+			System.out.println("Empleado actualizado exitosamente.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Error al actualizar el empleado.");
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 }

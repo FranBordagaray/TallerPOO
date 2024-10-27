@@ -38,8 +38,6 @@ import Modelo.Complementos.Reserva;
 import Modelo.Complementos.Servicio;
 import Modelo.Empleado.SesionEmpleado;
 import Vista.Cliente.DetalleReservaCliente;
-import Vista.Cliente.VistaReservaCliente;
-
 import com.toedter.calendar.JDateChooser;
 import javax.swing.JCheckBox;
 import javax.swing.JList;
@@ -57,7 +55,6 @@ public class VistaReservaEmpleado extends JPanel {
 	private JButton btnBloquear;
 	private JButton btnCrearEventoEspecial;
 	private JButton btnReservarLugar;
-	private VistaReservaCliente vista;
 	private LocalDate hoy;
 	private LocalDate unAnoFuturo;
 	private JComboBox<String> comboUbicaciones;
@@ -393,7 +390,6 @@ public class VistaReservaEmpleado extends JPanel {
 		btnReservar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				vista = new VistaReservaCliente();
 
 				comprobante = new Comprobante();
 				mesa = new Mesa();

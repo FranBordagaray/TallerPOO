@@ -146,12 +146,28 @@ public class Historial extends JPanel {
 			}
 		});
 
-		// scroll para utilizar la tabla
+		// Scroll para utilizar la tabla
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBorder(null);
 		scrollPane.setFont(new Font("Roboto Light", Font.PLAIN, 12));
 		scrollPane.setBounds(16, 150, 960, 518);
 		add(scrollPane);
+		scrollPane.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {   
+		        if (tblBHistorial.rowAtPoint(e.getPoint()) == -1) {
+		            tblBHistorial.clearSelection();
+		            idReservaSeleccionada = 0;
+		            fechaReservaSeleccionada = "";
+		            horaReservaSeleccionada = "";
+		            mesaSeleccionada = "";
+		            capacidadSeleccionada = "";
+		            ubicacionSeleccionada = "";
+		            comentarioSeleccionado = "";
+		        }
+		    }
+		});
+
 
 		// Tabla para el historial personal de un cliente
 		tblBHistorial = new JTable();
@@ -242,40 +258,61 @@ public class Historial extends JPanel {
 		btnCancelar.setIcon(new ImageIcon(Historial.class.getResource("/Img/icono cancelar.png")));
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				LocalDateTime ahora = LocalDateTime.now();
-				DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-				String horaSinRango = horaReservaSeleccionada.split(" - ")[0];
-				String fechaHoraSeleccionadaStr = fechaReservaSeleccionada + " " + horaSinRango;
-				LocalDateTime fechaHoraReservaSeleccionada = LocalDateTime.parse(fechaHoraSeleccionadaStr, formatoFecha);
-				long horasDiferencia = ChronoUnit.HOURS.between(ahora, fechaHoraReservaSeleccionada);
+				if(idReservaSeleccionada != 0) {
+						LocalDateTime ahora = LocalDateTime.now();
+						DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+						String horaSinRango = horaReservaSeleccionada.split(" - ")[0];
+						String fechaHoraSeleccionadaStr = fechaReservaSeleccionada + " " + horaSinRango;
+						LocalDateTime fechaHoraReservaSeleccionada = LocalDateTime.parse(fechaHoraSeleccionadaStr, formatoFecha);
+						long horasDiferencia = ChronoUnit.HOURS.between(ahora, fechaHoraReservaSeleccionada);
+						
+						int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea cancelar la reserva?", "Confirmación de Cancelación", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				        
+				        if (respuesta == JOptionPane.YES_OPTION) {
+				        		if( reservaControlador.verificarEstadoReserva(idReservaSeleccionada)) {
+						        	 try {
+								        	if(horasDiferencia >= 24) {
+								        		  reservaControlador.actualizarEstadoReserva(idReservaSeleccionada, 0);
+								        		  reservaControlador.eliminarMesa(idReservaSeleccionada);
+										          JOptionPane.showMessageDialog(null,"La cancelación se ha realizado con éxito" , "Éxito", JOptionPane.INFORMATION_MESSAGE);
+								        	}else {
+								        		generarComprobanteMail(comprobanteControlador.obtenerComprobantePorReserva(idReservaSeleccionada));
+								        		enviarMailComprobante();
+								        		reservaControlador.actualizarEstadoReserva(idReservaSeleccionada, 0);
+								        		reservaControlador.eliminarMesa(idReservaSeleccionada);
+								        		JOptionPane.showMessageDialog(null,"La cancelación se ha realizado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+								        	}
+								        } catch (Exception e2) {
+								            e2.printStackTrace();
+								            System.out.println("Error al cancelar la Reserva.");
+								        }
+				        		}else {
+				        			JOptionPane.showMessageDialog(null,"Cancelacion de reserva invalida", "Error", JOptionPane.ERROR_MESSAGE);
+				        		}
+				        } else {
+				            
+				            System.out.println("La reserva no se ha cancelado.");
+				        }
+				        
+				        cargarDatos(s.getClienteActual().getIdCliente());
+			  }else {
+				  JOptionPane.showMessageDialog(Historial.this,"No selecciono ninguna reserva","Error",JOptionPane.ERROR_MESSAGE);
+			  }
 		        
-		        try {
-		        	if(horasDiferencia >= 24) {
-		        		  reservaControlador.actualizarEstadoReserva(idReservaSeleccionada, 0);
-		        		  reservaControlador.eliminarMesa(idReservaSeleccionada);
-				          JOptionPane.showMessageDialog(null,"La cancelación se ha realizado con éxito" , "Éxito", JOptionPane.INFORMATION_MESSAGE);
-		        	}else {
-		        		generarComprobanteMail(comprobanteControlador.obtenerComprobantePorReserva(idReservaSeleccionada));
-		        		enviarMailComprobante();
-		        		reservaControlador.actualizarEstadoReserva(idReservaSeleccionada, 0);
-		        		reservaControlador.eliminarMesa(idReservaSeleccionada);
-		        		JOptionPane.showMessageDialog(null,"La cancelación se ha realizado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-		        	}
-		        } catch (Exception e2) {
-		            e2.printStackTrace();
-		            System.out.println("Error al cancelar la Reserva.");
-		        }
-
-					}
-				});
+		  }
+		});
 		btnCancelar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-			}
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnCancelar.setBackground(new Color(255, 0, 0));
+        		btnCancelar.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            	btnCancelar.setBackground(Color.WHITE);
+            	btnCancelar.setForeground(Color.BLACK);
+            }
 		});
 		btnCancelar.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnCancelar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -292,19 +329,28 @@ public class Historial extends JPanel {
         btnModificar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    ModificarReserva reserva = new ModificarReserva(reservaControlador.obtenerReservaPorId(idReservaSeleccionada));
-                    reserva.setVisible(true);
+                	if(idReservaSeleccionada != 0) {
+	                    ModificarReserva reserva = new ModificarReserva(reservaControlador.obtenerReservaPorId(idReservaSeleccionada));
+	                    reserva.setVisible(true);
+	                    cargarDatos(s.getClienteActual().getIdCliente());
+                	}else {
+                		JOptionPane.showMessageDialog(Historial.this,"No selecciono ninguna reserva","Error",JOptionPane.ERROR_MESSAGE);
+                	}
                 } catch (Exception e2) {
-
+                	System.out.println("Error al modificar la Reserva.");
                 }
             }
             });
         btnModificar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
+            	  btnModificar.setBackground(new Color(40, 180, 99));
+                  btnModificar.setForeground(Color.WHITE);
             }
             @Override
             public void mouseExited(MouseEvent e) {
+            	  btnModificar.setBackground(Color.WHITE);
+                  btnModificar.setForeground(Color.BLACK);
             }
         });
         btnModificar.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -326,7 +372,7 @@ public class Historial extends JPanel {
 	
 
 	// Función para cargar tabla con datos almacenados en la base de datos
-	private void cargarDatos(int idCliente) {
+	public void cargarDatos(int idCliente) {
 		List<HistorialReserva> historial;
 		try {
 			historial = reservaControlador.obtenerHistorialPorCliente(idCliente);
@@ -334,6 +380,24 @@ public class Historial extends JPanel {
 			model.setRowCount(0);
 
 			for (HistorialReserva reserva : historial) {
+				String estado;
+ 				switch (reserva.getEstado()) {
+ 				    case 0:
+ 				        estado = "CANCELADA";
+ 				        break;
+ 				    case 1:
+ 				        estado = "VIGENTE";
+ 				        break;
+ 				    case 2:
+ 				        estado = "COMPLETADA";
+ 				        break;
+ 				    case 3:
+ 				        estado = "NO ASISTIÓ";
+ 				        break;
+ 				    default:
+ 				        estado = "ESTADO DESCONOCIDO"; 
+ 				        break;
+ 				}
 				model.addRow(new Object[] {
 						reserva.getIdReserva(),
 						reserva.getFecha(),
@@ -341,7 +405,8 @@ public class Historial extends JPanel {
 						reserva.getIdMesa(),
 						reserva.getCapacidad(),
 						reserva.getUbicacion(),
-						reserva.getComentario()
+						reserva.getComentario(),
+						estado
 				});
 			}
 		} catch (Exception e) {
@@ -359,6 +424,24 @@ public class Historial extends JPanel {
 
 			if (filtro == null || filtro.equals("Todas")) {
 				for (HistorialReserva reserva : historial) {
+					String estado;
+	 				switch (reserva.getEstado()) {
+	 				    case 0:
+	 				        estado = "CANCELADA";
+	 				        break;
+	 				    case 1:
+	 				        estado = "VIGENTE";
+	 				        break;
+	 				    case 2:
+	 				        estado = "COMPLETADA";
+	 				        break;
+	 				    case 3:
+	 				        estado = "NO ASISTIÓ";
+	 				        break;
+	 				    default:
+	 				        estado = "ESTADO DESCONOCIDO"; 
+	 				        break;
+	 				}
 					model.addRow(new Object[] {
 							reserva.getIdReserva(),
 							reserva.getFecha(),
@@ -367,11 +450,29 @@ public class Historial extends JPanel {
 							reserva.getCapacidad(),
 							reserva.getUbicacion(),
 							reserva.getComentario(),
-							reserva.getEstado()
+							estado
 					});
 				}
 			} else {
 				for (HistorialReserva reserva : historial) {
+					String estado;
+	 				switch (reserva.getEstado()) {
+	 				    case 0:
+	 				        estado = "CANCELADA";
+	 				        break;
+	 				    case 1:
+	 				        estado = "VIGENTE";
+	 				        break;
+	 				    case 2:
+	 				        estado = "COMPLETADA";
+	 				        break;
+	 				    case 3:
+	 				        estado = "NO ASISTIÓ";
+	 				        break;
+	 				    default:
+	 				        estado = "ESTADO DESCONOCIDO"; 
+	 				        break;
+	 				}
 					if (("Mesa " + reserva.getIdMesa()).equals(filtro)) {
 						model.addRow(new Object[] {
 								reserva.getIdReserva(),
@@ -381,7 +482,7 @@ public class Historial extends JPanel {
 								reserva.getCapacidad(),
 								reserva.getUbicacion(),
 								reserva.getComentario(),
-								reserva.getEstado()
+								estado
 						});
 					}
 				}
@@ -564,21 +665,17 @@ public class Historial extends JPanel {
     // Método para formatear el comentario
 	private String formatearComentario(String comentario, int limiteCaracteres) {
 	    StringBuilder resultado = new StringBuilder();
-	    String[] palabras = comentario.split(" "); // Dividir el comentario en palabras
+	    String[] palabras = comentario.split(" "); 
 	    int longitudActual = 0;
-
 	    for (String palabra : palabras) {
-	        // Si la longitud actual más la longitud de la nueva palabra supera el límite
 	        if (longitudActual + palabra.length() > limiteCaracteres) {
-	            resultado.append("\n"); // Agregar un salto de línea
-	            longitudActual = 0; // Reiniciar la longitud actual
+	            resultado.append("\n"); 
+	            longitudActual = 0; 
 	        }
-	        
-	        resultado.append(palabra).append(" "); // Agregar la palabra al resultado
-	        longitudActual += palabra.length() + 1; // Actualizar la longitud actual (+1 por el espacio)
+	        resultado.append(palabra).append(" "); 
+	        longitudActual += palabra.length() + 1; 
 	    }
-
-	    return resultado.toString().trim(); // Retornar el resultado sin espacios al final
+	    return resultado.toString().trim(); 
 	}
  	
 }

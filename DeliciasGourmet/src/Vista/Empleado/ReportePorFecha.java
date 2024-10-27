@@ -8,6 +8,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
@@ -16,20 +23,31 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
-import Vista.Cliente.RecuperarCuenta;
 import javax.swing.SwingConstants;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.toedter.calendar.JDateChooser;
+
+import Controlador.ReservaControlador;
+import Modelo.Empleado.Reportes;
 
 public class ReportePorFecha extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private ReservaControlador controlador;
 
-	public ReportePorFecha(DetalleReservaEmpleado empleado) {
+	public ReportePorFecha() {
+		controlador = new ReservaControlador();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationByPlatform(true);
 		setUndecorated(true);
@@ -43,8 +61,6 @@ public class ReportePorFecha extends JFrame {
 		contentPane.setBackground(new Color(195, 155, 107));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
-		
 
 		// Boton x para cerrar el frame
 		JButton btnCerrar = new JButton("X");
@@ -112,6 +128,101 @@ public class ReportePorFecha extends JFrame {
 		contentPane.add(lblHasta);
 		
 		JButton btnBuscarReservas = new JButton("GENERAR");
+		btnBuscarReservas.addActionListener(new ActionListener() {
+            @SuppressWarnings("unused")
+            public void actionPerformed(ActionEvent e) {
+                DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                LocalDate fechaDesde = dateDesde.getDate() != null
+                        ? dateDesde.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                        : null;
+                LocalDate fechaHasta = dateHasta.getDate() != null
+                        ? dateHasta.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                        : null;
+
+                String desde = (fechaDesde != null) ? fechaDesde.format(formato) : null;
+                String hasta = (fechaHasta != null) ? fechaHasta.format(formato) : null;
+
+                if (desde == null || hasta == null) {
+                    JOptionPane.showMessageDialog(null, "Por favor, seleccione ambas fechas.", "Advertencia",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                Document documento = new Document();
+                String ruta = "src\\ReportesPDF\\Reservas_entre_fechas.pdf";
+                File archivo = new File(ruta);
+
+                if (archivo.exists()) {
+                    String nuevoNombre = "Reservas_entre_fechas_" + System.currentTimeMillis() + ".pdf";
+                    ruta = "src\\ReportesPDF\\" + nuevoNombre;
+                }
+
+                try {
+                    PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(ruta));
+                    documento.open();
+
+                    documento.add(new Paragraph("Reporte de Reservas Entre Fechas", FontFactory.getFont("Roboto Light",
+                            BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD)));
+                    documento.add(new Paragraph("Desde: " + desde));
+                    documento.add(new Paragraph("Hasta: " + hasta));
+                    documento.add(new Paragraph(" "));
+
+                    List<Reportes> reservasEntreFechas = controlador.obtenerHistorialDeReservas(desde, hasta);
+
+                    PdfPTable table = new PdfPTable(7);
+                    table.setWidthPercentage(100);
+
+                    table.addCell("Nombre");
+                    table.addCell("Apellido");
+                    table.addCell("Fecha");
+                    table.addCell("Hora");
+                    table.addCell("Capacidad de Mesa");
+                    table.addCell("Ubicación");
+                    table.addCell("Comentario");
+
+                    for (Reportes reserva : reservasEntreFechas) {
+                        table.addCell(reserva.getNombre());
+                        table.addCell(reserva.getApellido());
+                        table.addCell(reserva.getFecha());
+                        table.addCell(reserva.getHora());
+                        table.addCell(String.valueOf(reserva.getCapacidad()));
+                        table.addCell(reserva.getUbicacion());
+                        table.addCell(reserva.getComentario());
+                    }
+                    documento.add(table);
+                    JOptionPane.showMessageDialog(null, "PDF generado con éxito en el escritorio: " + ruta);
+                    dispose();
+                } catch (DocumentException | IOException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + ex.getMessage());
+                } finally {
+                    if (documento.isOpen()) {
+                        documento.close();
+                    }
+                }
+            }
+        });
+        btnBuscarReservas.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                btnBuscarReservas.setBackground(new Color(255, 0, 0));
+                btnBuscarReservas.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnBuscarReservas.setBackground(Color.WHITE);
+                btnBuscarReservas.setForeground(Color.BLACK);
+            }
+        });
+        btnBuscarReservas.setForeground(Color.BLACK);
+        btnBuscarReservas.setBackground(Color.WHITE);
+        btnBuscarReservas.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnBuscarReservas.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnBuscarReservas.setBorder(null);
+        btnBuscarReservas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnBuscarReservas.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        btnBuscarReservas.setBounds(785, 540, 150, 30);
+        add(btnBuscarReservas);
 		btnBuscarReservas.setIcon(new ImageIcon(ReportePorFecha.class.getResource("/Img/icono de reportes.png")));
 		btnBuscarReservas.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnBuscarReservas.setForeground(Color.BLACK);
@@ -121,10 +232,8 @@ public class ReportePorFecha extends JFrame {
 		btnBuscarReservas.setAlignmentX(0.5f);
 		btnBuscarReservas.setBounds(148, 285, 150, 30);
 		contentPane.add(btnBuscarReservas);
-
 	}
 	
-
 	public static boolean esCorreoValido(String correo) {
 		String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 		Pattern pattern = Pattern.compile(regex);

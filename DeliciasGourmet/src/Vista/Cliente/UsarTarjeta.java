@@ -30,6 +30,7 @@ import Vista.Empleado.VistaReservaEmpleado;
 import javax.swing.JComboBox;
 import javax.swing.ImageIcon;
 
+@SuppressWarnings({"rawtypes","unused","static-access", "unchecked"})
 public class UsarTarjeta extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -37,6 +38,7 @@ public class UsarTarjeta extends JFrame {
 	private JTextField txtEmisor;
 	private JTextField txtNroTarjeta;
 	private JTextField txtCodVerificacion;
+	
 	private JComboBox cbxTarjetas;
 	private JComboBox<String> comboBox;
 	private SesionCliente s;
@@ -48,14 +50,14 @@ public class UsarTarjeta extends JFrame {
 	TarjetaControlador controlador = new TarjetaControlador();
 
 	Tarjeta tarjeta = new Tarjeta();
-
+	
 	public UsarTarjeta(JPanel vistaReserva) {
 
 		this.reservaControlador = new ReservaControlador();
 		this.comprobanteControlador = new ComprobanteControlador();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 350);
+		setBounds(100, 100, 500, 400);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setBackground(new Color(222, 184, 135));
@@ -64,7 +66,7 @@ public class UsarTarjeta extends JFrame {
 		// Panel contenedor
 		JPanel panelContenedor = new JPanel();
 		panelContenedor.setBackground(new Color(222, 184, 135));
-		panelContenedor.setBounds(0, 0, 450, 350);
+		panelContenedor.setBounds(0, 0, 500, 400);
 		getContentPane().add(panelContenedor);
 		panelContenedor.setLayout(null);
 
@@ -74,42 +76,42 @@ public class UsarTarjeta extends JFrame {
 		lblLeyenda.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblLeyenda.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLeyenda.setFont(new Font("Roboto Light", Font.PLAIN, 14));
-		lblLeyenda.setBounds(25, 40, 400, 40);
+		lblLeyenda.setBounds(50, 40, 400, 40);
 		panelContenedor.add(lblLeyenda);
 
 		// Texto Titular
 		txtTitular = new JTextField();
-		txtTitular.setFont(new Font("Roboto Light", Font.PLAIN, 12));
+		txtTitular.setFont(new Font("Roboto Light", Font.PLAIN, 14));
 		txtTitular.setColumns(10);
 		txtTitular.setBackground(new Color(255, 255, 255));
-		txtTitular.setBounds(169, 110, 213, 25);
+		txtTitular.setBounds(170, 154, 300, 30);
 		txtTitular.setBorder(null);
 		panelContenedor.add(txtTitular);
 
 		// Texto Emisor
 		txtEmisor = new JTextField();
-		txtEmisor.setFont(new Font("Roboto Light", Font.PLAIN, 12));
+		txtEmisor.setFont(new Font("Roboto Light", Font.PLAIN, 14));
 		txtEmisor.setColumns(10);
 		txtEmisor.setBackground(new Color(255, 255, 255));
-		txtEmisor.setBounds(169, 150, 213, 25);
+		txtEmisor.setBounds(170, 194, 300, 30);
 		txtEmisor.setBorder(null);
 		panelContenedor.add(txtEmisor);
 
 		// Texto Tarjeta
 		txtNroTarjeta = new JTextField();
-		txtNroTarjeta.setFont(new Font("Roboto Light", Font.PLAIN, 12));
+		txtNroTarjeta.setFont(new Font("Roboto Light", Font.PLAIN, 14));
 		txtNroTarjeta.setColumns(10);
 		txtNroTarjeta.setBackground(new Color(255, 255, 255));
-		txtNroTarjeta.setBounds(169, 190, 213, 25);
+		txtNroTarjeta.setBounds(170, 234, 300, 30);
 		txtNroTarjeta.setBorder(null);
 		panelContenedor.add(txtNroTarjeta);
 
 		// Texto Codigo verificacion
 		txtCodVerificacion = new JTextField();
-		txtCodVerificacion.setFont(new Font("Roboto Light", Font.PLAIN, 12));
+		txtCodVerificacion.setFont(new Font("Roboto Light", Font.PLAIN, 14));
 		txtCodVerificacion.setColumns(10);
 		txtCodVerificacion.setBackground(new Color(255, 255, 255));
-		txtCodVerificacion.setBounds(169, 230, 100, 25);
+		txtCodVerificacion.setBounds(170, 274, 200, 30);
 		txtCodVerificacion.setBorder(null);
 		panelContenedor.add(txtCodVerificacion);
 
@@ -118,7 +120,7 @@ public class UsarTarjeta extends JFrame {
 		lblTarjeta.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblTarjeta.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTarjeta.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		lblTarjeta.setBounds(115, 10, 213, 25);
+		lblTarjeta.setBounds(143, 10, 213, 30);
 		panelContenedor.add(lblTarjeta);
 
 		// Etiqueta Titular
@@ -126,8 +128,8 @@ public class UsarTarjeta extends JFrame {
 		lblTitular.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitular.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblTitular.setAlignmentX(Component.CENTER_ALIGNMENT);
-		lblTitular.setFont(new Font("Roboto Light", Font.BOLD, 12));
-		lblTitular.setBounds(45, 110, 120, 25);
+		lblTitular.setFont(new Font("Roboto Light", Font.BOLD, 14));
+		lblTitular.setBounds(10, 154, 150, 30);
 		panelContenedor.add(lblTitular);
 
 		// Etiqueta Emisor
@@ -135,8 +137,8 @@ public class UsarTarjeta extends JFrame {
 		lblEmisor.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblEmisor.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEmisor.setAlignmentX(Component.CENTER_ALIGNMENT);
-		lblEmisor.setFont(new Font("Roboto Light", Font.BOLD, 12));
-		lblEmisor.setBounds(45, 150, 120, 25);
+		lblEmisor.setFont(new Font("Roboto Light", Font.BOLD, 14));
+		lblEmisor.setBounds(10, 194, 150, 30);
 		panelContenedor.add(lblEmisor);
 
 		// Etiqueta Numero Tarjeta
@@ -144,8 +146,8 @@ public class UsarTarjeta extends JFrame {
 		lblNroTarjeta.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNroTarjeta.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblNroTarjeta.setAlignmentX(Component.CENTER_ALIGNMENT);
-		lblNroTarjeta.setFont(new Font("Roboto Light", Font.BOLD, 12));
-		lblNroTarjeta.setBounds(45, 190, 120, 25);
+		lblNroTarjeta.setFont(new Font("Roboto Light", Font.BOLD, 14));
+		lblNroTarjeta.setBounds(10, 234, 150, 30);
 		panelContenedor.add(lblNroTarjeta);
 
 		// Etiqueta Codigo Verificacion
@@ -153,8 +155,8 @@ public class UsarTarjeta extends JFrame {
 		lblCodVerificacion.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblCodVerificacion.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCodVerificacion.setAlignmentX(Component.CENTER_ALIGNMENT);
-		lblCodVerificacion.setFont(new Font("Roboto Light", Font.BOLD, 12));
-		lblCodVerificacion.setBounds(45, 230, 120, 25);
+		lblCodVerificacion.setFont(new Font("Roboto Light", Font.BOLD, 14));
+		lblCodVerificacion.setBounds(10, 274, 150, 30);
 		panelContenedor.add(lblCodVerificacion);
 
 		// Boton Confirmar
@@ -223,7 +225,7 @@ public class UsarTarjeta extends JFrame {
 		btnConfirmar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnConfirmar.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnConfirmar.setFont(new Font("Roboto Light", Font.BOLD, 16));
-		btnConfirmar.setBounds(250, 300, 150, 25);
+		btnConfirmar.setBounds(282, 346, 150, 30);
 		panelContenedor.add(btnConfirmar);
 
 		// Boton para volver a la pantalla reservas
@@ -256,7 +258,7 @@ public class UsarTarjeta extends JFrame {
 		btnAtras.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnAtras.setBackground(Color.WHITE);
 		btnAtras.setAlignmentX(0.5f);
-		btnAtras.setBounds(50, 300, 150, 25);
+		btnAtras.setBounds(66, 346, 150, 30);
 		panelContenedor.add(btnAtras);
 
 		s = new SesionCliente();
@@ -265,12 +267,20 @@ public class UsarTarjeta extends JFrame {
 
 		// Combo box de Tarjetas
 		cbxTarjetas = new JComboBox<String>();
+		cbxTarjetas.setBackground(Color.WHITE);
+		cbxTarjetas.setBorder(null);
+		cbxTarjetas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		cbxTarjetas.setFont(new Font("Roboto Light", Font.PLAIN, 14));
 		cargarNumerosDeTarjetaEnComboBox(cbxTarjetas, obtenerIdsComprobantesPorListaReservas(reservas));
-		cbxTarjetas.setBounds(169, 79, 119, 21);
+		cbxTarjetas.setBounds(170, 110, 200, 30);
 		panelContenedor.add(cbxTarjetas);
 
 		// btn Cargar tarjeta
 		JButton btnCargar = new JButton("Cargar");
+		btnCargar.setBackground(Color.WHITE);
+		btnCargar.setFont(new Font("Roboto Light", Font.PLAIN, 14));
+		btnCargar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnCargar.setBorder(null);
 		btnCargar.addActionListener(e -> {
 			Tarjeta tarjetaSeleccionada = controlador
 					.obtenerDatosTarjetaConNumTarjeta((String) cbxTarjetas.getSelectedItem());
@@ -289,7 +299,20 @@ public class UsarTarjeta extends JFrame {
 				System.out.println("No hay tarjeta seleccionada.");
 			}
 		});
-		btnCargar.setBounds(298, 79, 85, 21);
+		btnCargar.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnCargar.setBackground(new Color(255, 0, 0));
+        		btnCargar.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            	btnCargar.setBackground(Color.WHITE);
+            	btnCargar.setForeground(Color.BLACK);
+            }
+        });
+		btnCargar.setBounds(378, 110, 92, 30);
 		panelContenedor.add(btnCargar);
 
 	}
