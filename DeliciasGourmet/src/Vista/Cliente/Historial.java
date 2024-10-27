@@ -39,6 +39,7 @@ import Controlador.TarjetaControlador;
 import Modelo.Cliente.SesionCliente;
 import Modelo.Cliente.Tarjeta;
 import Modelo.Complementos.Comprobante;
+import Vista.Empleado.GestionEmpleados;
 import Modelo.Cliente.EnviarMail;
 import Modelo.Cliente.HistorialReserva;
 import javax.swing.JButton;
@@ -49,6 +50,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import javax.swing.ImageIcon;
+import javax.swing.JTabbedPane;
 
 @SuppressWarnings("static-access")
 public class Historial extends JPanel {
@@ -103,7 +105,7 @@ public class Historial extends JPanel {
 		JLabel lblFiltroEstados = new JLabel("Filtrar estados:");
 		lblFiltroEstados.setHorizontalAlignment(SwingConstants.CENTER);
 		lblFiltroEstados.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-		lblFiltroEstados.setBounds(0, 90, 150, 25);
+		lblFiltroEstados.setBounds(0, 80, 150, 25);
 		add(lblFiltroEstados);
 
 		// Selección de Filtro de Estados
@@ -112,7 +114,7 @@ public class Historial extends JPanel {
 		comboBoxEstado.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 		comboBoxEstado.setBackground(Color.WHITE);
 		comboBoxEstado.setBorder(null);
-		comboBoxEstado.setBounds(150, 90, 100, 25);
+		comboBoxEstado.setBounds(150, 80, 100, 25);
 		add(comboBoxEstado);
 		comboBoxEstado.addActionListener(new ActionListener() {
 			@Override
@@ -126,7 +128,7 @@ public class Historial extends JPanel {
 		JLabel lblFiltroMesas = new JLabel("Filtrar mesas:");
 		lblFiltroMesas.setHorizontalAlignment(SwingConstants.CENTER);
 		lblFiltroMesas.setFont(new Font("Roboto Light", Font.PLAIN, 16));
-		lblFiltroMesas.setBounds(300, 90, 150, 25);
+		lblFiltroMesas.setBounds(0, 115, 150, 25);
 		add(lblFiltroMesas);
 
 		// Selección de Filtro de Mesas
@@ -135,7 +137,7 @@ public class Historial extends JPanel {
 		comboBoxMesa.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 		comboBoxMesa.setBackground(Color.WHITE);
 		comboBoxMesa.setBorder(null);
-		comboBoxMesa.setBounds(450, 90, 100, 25);
+		comboBoxMesa.setBounds(150, 115, 100, 25);
 		add(comboBoxMesa);
 
 		comboBoxMesa.addActionListener(new ActionListener() {
@@ -360,6 +362,39 @@ public class Historial extends JPanel {
         btnModificar.setBackground(Color.WHITE);
         btnModificar.setBounds(656, 115, 150, 25);
         add(btnModificar);
+        
+        JButton btnActualizarTabla = new JButton("ACTUALIZAR TABLA");
+        btnActualizarTabla.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		cargarDatos(s.getClienteActual().getIdCliente());
+        	}
+        });
+        btnActualizarTabla.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnActualizarTabla.setBackground(new Color(255, 0, 0));
+				btnActualizarTabla.setForeground(Color.WHITE);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnActualizarTabla.setForeground(Color.BLACK);
+				btnActualizarTabla.setBackground(Color.WHITE);
+			}
+		});
+        btnActualizarTabla.setIcon(new ImageIcon(GestionEmpleados.class.getResource("/Img/icono verificado.png")));
+        btnActualizarTabla.setForeground(Color.BLACK);
+        btnActualizarTabla.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        btnActualizarTabla.setBorder(null);
+        btnActualizarTabla.setBackground(Color.WHITE);
+        btnActualizarTabla.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnActualizarTabla.setAlignmentX(0.5f);
+        btnActualizarTabla.setBounds(435, 115, 200, 25);
+        add(btnActualizarTabla);
+        
+        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        tabbedPane.setBounds(90, 90, 5, 5);
+        add(tabbedPane);
         
 		// Utiliza la funcion para llenar la tabla con historial de reservas
 		cargarDatos(s.getClienteActual().getIdCliente());
@@ -677,5 +712,4 @@ public class Historial extends JPanel {
 	    }
 	    return resultado.toString().trim(); 
 	}
- 	
 }
