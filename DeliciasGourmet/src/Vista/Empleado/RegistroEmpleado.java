@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.regex.Pattern;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -42,10 +43,11 @@ public class RegistroEmpleado extends JFrame {
 	private JPasswordField txtRepetirContrasenia;
 	EmpleadoControlador controlador = new EmpleadoControlador();
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public RegistroEmpleado() {
 		// Configuración de la ventana principal
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 712, 679);
+		setBounds(100, 100, 712, 720);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setUndecorated(true);
@@ -61,7 +63,7 @@ public class RegistroEmpleado extends JFrame {
 		JPanel pnlContenedor = new JPanel();
 		pnlContenedor.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pnlContenedor.setBackground(new Color(222, 184, 135));
-		pnlContenedor.setBounds(0, 0, 712, 679);
+		pnlContenedor.setBounds(0, 0, 712, 720);
 		contentPane.add(pnlContenedor);
 		pnlContenedor.setLayout(null);
 
@@ -203,6 +205,22 @@ public class RegistroEmpleado extends JFrame {
 		txtRepetirContrasenia.setBorder(null);
 		txtRepetirContrasenia.setBounds(300, 540, 300, 30);
 		pnlContenedor.add(txtRepetirContrasenia);
+		
+		// Combobox estado del empleado
+		JLabel lblEstado = new JLabel("ESTADO:");
+		lblEstado.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEstado.setFont(new Font("Roboto Light", Font.PLAIN, 22));
+		lblEstado.setAlignmentX(0.5f);
+		lblEstado.setBounds(53, 600, 248, 27);
+		pnlContenedor.add(lblEstado);
+		
+		JComboBox estado = new JComboBox();
+		estado.setModel(new DefaultComboBoxModel(new String[] {"ALTA", "BAJA"}));
+		estado.setFont(new Font("Roboto Light", Font.PLAIN, 20));
+		estado.setBorder(null);
+		estado.setBackground(Color.WHITE);
+		estado.setBounds(300, 600, 137, 30);
+		pnlContenedor.add(estado);
 
 		// Botón para crear cuenta
 		JButton btnRegistro = new JButton("Crear cuenta");
@@ -248,6 +266,7 @@ public class RegistroEmpleado extends JFrame {
 						empleado.setEmail(email); // Usar el email verificado
 						empleado.setUsuario(txtUsuario.getText());
 						empleado.setContrasenia(String.valueOf(txtContrasenia.getPassword()));
+						empleado.setEstado((String)estado.getSelectedItem());;
 
 						// Intentar registrar al empleado
 						if (controlador.crearCuenta(empleado)) {
@@ -288,7 +307,7 @@ public class RegistroEmpleado extends JFrame {
 		btnRegistro.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnRegistro.setBorder(null);
 		btnRegistro.setForeground(Color.BLACK);
-		btnRegistro.setBounds(276, 600, 160, 30);
+		btnRegistro.setBounds(276, 650, 160, 30);
 		pnlContenedor.add(btnRegistro);
 		// Boton cerrar
 

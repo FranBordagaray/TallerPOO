@@ -27,7 +27,7 @@ public class EmpleadoControlador {
 	public boolean crearCuenta(Empleado empleado) {
 		PreparedStatement ps = null;
 		try {
-			ps = connection.prepareStatement("INSERT INTO Empleado VALUES(null, ?,?,?,?,?,?,?,?)");
+			ps = connection.prepareStatement("INSERT INTO Empleado VALUES(null, ?,?,?,?,?,?,?,?,?)");
 			ps.setString(1, empleado.getRol().name());
 			ps.setString(2, empleado.getNombre());
 			ps.setString(3, empleado.getApellido());
@@ -36,6 +36,7 @@ public class EmpleadoControlador {
 			ps.setString(6, empleado.getEmail());
 			ps.setString(7, empleado.getUsuario());
 			ps.setString(8, convertirSHA256(empleado.getContrasenia()));
+			ps.setString(9, empleado.getEstado());
 			ps.executeUpdate();
 			System.out.println("Cuenta creada con exito!");
 			return true;
@@ -156,6 +157,7 @@ public class EmpleadoControlador {
 	            empleado.setEmail(rs.getString("email"));
 	            empleado.setUsuario(rs.getString("usuario"));
 	            empleado.setContrasenia(rs.getString("contrasenia"));
+	            empleado.setEstado(rs.getString("estado"));
 	            empleados.add(empleado);
 	        }
 	    } catch (SQLException e) {
@@ -381,6 +383,30 @@ public class EmpleadoControlador {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("Error al actualizar el empleado.");
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	// resetear contraseña
+	public boolean actualizarContrasenia(String contrasenia, int idEmpleado) {
+		PreparedStatement ps = null;
+		try {
+			ps = connection.prepareStatement("UPDATE Empleado SET contrasenia = ? WHERE idEmpleado = ?");
+			ps.setString(1, convertirSHA256(contrasenia));
+			ps.setInt(2, idEmpleado);
+			ps.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Error al actualizar el empleado.");
+			return false;
 		} finally {
 			if (ps != null) {
 				try {

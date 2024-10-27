@@ -17,7 +17,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -38,7 +37,6 @@ public class ModificarEmpleado extends JFrame {
 	private JTextField txtNombre;
 	private JTextField txtApellido;
 	private JTextField txtUsuario;
-	private JPasswordField txtContrasenia;
 	EmpleadoControlador controlador;
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -48,7 +46,7 @@ public class ModificarEmpleado extends JFrame {
 		
 		// Configuración de la ventana principal
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 712, 660);
+		setBounds(100, 100, 712, 600);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setUndecorated(true);
@@ -64,7 +62,7 @@ public class ModificarEmpleado extends JFrame {
 		JPanel pnlContenedor = new JPanel();
 		pnlContenedor.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pnlContenedor.setBackground(new Color(222, 184, 135));
-		pnlContenedor.setBounds(0, 0, 712, 660);
+		pnlContenedor.setBounds(0, 0, 712, 600);
 		contentPane.add(pnlContenedor);
 		pnlContenedor.setLayout(null);
 
@@ -181,26 +179,12 @@ public class ModificarEmpleado extends JFrame {
 		txtUsuario.setBounds(300, 420, 300, 30);
 		pnlContenedor.add(txtUsuario);
 
-		// Etiqueta y campo de texto de contrasenia
-		JLabel lblContrasenia = new JLabel("CONTRASEÑA:");
-		lblContrasenia.setHorizontalAlignment(SwingConstants.CENTER);
-		lblContrasenia.setAlignmentX(Component.CENTER_ALIGNMENT);
-		lblContrasenia.setFont(new Font("Roboto Light", Font.PLAIN, 22));
-		lblContrasenia.setBounds(53, 480, 248, 27);
-		pnlContenedor.add(lblContrasenia);
-
-		txtContrasenia = new JPasswordField("*******");
-		txtContrasenia.setFont(new Font("Roboto Light", Font.PLAIN, 20));
-		txtContrasenia.setBorder(null);
-		txtContrasenia.setBounds(300, 480, 300, 30);
-		pnlContenedor.add(txtContrasenia);
-		
 		// Combobox estado del empleado
 		JLabel lblEstado = new JLabel("ESTADO:");
 		lblEstado.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEstado.setFont(new Font("Roboto Light", Font.PLAIN, 22));
 		lblEstado.setAlignmentX(0.5f);
-		lblEstado.setBounds(53, 540, 248, 27);
+		lblEstado.setBounds(53, 480, 248, 27);
 		pnlContenedor.add(lblEstado);
 		
 		JComboBox estado = new JComboBox();
@@ -209,7 +193,7 @@ public class ModificarEmpleado extends JFrame {
 		estado.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 		estado.setBorder(null);
 		estado.setBackground(Color.WHITE);
-		estado.setBounds(300, 540, 137, 30);
+		estado.setBounds(300, 480, 137, 30);
 		pnlContenedor.add(estado);
 
 		// Botón para modificar empleado
@@ -224,7 +208,6 @@ public class ModificarEmpleado extends JFrame {
 				empleado.setTelefono(txtTelefono.getText());
 				empleado.setEmail(txtEmail.getText());
 				empleado.setUsuario(txtUsuario.getText());
-				//empleado.setContrasenia(String.valueOf(txtContrasenia.getPassword()));
 				empleado.setEstado((String)estado.getSelectedItem());
 				try {
 					if (verificarCampos()) {
@@ -260,7 +243,7 @@ public class ModificarEmpleado extends JFrame {
 		btnModificar.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnModificar.setBorder(null);
 		btnModificar.setForeground(Color.BLACK);
-		btnModificar.setBounds(271, 600, 160, 30);
+		btnModificar.setBounds(271, 540, 160, 30);
 		pnlContenedor.add(btnModificar);
 		
 		// Boton cerrar
@@ -316,15 +299,10 @@ public class ModificarEmpleado extends JFrame {
 		String telefono = txtTelefono.getText();
 		String mail = txtEmail.getText();
 		String usuario = txtUsuario.getText();
-		String contrasenia = String.valueOf(txtContrasenia.getPassword());
 
 		if (nombre.isEmpty() || apellido.isEmpty() || domicilio.isEmpty() || telefono.isEmpty() || mail.isEmpty()
-				|| usuario.isEmpty() || contrasenia.isEmpty()) {
+				|| usuario.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Complete todos los campos", "Advertencia", JOptionPane.ERROR_MESSAGE);
-			return true;
-		} else if (contrasenia.length() < 8) {
-			JOptionPane.showMessageDialog(this, "Las contraseñas debe contener minimo 8 caracteres", "Error",
-					JOptionPane.ERROR_MESSAGE);
 			return true;
 		}
 		return false;

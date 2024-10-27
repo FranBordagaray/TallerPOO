@@ -236,6 +236,72 @@ public class GestionEmpleados extends JPanel {
         });
         add(btnModificar);
         
+        // Boton para reestablecer la contraseña
+        JButton btnResetearClave = new JButton("RESETEAR CLAVE");
+        btnResetearClave.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		int selectedRow = tblEmpleados.getSelectedRow();
+        		 if (selectedRow != -1) {
+                     int idEmpleado = (int) model.getValueAt(selectedRow, 0);
+                     System.out.println("ID del empleado seleccionado: " + idEmpleado);
+
+                     ReestablecerClaveEmpleado resetClave = new ReestablecerClaveEmpleado(idEmpleado);
+                     resetClave.setVisible(true);
+                 } else {
+                     System.out.println("Por favor, selecciona un empleado para modificar.");
+                 }
+        	}
+        });
+        btnResetearClave.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            	btnResetearClave.setBackground(new Color(76, 175, 80));
+            	btnResetearClave.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            	btnResetearClave.setBackground(Color.WHITE);
+            	btnResetearClave.setForeground(Color.BLACK);
+            }
+        });
+        btnResetearClave.setIcon(new ImageIcon(GestionEmpleados.class.getResource("/Img/icono modificar.png")));
+        btnResetearClave.setForeground(Color.BLACK);
+        btnResetearClave.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        btnResetearClave.setBorder(null);
+        btnResetearClave.setBackground(Color.WHITE);
+        btnResetearClave.setAlignmentX(0.5f);
+        btnResetearClave.setBounds(526, 95, 200, 25);
+        add(btnResetearClave);
+        
+        JButton btnActualizarTabla = new JButton("ACTUALIZAR TABLA");
+        btnActualizarTabla.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		cargarDatos();
+        	}
+        });
+        btnActualizarTabla.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnActualizarTabla.setBackground(new Color(255, 0, 0));
+				btnActualizarTabla.setForeground(Color.WHITE);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnActualizarTabla.setForeground(Color.BLACK);
+				btnActualizarTabla.setBackground(Color.WHITE);
+			}
+		});
+        btnActualizarTabla.setIcon(new ImageIcon(GestionEmpleados.class.getResource("/Img/icono verificado.png")));
+        btnActualizarTabla.setForeground(Color.BLACK);
+        btnActualizarTabla.setFont(new Font("Roboto Light", Font.PLAIN, 16));
+        btnActualizarTabla.setBorder(null);
+        btnActualizarTabla.setBackground(Color.WHITE);
+        btnActualizarTabla.setAlignmentX(0.5f);
+        btnActualizarTabla.setBounds(227, 125, 200, 25);
+        add(btnActualizarTabla);
+        
     }
     
     // Funcion para cargar tabla con datos almacenados en base de datos 
