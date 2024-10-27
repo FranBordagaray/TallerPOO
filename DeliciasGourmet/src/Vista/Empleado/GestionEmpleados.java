@@ -219,6 +219,7 @@ public class GestionEmpleados extends JPanel {
         btnModificar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
         btnModificar.setBorder(null);
         btnModificar.setBackground(Color.WHITE);
+        btnModificar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnModificar.setAlignmentX(0.5f);
         btnModificar.setBounds(736, 95, 119, 25);
         btnModificar.addMouseListener(new MouseAdapter() {
@@ -270,6 +271,7 @@ public class GestionEmpleados extends JPanel {
         btnResetearClave.setFont(new Font("Roboto Light", Font.PLAIN, 16));
         btnResetearClave.setBorder(null);
         btnResetearClave.setBackground(Color.WHITE);
+        btnResetearClave.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnResetearClave.setAlignmentX(0.5f);
         btnResetearClave.setBounds(526, 95, 200, 25);
         add(btnResetearClave);
@@ -298,6 +300,7 @@ public class GestionEmpleados extends JPanel {
         btnActualizarTabla.setFont(new Font("Roboto Light", Font.PLAIN, 16));
         btnActualizarTabla.setBorder(null);
         btnActualizarTabla.setBackground(Color.WHITE);
+        btnActualizarTabla.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnActualizarTabla.setAlignmentX(0.5f);
         btnActualizarTabla.setBounds(227, 125, 200, 25);
         add(btnActualizarTabla);
