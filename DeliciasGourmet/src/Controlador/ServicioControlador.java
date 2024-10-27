@@ -153,6 +153,46 @@ public class ServicioControlador {
 	    return idServicio;
 	}
 
+	public int buscarServicioPorFecha(String fecha, String hora) {
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+	    int idServicio = -1;
+	    try {
+	        // Modificación de la consulta para incluir el estado
+	        ps = connection.prepareStatement("SELECT idServicio FROM Servicio WHERE fecha = ? AND horaInicio = ? AND eventoPrivado = ?");
+	        ps.setString(1, fecha);
+	        String horaInicio = hora.split(" - ")[0];
+	        ps.setString(2, horaInicio);
+	        ps.setInt(3, 1); 
+	        rs = ps.executeQuery();
+	        
+	        if (rs.next()) {
+	            idServicio = rs.getInt("idServicio");
+	        } else {
+	            System.out.println("No se encontró ningún servicio para la reserva dada con estado 1.");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Error al buscar el servicio para la reserva.");
+	    } finally {
+	        if (rs != null) {
+	            try {
+	                rs.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	        if (ps != null) {
+	            try {
+	                ps.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	    return idServicio;
+	}
+	
 	// Método para verificar si hay un servicio solapado
 	public boolean verificarSolapamientoServicio(Servicio servicio) {
 	    PreparedStatement ps = null;

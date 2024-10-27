@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import Controlador.MesaControlador;
+import Controlador.ServicioControlador;
 import Modelo.Cliente.SesionCliente;
 import Modelo.Complementos.Comprobante;
 import Modelo.Complementos.Mesa;
@@ -49,6 +50,7 @@ public class VistaReservaCliente extends JPanel {
     private JComboBox<String> comboMesa;
     private JComboBox<Integer> comboCapacidad;
     private MesaControlador mesaControlador;
+    private ServicioControlador servicioControlador;
     private String SeleccionarUbicacion;
     private int capacidadSeleccionada;
     private String fechaFormateada;
@@ -61,6 +63,7 @@ public class VistaReservaCliente extends JPanel {
     private int idMesaSeleccionada;
     private Servicio servicio;
     private DetalleReservaCliente detalle;
+   
 
     public VistaReservaCliente() {
 
@@ -70,6 +73,7 @@ public class VistaReservaCliente extends JPanel {
         setBackground(new Color(222, 184, 135));
 
         mesaControlador = new MesaControlador();
+        servicioControlador = new ServicioControlador();
 
         // Inicializa fechas de restricción
         hoy = LocalDate.now();
@@ -382,9 +386,6 @@ public class VistaReservaCliente extends JPanel {
         // Si no se selecciona ninguna ubicacion setea comedor principal
         SeleccionarUbicacion = "COMEDOR PRINCIPAL";
 
-        // Llama a la funcion actualizarMesas para actualizar filtros de capacidad
-        // actualizarMesas();
-
     }
 
     // Cambia el panel visible
@@ -438,14 +439,16 @@ public class VistaReservaCliente extends JPanel {
         List<Mesa> mesasP = new ArrayList<Mesa>();
         if (ubicacionSeleccionada != null && !ubicacionSeleccionada.equals("Seleccione una ubicación")) {
             try {
-
+            	List<Mesa> mesasB = verificarDisponibilidadMesas(mesasP);
+            	
                 mesasP = mesaControlador.buscarMesasPorUbicacion(ubicacionSeleccionada);
-                List<Integer> mesasO = mesaControlador.buscarMesasOcupadasPorServicio(fechaFormateada,
-                        (String) comboHora.getSelectedItem());
-
+                List<Integer> mesasO = mesaControlador.buscarMesasOcupadasPorServicio(fechaFormateada, (String) comboHora.getSelectedItem());
+                
+                
+                //List<Integer> mesasB 
                 comboMesa.removeAllItems();
 
-                for (Mesa mesa : mesasP) {
+                for (Mesa mesa : mesasB) {
                     if (!mesasO.contains(mesa.getIdMesa())) {
                         comboMesa.addItem("Mesa " + mesa.getIdMesa());
                     }
@@ -565,7 +568,7 @@ public class VistaReservaCliente extends JPanel {
         return mesa;
     }
     
- // Metodo que habilita el boton siguiente depues de confirmar la tarjeta
+    // Metodo que habilita el boton siguiente depues de confirmar la tarjeta
     public void habilitarBoton(boolean valor) {
     	btnSiguiente.setEnabled(valor); 
     }
@@ -616,6 +619,68 @@ public class VistaReservaCliente extends JPanel {
         }
         
         idMesaSeleccionada = 1;
+    }
+    
+    // Método para verificar solapamiento entre dos servicios
+ 	private boolean verificarSolapamiento(String fecha1, String horaInicio1, String horaFin1, String fecha2,
+ 			String horaInicio2, String horaFin2) {
+ 				
+ 	    if (!fecha1.equals(fecha2)) {
+ 	        return false;
+ 	    }
+ 	    	
+ 	    LocalTime inicio1 = LocalTime.parse(horaInicio1);
+ 	    LocalTime fin1 = LocalTime.parse(horaFin1);
+ 	    LocalTime inicio2 = LocalTime.parse(horaInicio2);
+ 	    LocalTime fin2 = LocalTime.parse(horaFin2);
+ 	 
+ 	    if (fin1.isBefore(inicio1)) {	        
+ 	        return (inicio1.isBefore(fin2) || fin2.equals(fin1)) || (inicio2.isBefore(fin1) || fin1.equals(fin2));
+ 	    } else {
+ 	        return (inicio1.isBefore(fin2) && fin1.isAfter(inicio2));
+ 	    }
+ 	}
+    
+    // Método para verificar disponibilidad de las Mesas y retornar una lista de mesas sin solapamiento
+    public List<Mesa> verificarDisponibilidadMesas(List<Mesa> mesasAverificar) {
+        List<Mesa> mesasDisponibles = new ArrayList<>();
+
+        try {
+            if (mesasAverificar.isEmpty()) {
+                System.out.println("La lista de mesas a verificar está vacía.");
+                return mesasDisponibles;
+            }
+            
+            for (Mesa m : mesasAverificar) {
+                Servicio servicioExistente = servicioControlador.buscarServicioPorId(m.getIdServicio());
+
+                if (servicioExistente != null) {
+                    System.out.println("Servicio existente: " + servicioExistente.getIdServicio()
+                            + ", Fecha: " + servicioExistente.getFecha()
+                            + ", HoraInicio: " + servicioExistente.getHoraInicio()
+                            + ", HoraFin: " + servicioExistente.getHoraFin());
+                    boolean solapamiento = verificarSolapamiento(
+                            servicioExistente.getFecha(),
+                            servicioExistente.getHoraInicio(),
+                            servicioExistente.getHoraFin(),
+                            servicio.getFecha(),
+                            servicio.getHoraInicio(),
+                            servicio.getHoraFin()
+                    );
+                    if (!solapamiento) {
+                        mesasDisponibles.add(m);
+                    } else {
+                        System.out.println("Solapamiento en la mesa: " + m.getIdMesa());
+                    }
+                } else {
+                    mesasDisponibles.add(m);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return mesasDisponibles;
     }
     
 }

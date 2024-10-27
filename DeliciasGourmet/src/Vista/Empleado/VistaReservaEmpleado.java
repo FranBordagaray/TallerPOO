@@ -501,7 +501,7 @@ public class VistaReservaEmpleado extends JPanel {
 		btnBloquear.setEnabled(false);
 		pnlVertical.add(btnBloquear);
 
-		// Boton pra agregar tarjeta
+		// Boton para Reservar Lugar
 		btnReservarLugar = new JButton("Reservar Lugar");
 		btnReservarLugar.setIcon(new ImageIcon(VistaReservaEmpleado.class.getResource("/Img/icono lugar.png")));
 		btnReservarLugar.addActionListener(new ActionListener() {
@@ -535,7 +535,7 @@ public class VistaReservaEmpleado extends JPanel {
 						reserva = new Reserva();
 						servicio = new Servicio();
 
-						recopilarDatosMesaNormal(mesa);
+						recopilarDatosMesaEventoEspecial(mesa);
 						recopilarDatosServicioEventoEspecial(servicio);
 						recopilarDatosComprobante(comprobante);
 						recopilarDatosReservaEventoEspecial(reserva, horaInicio, horaFinal);
@@ -564,7 +564,7 @@ public class VistaReservaEmpleado extends JPanel {
 						reserva = new Reserva();
 						servicio = new Servicio();
 
-						recopilarDatosMesaNormal(mesa);
+						recopilarDatosMesaEventoEspecial(mesa);
 						recopilarDatosServicioEventoEspecial(servicio);
 						recopilarDatosComprobante(comprobante);
 						recopilarDatosReservaEventoEspecial(reserva, horaInicio, horaFinal);
@@ -621,7 +621,7 @@ public class VistaReservaEmpleado extends JPanel {
 						reserva = new Reserva();
 						servicio = new Servicio();
 
-						recopilarDatosMesaNormal(mesa);
+						recopilarDatosMesaEventoEspecial(mesa);
 						recopilarDatosServicioEventoEspecial(servicio);
 						recopilarDatosComprobante(comprobante);
 						recopilarDatosReservaEventoEspecial(reserva, horaInicio, horaFinal);
@@ -650,7 +650,7 @@ public class VistaReservaEmpleado extends JPanel {
 						reserva = new Reserva();
 						servicio = new Servicio();
 
-						recopilarDatosMesaNormal(mesa);
+						recopilarDatosMesaEventoEspecial(mesa);
 						recopilarDatosServicioEventoEspecial(servicio);
 						recopilarDatosComprobante(comprobante);
 						recopilarDatosReservaEventoEspecial(reserva, horaInicio, horaFinal);
@@ -1018,6 +1018,19 @@ public class VistaReservaEmpleado extends JPanel {
 		}
 		return mesa;
 	}
+	
+	// Metodo que Almacena los datos seleccionados para el objeto de Mesa Evento
+		public Mesa recopilarDatosMesaEventoEspecial(Mesa mesa) {
+			mesa.setIdMesa(idMesaSeleccionadaEvento);
+			mesa.setUbicacion(SeleccionarUbicacion);
+
+			if (capacidadSeleccionada == 0) {
+				mesa.setCapacidad(mesaControlador.filtrarCapacidad(idMesaSeleccionada));
+			} else {
+				mesa.setCapacidad(capacidadSeleccionada);
+			}
+			return mesa;
+		}
 
 	// Método que almacena los datos seleccionados para el objeto de Mesa
 	public Mesa recopilarDatosMesaPorNumero(String mesasSeleccionadas[], int id) {

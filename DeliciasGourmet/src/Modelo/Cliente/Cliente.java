@@ -24,6 +24,16 @@ public class Cliente extends Persona {
 		this.idCliente = idCliente;
 	}
 	
+	// Getter de tarjeta
+	public Tarjeta getTarjeta() {
+		return tarjeta;
+	}
+
+	// Setter de tarjeta
+	public void setTarjeta(Tarjeta tarjeta) {
+		this.tarjeta = tarjeta;
+	}
+	
 	// Getter codRecuperacion
 	public String getCodRecuperacion() {
 		return codRecuperacion;
@@ -36,13 +46,5 @@ public class Cliente extends Persona {
 	    return String.valueOf(codigo);
 	}
 
-	// Getter de tarjeta
-	public Tarjeta getTarjeta() {
-		return tarjeta;
-	}
-
-	// Setter de tarjeta
-	public void setTarjeta(Tarjeta tarjeta) {
-		this.tarjeta = tarjeta;
-	}
+	
 }

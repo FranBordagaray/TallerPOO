@@ -62,7 +62,7 @@ public class Servicio {
 	}
 
 	// Setter de Evento Privado
-	public void setEventoPrivado(int eventoPrivado) {
-		this.eventoPrivado = eventoPrivado;
+	public void setEventoPrivado(int evento) {
+		this.eventoPrivado = evento;
 	}
 }
