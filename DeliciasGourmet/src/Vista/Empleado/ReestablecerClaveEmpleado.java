@@ -23,14 +23,24 @@ import java.awt.Cursor;
 import java.awt.Component;
 import javax.swing.ImageIcon;
 
+/**
+ * Clase que representa un diálogo para reestablecer la contraseña de un empleado en el sistema.
+ * Permite al usuario ingresar una nueva contraseña y confirmarla.
+ */
 public class ReestablecerClaveEmpleado extends JDialog {
-    
-    private static final long serialVersionUID = 1L;
-    private final JPanel contentPanel = new JPanel();
-    private JTextField txtContrasenia;
-    private JTextField txtRepetirContrasenia;
-    private EmpleadoControlador controlador;
 
+    private static final long serialVersionUID = 1L; // Identificador único de la clase
+    private final JPanel contentPanel = new JPanel(); // Panel principal del diálogo
+    private JTextField txtContrasenia; // Campo de texto para la nueva contraseña
+    private JTextField txtRepetirContrasenia; // Campo de texto para repetir la nueva contraseña
+    private EmpleadoControlador controlador; // Controlador para la gestión de empleados
+
+    /**
+     * Constructor de la clase ReestablecerClaveEmpleado.
+     * Inicializa el diálogo con campos para ingresar y confirmar la nueva contraseña del empleado.
+     *
+     * @param idEmpleado El ID del empleado cuya contraseña se desea reestablecer.
+     */
     public ReestablecerClaveEmpleado(int idEmpleado) {
         controlador = new EmpleadoControlador();
         //Configuracion del dialog
@@ -136,6 +146,17 @@ public class ReestablecerClaveEmpleado extends JDialog {
     
     // Funcion para verificar campos vacios
     private boolean verificarCampos() {
+    	 /**
+         * Verifica si los campos de contraseña están completos y válidos.
+         *
+         * Este método comprueba si los campos de contraseña y repetir contraseña
+         * están llenos. Además, verifica que ambas contraseñas coincidan y que la
+         * longitud de la contraseña sea al menos de 8 caracteres. Si hay algún 
+         * problema, se muestra un mensaje de advertencia o error correspondiente.
+         *
+         * @return boolean `true` si hay un error en los campos (vacíos, no coinciden o corta), 
+         *                 `false` si todos los campos son válidos.
+         */
         String contrasenia = txtContrasenia.getText();
         String repetir = txtRepetirContrasenia.getText();
         if (contrasenia.isEmpty() || repetir.isEmpty()) {

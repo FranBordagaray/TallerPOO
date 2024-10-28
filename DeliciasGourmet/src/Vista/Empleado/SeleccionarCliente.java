@@ -48,16 +48,25 @@ import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 import javax.swing.SwingConstants;
 
+/**
+ * Clase que representa una ventana para seleccionar un cliente.
+ * Permite buscar y seleccionar un cliente para generar reportes o realizar acciones relacionadas.
+ */
 public class SeleccionarCliente extends JFrame {
+    private static final long serialVersionUID = 1L; // Identificador único de la clase
+    private JPanel contentPane; // Panel principal de la ventana
+    private JTextField txtBuscar; // Campo de texto para buscar clientes
+    private JTable tblClientes; // Tabla para mostrar la lista de clientes
+    private DefaultTableModel model; // Modelo de tabla para gestionar los datos de clientes
+    private ClienteControlador clienteControlador; // Controlador para gestionar la lógica de clientes
+    private ReservaControlador reservaControlador; // Controlador para gestionar la lógica de reservas
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField txtBuscar;
-	private JTable tblClientes;
-	private DefaultTableModel model;
-	private ClienteControlador clienteControlador;
-	private ReservaControlador reservaControlador;
-
+    /**
+     * Constructor de la clase SeleccionarCliente.
+     * Inicializa la ventana y sus componentes.
+     *
+     * @param seleccionReporte Indica el contexto de selección (ejemplo: reporte específico).
+     */
 	@SuppressWarnings("serial")
 	public SeleccionarCliente(String SeleccionReporte) {
 		clienteControlador = new ClienteControlador();
@@ -167,7 +176,12 @@ public class SeleccionarCliente extends JFrame {
 		contentPane.add(txtBuscar);
 		txtBuscar.setColumns(10);
 
-		// Boton para generar el PDF
+		/**
+		 * Crea un botón para generar un PDF de reservas basadas en la selección del usuario.
+		 * Dependiendo del tipo de reporte seleccionado ("Reservas Futuras" o "Reserva Historial"),
+		 * el botón obtiene la información necesaria del cliente seleccionado en la tabla y 
+		 * llama a los métodos correspondientes para generar el PDF.
+		 */
 		JButton btnGenerar = new JButton("GENERAR");
 		btnGenerar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnGenerar.setIcon(new ImageIcon(SeleccionarCliente.class.getResource("/Img/icono de reportes.png")));
@@ -259,8 +273,14 @@ public class SeleccionarCliente extends JFrame {
 
 	}
 
-	// Función para cargar la tabla con los datos de los clientes almacenados en la
-	// base de datos
+	/**
+	 * Carga los datos de los clientes almacenados en la base de datos y los
+	 * muestra en la tabla de clientes.
+	 * 
+	 * Esta función obtiene la lista de todos los clientes mediante el
+	 * clienteControlador y actualiza el modelo de la tabla. Si ocurre
+	 * un error durante la carga, se imprime un mensaje de error en la consola.
+	 */
 	private void cargarDatosClientes() {
 		List<Cliente> clientes;
 		try {
@@ -278,7 +298,17 @@ public class SeleccionarCliente extends JFrame {
 		}
 	}
 
-	// Metodo para busar clientes por su email
+	/**
+	 * Busca clientes por su dirección de correo electrónico y actualiza la
+	 * tabla de clientes con los resultados filtrados.
+	 *
+	 * Este método recupera todos los clientes de la base de datos y
+	 * verifica si el correo electrónico de cada cliente contiene la
+	 * cadena de texto proporcionada. Si se encuentran coincidencias,
+	 * se actualiza la tabla con los clientes filtrados.
+	 *
+	 * @param emailBuscado La dirección de correo electrónico que se desea buscar.
+	 */
 	private void buscarClientesPorEmail(String emailBuscado) {
 		List<Cliente> clientesFiltrados = new ArrayList<>();
 		try {
@@ -304,7 +334,15 @@ public class SeleccionarCliente extends JFrame {
 		}
 	}
 
-	// Metodo para que retorne solo las reservas futuras
+	/**
+	 * Filtra y devuelve una lista de reportes que corresponden a reservas futuras.
+	 *
+	 * Este método recibe una lista de reportes y filtra aquellos que tienen una
+	 * fecha igual o posterior a la fecha actual.
+	 *
+	 * @param listaReportes La lista de reportes que se desea filtrar.
+	 * @return Una lista de reportes que representan reservas futuras.
+	 */
 	public List<Reportes> filtrarReservasFuturas(List<Reportes> listaReportes) {
 		LocalDate fechaHoy = LocalDate.now();
 
@@ -317,7 +355,16 @@ public class SeleccionarCliente extends JFrame {
 		return reportesFuturos;
 	}
 
-	// Metodo para generar el PDF de reservas futuras
+	/**
+	 * Genera un PDF con las reservas futuras de un cliente específico.
+	 *
+	 * Este método crea un documento PDF que incluye la información del cliente
+	 * y una tabla con las reservas futuras, si las hay.
+	 *
+	 * @param reportesCliente La lista de reportes de reservas futuras del cliente.
+	 * @param nombre El nombre del cliente.
+	 * @param apellido El apellido del cliente.
+	 */
 	@SuppressWarnings("unused")
 	public void generarPDFReservasFuturas(List<Reportes> reportesCliente, String nombre, String apellido) {
 		Document documento = new Document();
@@ -374,7 +421,16 @@ public class SeleccionarCliente extends JFrame {
 		}
 	}
 
-	
+	/**
+	 * Genera un PDF con el historial de reservas de un cliente específico.
+	 *
+	 * Este método crea un documento PDF que incluye la información del cliente
+	 * y una tabla con el historial de reservas, si las hay.
+	 *
+	 * @param historialReservas La lista de reservas del historial del cliente.
+	 * @param nombre El nombre del cliente.
+	 * @param apellido El apellido del cliente.
+	 */
 	@SuppressWarnings("unused")
 	public void generarPDFHistorial(List<HistorialReserva> historialReservas, String nombre, String apellido) {
 	    Document documento = new Document();

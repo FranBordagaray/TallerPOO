@@ -17,16 +17,47 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
 import Modelo.Cliente.SesionCliente;
-
+/**
+ * La clase {@code InicioCliente} representa la ventana principal de la
+ * aplicación para el cliente, donde se pueden gestionar reservas y
+ * acceder a diferentes funcionalidades relacionadas con el servicio.
+ * 
+ * <p>Esta clase extiende {@link JFrame} y contiene varios paneles
+ * y botones que permiten a los usuarios interactuar con la aplicación.
+ * Incluye acceso a la pantalla de historial de reservas, un dashboard
+ * que muestra información relevante del cliente, y una vista para
+ * gestionar reservas.</p>
+ */
 public class InicioCliente extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	/** Panel principal de la ventana. */
 	private JPanel contentPane;
+
+	/** Maneja el historial de reservas. */
 	private Historial historial;
+
+	/** Muestra información del cliente. */
 	private Dashboard dashboard;
+
+	/** Almacena la sesión actual del cliente. */
 	private SesionCliente s;
+
+	/** Gestiona las reservas del cliente. */
 	private VistaReservaCliente Reserva;
 	
+	
+	/**
+	 * Constructor de la clase InicioCliente.
+	 *
+	 * Este constructor inicializa una nueva instancia de la clase 
+	 * InicioCliente, que representa la interfaz principal para los 
+	 * clientes después de iniciar sesión en el sistema. Esta vista 
+	 * proporciona acceso a las funcionalidades principales, como 
+	 * realizar reservas, ver el historial de reservas, actualizar 
+	 * su perfil, y más, permitiendo a los usuarios interactuar 
+	 * fácilmente con el sistema.
+	 */
 	@SuppressWarnings("static-access")
 	public InicioCliente() {
 		
@@ -70,7 +101,27 @@ public class InicioCliente extends JFrame {
 		tabbedPane.setBounds(0, -25, 992, 704);
 		panelContenedor.add(tabbedPane);
 
-		// Boton para ver pantalla inicio
+		/**
+		 * Crea un botón que permite al usuario acceder a la pantalla de inicio.
+		 * Al hacer clic en este botón, se selecciona la pestaña correspondiente
+		 * al inicio en el panel de pestañas y se cargan los datos del cliente actual.
+		 * 
+		 * <p>El botón incluye un icono representativo y cambia su color de fondo
+		 * y texto cuando el cursor se coloca sobre él, mejorando la experiencia
+		 * del usuario.</p>
+		 * 
+		 * <p>Detalles del botón:</p>
+		 * <ul>
+		 *   <li>Texto del botón: "INICIO"</li>
+		 *   <li>Icono: se carga desde la ruta especificada en los recursos del proyecto.</li>
+		 *   <li>Acción: al hacer clic, se selecciona la pestaña de inicio en el {@link JTabbedPane},
+		 *       se cargan los datos del cliente actual, y se restablecen los campos de reserva.</li>
+		 *   <li>Estilo: fuente en negrita, color de fondo y color del texto se ajustan para
+		 *       mejorar la apariencia.</li>
+		 *   <li>Posicionamiento: el botón se ubica en el panel del menú en una posición
+		 *       específica.</li>
+		 * </ul>
+		 */
 		JButton btnInicio = new JButton("INICIO");
 		btnInicio.setIcon(new ImageIcon(InicioCliente.class.getResource("/Img/icono de inicio.png")));
 		btnInicio.addActionListener(new ActionListener() {
@@ -102,7 +153,26 @@ public class InicioCliente extends JFrame {
 		btnInicio.setBounds(0, 100, 271, 35);
 		panelMenu.add(btnInicio);
 
-		// Boton para ver pantalla reservas
+		/**
+		 * Crea un botón que permite al usuario acceder a la pantalla de reservas.
+		 * Al hacer clic en este botón, se selecciona la pestaña correspondiente
+		 * a reservas en el panel de pestañas.
+		 * 
+		 * <p>El botón incluye un icono representativo y cambia su color de fondo
+		 * y texto cuando el cursor se coloca sobre él, mejorando la experiencia
+		 * del usuario.</p>
+		 * 
+		 * <p>Detalles del botón:</p>
+		 * <ul>
+		 *   <li>Texto del botón: "RESERVAS"</li>
+		 *   <li>Icono: se carga desde la ruta especificada en los recursos del proyecto.</li>
+		 *   <li>Acción: al hacer clic, se selecciona la pestaña de reservas en el {@link JTabbedPane}.</li>
+		 *   <li>Estilo: fuente en negrita, color de fondo y color del texto se ajustan para
+		 *       mejorar la apariencia.</li>
+		 *   <li>Posicionamiento: el botón se ubica en el panel del menú en una posición
+		 *       específica.</li>
+		 * </ul>
+		 */
 		JButton btnReservas = new JButton("RESERVAS");
 		btnReservas.setIcon(new ImageIcon(InicioCliente.class.getResource("/Img/icono de reservas.png")));
 		btnReservas.addActionListener(new ActionListener() {
@@ -131,7 +201,27 @@ public class InicioCliente extends JFrame {
 		btnReservas.setBounds(0, 150, 271, 35);
 		panelMenu.add(btnReservas);
 
-		// Boton para ver pantalla historial
+		/**
+		 * Crea un botón que permite al usuario acceder a la pantalla de historial.
+		 * Al hacer clic en este botón, se selecciona la pestaña correspondiente
+		 * al historial en el panel de pestañas y se cargan los datos del cliente actual.
+		 * 
+		 * <p>El botón incluye un icono representativo y cambia su color de fondo
+		 * y texto cuando el cursor se coloca sobre él, mejorando la experiencia
+		 * del usuario.</p>
+		 * 
+		 * <p>Detalles del botón:</p>
+		 * <ul>
+		 *   <li>Texto del botón: "HISTORIAL"</li>
+		 *   <li>Icono: se carga desde la ruta especificada en los recursos del proyecto.</li>
+		 *   <li>Acción: al hacer clic, se selecciona la pestaña de historial en el {@link JTabbedPane}
+		 *       y se cargan los datos del cliente actual.</li>
+		 *   <li>Estilo: fuente en negrita, color de fondo y color del texto se ajustan para
+		 *       mejorar la apariencia.</li>
+		 *   <li>Posicionamiento: el botón se ubica en el panel del menú en una posición
+		 *       específica.</li>
+		 * </ul>
+		 */
 		JButton btnHistorial = new JButton("HISTORIAL");
 		btnHistorial.setIcon(new ImageIcon(InicioCliente.class.getResource("/Img/icono de historial.png")));
 		btnHistorial.addActionListener(new ActionListener() {
@@ -168,7 +258,28 @@ public class InicioCliente extends JFrame {
 		btnHistorial.setBounds(0, 200, 271, 35);
 		panelMenu.add(btnHistorial);
 
-		// Boton para ver pantalla perfil
+		/**
+		 * Crea un botón que permite al usuario acceder a la pantalla de perfil.
+		 * Al hacer clic en este botón, se reinician los campos de la reserva,
+		 * se deshabilita el botón correspondiente, y se selecciona la pestaña
+		 * correspondiente al perfil en el panel de pestañas.
+		 * 
+		 * <p>El botón incluye un icono representativo y cambia su color de fondo
+		 * y texto cuando el cursor se coloca sobre él, mejorando así la
+		 * experiencia del usuario.</p>
+		 * 
+		 * <p>Detalles del botón:</p>
+		 * <ul>
+		 *   <li>Texto del botón: "PERFIL"</li>
+		 *   <li>Icono: se carga desde la ruta especificada en los recursos del proyecto.</li>
+		 *   <li>Acción: al hacer clic, se llaman a los métodos {@link Reserva#resetearCampos()}
+		 *       y {@link Reserva#habilitarBoton(boolean)} y se selecciona la pestaña de perfil.</li>
+		 *   <li>Estilo: fuente en negrita, color de fondo y color del texto se ajustan para
+		 *       mejorar la apariencia.</li>
+		 *   <li>Posicionamiento: el botón se ubica en el panel del menú en una posición
+		 *       específica.</li>
+		 * </ul>
+		 */
 		JButton btnPerfil = new JButton("PERFIL");
 		btnPerfil.setIcon(new ImageIcon(InicioCliente.class.getResource("/Img/icono de perfil.png")));
 		btnPerfil.addActionListener(new ActionListener() {
@@ -199,7 +310,26 @@ public class InicioCliente extends JFrame {
 		btnPerfil.setBounds(0, 250, 271, 35);
 		panelMenu.add(btnPerfil);
 
-		// Boton para cerrar sesion
+		/**
+		 * Crea un botón que permite al usuario cerrar sesión en el sistema.
+		 * Al hacer clic en este botón, se abre la ventana de inicio de sesión
+		 * y se oculta la ventana actual del cliente.
+		 * 
+		 * <p>El botón incluye un icono representativo y cambia su color de fondo
+		 * y texto cuando el cursor se coloca sobre él, mejorando así la
+		 * experiencia del usuario.</p>
+		 * 
+		 * <p>Detalles del botón:</p>
+		 * <ul>
+		 *   <li>Texto del botón: "CERRAR SESION"</li>
+		 *   <li>Icono: se carga desde la ruta especificada en los recursos del proyecto.</li>
+		 *   <li>Acción: al hacer clic, se instancia un objeto de la clase {@link LoginCliente}.</li>
+		 *   <li>Estilo: fuente en negrita, color de fondo y color del texto se ajustan para
+		 *       mejorar la apariencia.</li>
+		 *   <li>Posicionamiento: el botón se ubica en el panel del menú en una posición
+		 *       específica.</li>
+		 * </ul>
+		 */
 		JButton btnCerrarSesion = new JButton("CERRAR SESION");
 		btnCerrarSesion.setIcon(new ImageIcon(InicioCliente.class.getResource("/Img/icono de cerrar sesion.png")));
 		btnCerrarSesion.addActionListener(new ActionListener() {

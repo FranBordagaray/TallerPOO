@@ -24,16 +24,56 @@ import java.awt.Cursor;
 import java.awt.Component;
 import javax.swing.ImageIcon;
 
+
+/**
+ * Clase que representa un diálogo para el restablecimiento de contraseña.
+ *
+ * Esta clase extiende JDialog y proporciona una interfaz para que los usuarios
+ * ingresen su correo electrónico y reciban instrucciones para restablecer su
+ * contraseña. La ventana incluye campos para la entrada del correo electrónico,
+ * así como botones para confirmar el restablecimiento o cancelar la operación.
+ *
+ * El diálogo se puede invocar desde otras partes de la aplicación, permitiendo
+ * un acceso fácil al proceso de recuperación de contraseña.
+ */
 @SuppressWarnings("unused")
 public class ReestablecerContrasenia extends JDialog {
     
     private static final long serialVersionUID = 1L;
+    /**
+     * Panel que contiene los componentes del diálogo para restablecer la contraseña.
+     */
     private final JPanel contentPanel = new JPanel();
-    private JTextField txtContrasenia;
-    private JTextField txtRepetirContrasenia;
-    private ClienteControlador controlador;
-	private String email;
 
+    /**
+     * Campo de texto para ingresar la nueva contraseña.
+     */
+    private JTextField txtContrasenia;
+
+    /**
+     * Campo de texto para repetir la nueva contrasenia, utilizado para la confirmación.
+     */
+    private JTextField txtRepetirContrasenia;
+
+    /**
+     * Controlador que gestiona la lógica de cliente, incluyendo la actualización de contraseñas.
+     */
+    private ClienteControlador controlador;
+
+    /**
+     * Correo electrónico del cliente para el cual se restablecerá la contraseña.
+     */
+    private String email;
+
+    /**
+     * Constructor para crear una instancia de ReestablecerContrasenia.
+     *
+     * Este constructor inicializa el objeto con el correo electrónico proporcionado,
+     * que se utilizará para enviar un enlace de restablecimiento de contraseña.
+     *
+     * @param email El correo electrónico del usuario que solicita el restablecimiento
+     *              de la contraseña.
+     */
     public ReestablecerContrasenia(String email) {
         this.email = email;
         controlador = new ClienteControlador();
@@ -93,7 +133,14 @@ public class ReestablecerContrasenia extends JDialog {
         txtRepetirContrasenia.setBounds(100, 233, 400, 30);
         contentPanel.add(txtRepetirContrasenia);
         
-        // Boton para actualizar la contraseña
+        /**
+         * Crea un botón para actualizar la contraseña del cliente.
+         * Al hacer clic en el botón, se verifica que los campos de contraseña no estén vacíos
+         * y que cumplan con los requisitos de longitud y coincidencia. Si las validaciones son correctas,
+         * se intenta actualizar la contraseña del cliente a través del controlador.
+         * Si la actualización es exitosa, se muestra un mensaje de éxito y se abre la ventana de login;
+         * de lo contrario, se muestra un mensaje de error.
+         */
         JButton btnActualizar = new JButton("ACTUALIZAR");
         btnActualizar.setIcon(new ImageIcon(ReestablecerContrasenia.class.getResource("/Img/icono verificado.png")));
         btnActualizar.setBackground(Color.WHITE);
@@ -109,7 +156,7 @@ public class ReestablecerContrasenia extends JDialog {
                         String contraseniaNueva = txtContrasenia.getText();
                         Cliente cliente = new Cliente();
                         String codigoNuevo = cliente.generarCodigoRecuperacion();
-                        if (controlador.recuperarContraseña(email, contraseniaNueva, codigoNuevo)) {
+                        if (controlador.recuperarContrasena(email, contraseniaNueva, codigoNuevo)) {
                             JOptionPane.showMessageDialog(ReestablecerContrasenia.this, "Contraseña actualizada exitosamente!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                             LoginCliente login = new LoginCliente();
                             login.setVisible(true);
@@ -141,7 +188,12 @@ public class ReestablecerContrasenia extends JDialog {
         contentPanel.add(btnActualizar);
     }
     
-    // Funcion para verificar campos vacios
+    /**
+     * Verifica si los campos de contraseña están completos y cumplen con los requisitos.
+     * 
+     * @return true si hay campos vacíos, las contraseñas no coinciden, 
+     *         o la contraseña es menor de 8 caracteres; de lo contrario, false.
+     */
     private boolean verificarCampos() {
         String contrasenia = txtContrasenia.getText();
         String repetir = txtRepetirContrasenia.getText();

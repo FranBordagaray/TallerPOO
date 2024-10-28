@@ -39,12 +39,19 @@ import com.toedter.calendar.JDateChooser;
 import Controlador.ReservaControlador;
 import Modelo.Empleado.Reportes;
 
+/**
+ * Clase que representa una ventana para generar reportes de reservas por fecha.
+ * Permite seleccionar una fecha y visualizar las reservas asociadas.
+ */
 public class ReportePorFecha extends JFrame {
+    private static final long serialVersionUID = 1L; // Identificador único de la clase
+    private JPanel contentPane; // Panel principal de la ventana
+    private ReservaControlador controlador; // Controlador para gestionar reservas
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private ReservaControlador controlador;
-
+    /**
+     * Constructor de la clase ReportePorFecha.
+     * Inicializa la ventana y sus componentes.
+     */
 	public ReportePorFecha() {
 		controlador = new ReservaControlador();
 		
@@ -127,6 +134,14 @@ public class ReportePorFecha extends JFrame {
 		lblHasta.setBounds(0, 161, 450, 30);
 		contentPane.add(lblHasta);
 		
+		/**
+		 * Crea un botón para generar un reporte en formato PDF de las reservas
+		 * realizadas entre dos fechas seleccionadas.
+		 *
+		 * Este método maneja el evento de acción del botón y genera un PDF
+		 * con un listado de reservas entre las fechas especificadas. Si el PDF
+		 * ya existe, se genera un nuevo archivo con un sufijo de timestamp.
+		 */
 		JButton btnBuscarReservas = new JButton("GENERAR");
 		btnBuscarReservas.addActionListener(new ActionListener() {
             @SuppressWarnings("unused")
@@ -234,6 +249,17 @@ public class ReportePorFecha extends JFrame {
 		contentPane.add(btnBuscarReservas);
 	}
 	
+	/**
+	 * Verifica si un correo electrónico tiene un formato válido.
+	 *
+	 * Este método utiliza una expresión regular para validar la estructura del
+	 * correo electrónico. El formato aceptado incluye letras, números y ciertos
+	 * caracteres especiales antes del símbolo '@', seguido de un dominio que
+	 * puede incluir letras, números y puntos.
+	 *
+	 * @param correo el correo electrónico a validar
+	 * @return true si el correo es válido; false en caso contrario
+	 */
 	public static boolean esCorreoValido(String correo) {
 		String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 		Pattern pattern = Pattern.compile(regex);

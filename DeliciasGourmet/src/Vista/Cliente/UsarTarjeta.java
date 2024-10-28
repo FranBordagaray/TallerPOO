@@ -31,26 +31,51 @@ import javax.swing.JComboBox;
 import javax.swing.ImageIcon;
 
 @SuppressWarnings({"rawtypes","unused","static-access", "unchecked"})
+/**
+ * La clase UsarTarjeta representa una ventana de interfaz gráfica para que 
+ * el usuario ingrese los detalles de una tarjeta de crédito o débito para 
+ * confirmar una reserva. Extiende JFrame y utiliza componentes Swing para 
+ * la creación de la interfaz.
+ * 
+ */
 public class UsarTarjeta extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	 /** Campo de texto para ingresar el titular de la tarjeta. */
 	private JTextField txtTitular;
+	/** Campo de texto para ingresar el emisor de la tarjeta. */
 	private JTextField txtEmisor;
+	/** Campo de texto para ingresar el número de tarjeta. */
 	private JTextField txtNroTarjeta;
+	 /** Campo de texto para ingresar el código de verificación. */
 	private JTextField txtCodVerificacion;
-	
+	/** ComboBox para seleccionar tarjetas previamente guardadas. */
 	private JComboBox cbxTarjetas;
+	/** ComboBox adicional utilizado en la interfaz. */
 	private JComboBox<String> comboBox;
+	/** Indica si se ha seleccionado una tarjeta existente. */
 	private SesionCliente s;
+	/** Controlador para manejar reservas. */
 	private ReservaControlador reservaControlador;
+	/** Controlador para manejar comprobantes. */
 	private ComprobanteControlador comprobanteControlador;
+	/** Número de tarjeta seleccionada. */
 	private String numeroTarjetaSeleccionada;
+	/** Indica si se ha seleccionado una tarjeta existente. */
 	private boolean seleccion;
+	/** Vista de reservas del cliente. */
 	private VistaReservaCliente vistaReserva;
-
+	/** Controlador para manejar tarjetas. */
 	TarjetaControlador controlador = new TarjetaControlador();
+	/** Objeto Tarjeta que almacena los datos ingresados. */
 	Tarjeta tarjeta = new Tarjeta();
 	
+	/**
+     * Constructor que inicializa la ventana UsarTarjeta.
+     *
+     * @param vistaReserva La vista de reservas del cliente desde donde se 
+     *                     accede a esta ventana.
+     */
 	public UsarTarjeta(VistaReservaCliente vistaReserva) {
 
 		this.vistaReserva = vistaReserva; 
@@ -160,7 +185,20 @@ public class UsarTarjeta extends JFrame {
 		lblCodVerificacion.setBounds(10, 274, 150, 30);
 		panelContenedor.add(lblCodVerificacion);
 
-		// Boton Confirmar
+		/**
+		 * Crea un botón "Confirmar" que permite al usuario ingresar 
+		 * los detalles de una tarjeta. El botón incluye un ícono y 
+		 * cambia de color al pasar el mouse sobre él. Al hacer clic, 
+		 * verifica si la tarjeta seleccionada y el código de 
+		 * verificación coinciden; si es así, habilita el botón en 
+		 * la vista de reserva y muestra un mensaje de éxito. Si no, 
+		 * muestra un mensaje de error. Si no hay selección, 
+		 * valida los campos de entrada y guarda los detalles de 
+		 * la tarjeta en caso de que la validación sea exitosa. 
+		 * También maneja excepciones y muestra mensajes de error 
+		 * para cualquier problema inesperado. El botón se coloca 
+		 * en el panel contenedor con un tamaño y posición específicos.
+		 */
 		JButton btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.setIcon(new ImageIcon(UsarTarjeta.class.getResource("/Img/icono verificado.png")));
 		btnConfirmar.addMouseListener(new MouseAdapter() {
@@ -221,7 +259,16 @@ public class UsarTarjeta extends JFrame {
 		btnConfirmar.setBounds(282, 346, 150, 30);
 		panelContenedor.add(btnConfirmar);
 
-		// Boton para volver a la pantalla reservas
+		/**
+		 * Crea un botón "Volver" que permite al usuario regresar a la 
+		 * pantalla de reservas. El botón incluye un ícono y cambia de 
+		 * color al pasar el mouse sobre él. Al hacer clic, se 
+		 * instancia una nueva ventana de la clase VistaReservaCliente 
+		 * y se muestra, mientras que la ventana actual se cierra. 
+		 * El botón está configurado con un diseño específico, 
+		 * incluyendo tamaño, color y tipo de fuente, y se añade al 
+		 * panel contenedor.
+		 */
 		JButton btnAtras = new JButton("Volver");
 		btnAtras.setIcon(new ImageIcon(UsarTarjeta.class.getResource("/Img/icono de volver.png")));
 		btnAtras.addActionListener(new ActionListener() {
@@ -268,7 +315,18 @@ public class UsarTarjeta extends JFrame {
 		cbxTarjetas.setBounds(170, 110, 200, 30);
 		panelContenedor.add(cbxTarjetas);
 
-		// btn Cargar tarjeta
+		/**
+		 * Crea un botón "Cargar" que permite al usuario cargar los 
+		 * datos de una tarjeta seleccionada desde un combo box. Al 
+		 * hacer clic, se obtiene la tarjeta correspondiente y se 
+		 * rellenan los campos de texto con la información de la 
+		 * tarjeta, como el titular, el emisor y el número de 
+		 * tarjeta. Si no se encuentra ninguna tarjeta seleccionada, 
+		 * se imprime un mensaje en la consola. El botón cambia de 
+		 * color al pasar el mouse sobre él y está configurado con 
+		 * un diseño específico, incluyendo tamaño, color y tipo de 
+		 * fuente. Se añade al panel contenedor.
+		 */
 		JButton btnCargar = new JButton("Cargar");
 		btnCargar.setBackground(Color.WHITE);
 		btnCargar.setFont(new Font("Roboto Light", Font.PLAIN, 14));
@@ -310,7 +368,17 @@ public class UsarTarjeta extends JFrame {
 
 	}
 
-	// Funcion para verificar campos vacios
+	/**
+	 * Verifica si los campos de entrada de la tarjeta están completos 
+	 * y cumplen con los requisitos de longitud. Si algún campo está 
+	 * vacío, muestra un mensaje de advertencia pidiendo al usuario que 
+	 * complete todos los campos. Si el número de tarjeta no tiene 16 
+	 * dígitos o si el código de verificación no tiene 3 dígitos, 
+	 * muestra un mensaje de error correspondiente. 
+	 * 
+	 * @return true si hay campos vacíos o si los formatos son 
+	 *         incorrectos; false si todos los campos son válidos.
+	 */
 	private boolean verificarCampos() {
 		String titular = txtTitular.getText();
 		String emisor = txtEmisor.getText();
@@ -334,7 +402,19 @@ public class UsarTarjeta extends JFrame {
 		return false;
 	}
 
-	// Método para obtener los IDs de comprobantes de una lista de reservas
+	/**
+	 * Obtiene una lista de IDs de comprobantes correspondientes a 
+	 * una lista de reservas. Recorre cada reserva en la lista y 
+	 * utiliza el controlador de comprobantes para obtener el ID 
+	 * del comprobante asociado. Si se encuentra un ID válido, 
+	 * se agrega a la lista de IDs de comprobantes. Si no se 
+	 * encuentra un comprobante para una reserva, se imprime un 
+	 * mensaje en la consola indicando la reserva correspondiente. 
+	 * 
+	 * @param listaReservas la lista de reservas para las cuales se 
+	 *                      desean obtener los IDs de comprobantes.
+	 * @return una lista de IDs de comprobantes encontrados. 
+	 */
 	public ArrayList<Integer> obtenerIdsComprobantesPorListaReservas(ArrayList<Reserva> listaReservas) {
 		ArrayList<Integer> idsComprobantes = new ArrayList<>();
 
@@ -350,8 +430,21 @@ public class UsarTarjeta extends JFrame {
 		return idsComprobantes;
 	}
 
-	// Método para cargar los números de tarjeta en un JComboBox desde una lista de
-	// comprobantes
+	/**
+	 * Carga los números de tarjeta en un JComboBox a partir de una 
+	 * lista de IDs de comprobantes. Para cada ID de comprobante, 
+	 * se obtiene la tarjeta correspondiente y se extrae su número. 
+	 * Los números de tarjeta se almacenan en un HashSet para evitar 
+	 * duplicados. Si ocurre un error al convertir el número de 
+	 * tarjeta, se imprime un mensaje en la consola. Al finalizar, 
+	 * se establece un modelo de combo box con los números de tarjeta 
+	 * únicos.
+	 * 
+	 * @param comboBox el JComboBox donde se cargarán los números de 
+	 *                 tarjeta.
+	 * @param idsComprobantes la lista de IDs de comprobantes 
+	 *                        utilizada para obtener las tarjetas.
+	 */
 	public void cargarNumerosDeTarjetaEnComboBox(JComboBox<String> comboBox, ArrayList<Integer> idsComprobantes) {
 		HashSet<String> numerosTarjetas = new HashSet<>();
 

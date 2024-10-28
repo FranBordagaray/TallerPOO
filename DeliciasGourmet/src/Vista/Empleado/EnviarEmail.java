@@ -22,11 +22,25 @@ import javax.swing.border.EmptyBorder;
 
 import Vista.Cliente.RecuperarCuenta;
 
+/**
+ * Clase que representa la ventana para enviar un correo electrónico.
+ * Extiende de JFrame y permite al usuario ingresar una dirección de
+ * correo electrónico para enviar notificaciones relacionadas con la
+ * reserva.
+ */
 public class EnviarEmail extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField txtEmail;
+    private static final long serialVersionUID = 1L; // SerialVersionUID para la serialización
+    private JPanel contentPane; // Panel principal de la ventana que contiene todos los componentes visuales
+    private JTextField txtEmail; // Campo de texto donde el usuario ingresa la dirección de correo electrónico
+
+    /**
+     * Constructor de la clase EnviarEmail.
+     *
+     * @param empleado Objeto DetalleReservaEmpleado que representa la información del empleado
+     *                 que está enviando el correo. Se puede usar para obtener detalles de la reserva
+     *                 o información adicional relacionada.
+     */
 
 	public EnviarEmail(DetalleReservaEmpleado empleado) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -147,6 +161,12 @@ public class EnviarEmail extends JFrame {
 
 	}
 
+	/**
+	 * Método para verificar si una dirección de correo electrónico es válida.
+	 *
+	 * @param correo La dirección de correo electrónico a validar.
+	 * @return true si el correo es válido; false en caso contrario.
+	 */
 	public static boolean esCorreoValido(String correo) {
 		String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 		Pattern pattern = Pattern.compile(regex);

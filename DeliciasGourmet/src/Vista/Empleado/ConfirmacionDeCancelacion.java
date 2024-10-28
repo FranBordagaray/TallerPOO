@@ -19,13 +19,36 @@ import javax.swing.border.EmptyBorder;
 
 import javax.swing.JSeparator;
 
+/**
+ * Clase que representa un diálogo de confirmación para la cancelación de una acción.
+ * Este diálogo solicita al usuario que confirme su intención de cancelar una acción
+ * en la aplicación.
+ */
 public class ConfirmacionDeCancelacion extends JDialog {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private boolean confirmacion = false;
+    /** 
+     * Serial Version UID para la serialización de la clase.
+     */
+    private static final long serialVersionUID = 1L;
+    
+    /** 
+     * Panel que contiene los componentes del diálogo.
+     */
+    private JPanel contentPane;
 
-	public ConfirmacionDeCancelacion() {
+    /** 
+     * Indica si la cancelación fue confirmada por el usuario.
+     * Se inicializa en false, indicando que la cancelación no ha sido confirmada.
+     */
+    private boolean confirmacion = false;
+
+    /**
+     * Constructor de la clase ConfirmacionDeCancelacion.
+     * Inicializa el diálogo y sus componentes.
+     */
+    public ConfirmacionDeCancelacion() {
+        // Inicialización de componentes del diálogo
+    
 		setModal(true); // Hace que la ventana sea modal
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationByPlatform(true);
@@ -110,14 +133,29 @@ public class ConfirmacionDeCancelacion extends JDialog {
 		btnCerrar.setBounds(329, 0, 31, 22);
 		contentPane.add(btnCerrar);
 
+		/**
+		 * Botón que permite al usuario confirmar una acción, como la cancelación de una reserva.
+		 * Al hacer clic en este botón, se establece una variable de confirmación a true y se cierra
+		 * el diálogo actual.
+		 */
 		JButton btnConfirmar = new JButton("CONFIRMAR");
+
+		/**
+		 * Agrega un ActionListener al botón para manejar el evento de clic.
+		 */
 		btnConfirmar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				confirmacion = true;
-				dispose();
-			}
-		});
-		btnConfirmar.setIcon(new ImageIcon(ConfirmacionDeCancelacion.class.getResource("/Img/icono verificado.png")));
+		    /**
+		     * Método que se ejecuta al hacer clic en el botón.
+		     * Cambia el estado de la variable 'confirmacion' a true 
+		     * y cierra el diálogo actual.
+		     *
+		     * @param e El evento de acción que se genera al hacer clic en el botón.
+		     */
+		    public void actionPerformed(ActionEvent e) {
+		        confirmacion = true; // Establece la confirmación a true.
+		        dispose();           // Cierra el diálogo actual.
+		    }
+		});		btnConfirmar.setIcon(new ImageIcon(ConfirmacionDeCancelacion.class.getResource("/Img/icono verificado.png")));
 		btnConfirmar.setForeground(Color.BLACK);
 		btnConfirmar.setFont(new Font("Roboto Light", Font.PLAIN, 16));
 		btnConfirmar.setBorder(null);
@@ -132,7 +170,11 @@ public class ConfirmacionDeCancelacion extends JDialog {
 
 	}
 
-	// Método para mostrar la ventana y retornar el resultado de la confirmación
+    /**
+     * Muestra la ventana de confirmación y retorna el resultado de la confirmación.
+     *
+     * @return true si el usuario confirmó la acción; false en caso contrario.
+     */
 	public boolean mostrarConfirmacion() {
 		setVisible(true);
 		return confirmacion;

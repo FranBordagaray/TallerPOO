@@ -40,34 +40,148 @@ import Modelo.Complementos.EnumEstado;
 import Modelo.Complementos.Mesa;
 import Modelo.Complementos.Reserva;
 import Modelo.Complementos.Servicio;
-
+/**
+ * La clase ModificarReserva es un JFrame que permite a los usuarios 
+ * modificar una reserva existente en la aplicación de gestión de reservas.
+ * 
+ * Esta clase proporciona una interfaz gráfica donde los usuarios pueden
+ * cambiar la fecha, hora, ubicación, mesa y capacidad de una reserva ya 
+ * existente. También incluye un campo para comentarios adicionales que 
+ * el usuario puede desear agregar.
+ * 
+ * Además, esta clase utiliza controladores para gestionar las mesas, 
+ * servicios y reservas, facilitando la interacción con la base de datos 
+ * y garantizando que la información se mantenga actualizada.
+ * 
+ * Ejemplo de uso:
+ * <pre>
+ *   ModificarReserva modificarReserva = new ModificarReserva();
+ *   modificarReserva.setVisible(true);
+ * </pre>
+ */
 public class ModificarReserva extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Panel que contiene los componentes visuales para la modificación de reservas.
+     */
     private JPanel Mapas;
-    private JDateChooser calendario2;
-    private JComboBox<String> comboHora;
-    JButton btnModificar;
-    private LocalDate hoy;
-    private LocalDate unAnoFuturo;
-    private JComboBox<String> comboUbicaciones;
-    private JComboBox<String> comboMesa;
-    private JComboBox<Integer> comboCapacidad;
-    private MesaControlador mesaControlador;
-    private ServicioControlador servicioControlador;
-    private String SeleccionarUbicacion;
-    private int capacidadSeleccionada;
-    private String fechaFormateada;
-    private JTextArea CampoComentario;
-    private String[] ubicaciones;
-    private int idMesaSeleccionada;
-    private String seleccionMesa;
-    private int idServicio;
-    private  Servicio servicio;
-    private ReservaControlador reservaControlador;
-    LocalDateTime fechaSeleccionada;
 
+    /**
+     * Componente que permite seleccionar una fecha para la reserva.
+     */
+    private JDateChooser calendario2;
+
+    /**
+     * ComboBox que permite seleccionar la hora de la reserva.
+     */
+    private JComboBox<String> comboHora;
+
+    /**
+     * Botón que ejecuta la acción de modificar la reserva cuando se presiona.
+     */
+    JButton btnModificar;
+
+    /**
+     * Fecha actual que se utiliza para validar fechas de reserva.
+     */
+    private LocalDate hoy;
+
+    /**
+     * Fecha que representa un año en el futuro, utilizada para restricciones de fecha.
+     */
+    private LocalDate unAnoFuturo;
+
+    /**
+     * ComboBox que permite seleccionar la ubicación de la mesa.
+     */
+    private JComboBox<String> comboUbicaciones;
+
+    /**
+     * ComboBox que permite seleccionar la mesa específica para la reserva.
+     */
+    private JComboBox<String> comboMesa;
+
+    /**
+     * ComboBox que permite seleccionar la capacidad de la mesa.
+     */
+    private JComboBox<Integer> comboCapacidad;
+
+    /**
+     * Controlador que gestiona la lógica relacionada con las mesas.
+     */
+    private MesaControlador mesaControlador;
+
+    /**
+     * Controlador que gestiona la lógica relacionada con los servicios disponibles.
+     */
+    private ServicioControlador servicioControlador;
+
+    /**
+     * Cadena que almacena la ubicación seleccionada por el usuario.
+     */
+    private String SeleccionarUbicacion;
+
+    /**
+     * Capacidad seleccionada de la mesa, representada como un entero.
+     */
+    private int capacidadSeleccionada;
+
+    /**
+     * Fecha formateada como una cadena, utilizada para mostrar en el interfaz.
+     */
+    private String fechaFormateada;
+
+    /**
+     * Area de texto donde el usuario puede escribir comentarios adicionales sobre la reserva.
+     */
+    private JTextArea CampoComentario;
+
+    /**
+     * Arreglo de cadenas que contiene las ubicaciones disponibles para seleccionar.
+     */
+    private String[] ubicaciones;
+
+    /**
+     * ID de la mesa seleccionada, utilizado para identificarla en el sistema.
+     */
+    private int idMesaSeleccionada;
+
+    /**
+     * Cadena que representa la mesa seleccionada por el usuario.
+     */
+    private String seleccionMesa;
+
+    /**
+     * ID del servicio asociado a la reserva, utilizado para referencias en la base de datos.
+     */
+    private int idServicio;
+
+    /**
+     * Instancia de la clase Servicio que contiene información sobre el servicio relacionado.
+     */
+    private Servicio servicio;
+
+    /**
+     * Controlador que gestiona la lógica relacionada con las reservas.
+     */
+    private ReservaControlador reservaControlador;
+
+    /**
+     * Fecha y hora seleccionada para la reserva, representada como LocalDateTime.
+     */
+    LocalDateTime fechaSeleccionada;
+    /**
+     * Constructor de la clase ModificarReserva.
+     *
+     * Este constructor inicializa una nueva instancia de la clase ModificarReserva
+     * utilizando un objeto HistorialReserva proporcionado. El objeto reserva contiene
+     * información sobre la reserva que se desea modificar, lo que permite al usuario
+     * realizar cambios específicos en los detalles de la reserva existente.
+     *
+     * @param reserva El objeto HistorialReserva que representa la reserva a modificar.
+     */
     public ModificarReserva(HistorialReserva reserva) {
 		reservaControlador = new ReservaControlador();
 		servicioControlador = new ServicioControlador();
@@ -298,7 +412,20 @@ public class ModificarReserva extends JFrame {
         CampoComentario.setWrapStyleWord(true);
         pnlVertical.add(CampoComentario);
 
-     // Botón Modificar
+        /**
+         * Crea un botón para modificar una reserva existente.
+         *
+         * Al hacer clic en este botón, se recopilan los datos de la reserva 
+         * desde la interfaz y se actualizan en el sistema. Se verifica si 
+         * han cambiado la fecha, la hora o la mesa seleccionada. Dependiendo 
+         * de los cambios, se eliminan y crean mesas o se actualizan los 
+         * servicios asociados. Si la reserva se actualiza correctamente, 
+         * se muestra un mensaje de éxito; de lo contrario, se muestra un 
+         * mensaje de error.
+         *
+         * Además, el botón cambia de color al pasar el ratón sobre él, 
+         * mejorando la experiencia del usuario.
+         */
         btnModificar = new JButton("MODIFICAR");
         btnModificar.setIcon(new ImageIcon(ModificarReserva.class.getResource("/Img/icono modificar.png")));
         btnModificar.addActionListener(new ActionListener() {
@@ -446,7 +573,17 @@ public class ModificarReserva extends JFrame {
         btnModificar.setBounds(41, 593, 150, 25);
         pnlVertical.add(btnModificar);
         
-        // Boton para cancelar modificacion
+        /**
+         * Crea un botón para cancelar la modificación de una reserva.
+         *
+         * Este botón permite al usuario cerrar la ventana actual sin guardar los 
+         * cambios realizados. Al hacer clic en el botón, se cierra el 
+         * JFrame de modificación. Además, se cambian los colores del botón 
+         * al pasar el mouse sobre él, mejorando la experiencia del usuario.
+         *
+         * Se establece un ícono y se configuran las propiedades visuales del 
+         * botón, como el texto, la fuente, el borde y el color de fondo.
+         */
         JButton btnCancelar = new JButton("CANCELAR");
         btnCancelar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnCancelar.addActionListener(new ActionListener() {
@@ -543,13 +680,33 @@ public class ModificarReserva extends JFrame {
         
     }
 
-    // Cambia el panel visible
+    /**
+     * Cambia el panel visible dentro del contenedor de paneles.
+     *
+     * Este método utiliza un CardLayout para cambiar la vista actual al panel 
+     * especificado. Es útil para gestionar múltiples vistas dentro de un mismo 
+     * contenedor, permitiendo una navegación fluida entre ellas.
+     *
+     * @param panel El nombre del panel que se desea mostrar. Debe coincidir 
+     *              con el identificador del panel en el CardLayout.
+     */
     private void cambioPanel(String panel) {
         CardLayout cl = (CardLayout) (Mapas.getLayout());
         cl.show(Mapas, panel);
     }
 
-    // Funcion actualiza horas disponibles
+    /**
+     * Actualiza el JComboBox de horas disponibles según la fecha seleccionada.
+     *
+     * Este método verifica si la fecha seleccionada es igual a la fecha actual. 
+     * Si es así, se comparan las horas disponibles con la hora actual y se añaden 
+     * a comboHora aquellas que son futuras o iguales a la hora actual. Si no hay 
+     * horas disponibles, se añade un mensaje indicando que no hay servicios disponibles 
+     * para ese día. Si la fecha seleccionada no es hoy, se añaden todas las horas disponibles.
+     *
+     * @param fechaSeleccionada La fecha seleccionada por el usuario en formato LocalDateTime,
+     *                          que se utiliza para determinar qué horas son válidas.
+     */
     private void actualizarHorasDisponibles(LocalDateTime fechaSeleccionada) {
 
         comboHora.removeAllItems();
@@ -588,7 +745,20 @@ public class ModificarReserva extends JFrame {
         }
     }
 
-    // Metodo encontrar el path del mapa de la mesa
+    /**
+     * Busca y devuelve la ruta del mapa correspondiente a la ubicación seleccionada.
+     *
+     * Este método utiliza una estructura switch para determinar el archivo de imagen 
+     * que representa el mapa de la mesa según la ubicación proporcionada. 
+     * Si la ubicación seleccionada no coincide con ninguna de las opciones esperadas, 
+     * se lanza una excepción IllegalArgumentException.
+     * 
+     * @param ubicaciones Un arreglo de cadenas que contiene las ubicaciones disponibles.
+     * @param SeleccionarUbicacion La ubicación seleccionada por el usuario, la cual se utiliza 
+     *                             para determinar el mapa correspondiente.
+     * @return String La ruta del archivo de imagen del mapa correspondiente a la ubicación seleccionada.
+     * @throws IllegalArgumentException Si la ubicación seleccionada no es reconocida.
+     */
     public String BuscarPath(String[] ubicaciones, String SeleccionarUbicacion) {
         switch (SeleccionarUbicacion) {
             case "COMEDOR PRINCIPAL":
@@ -606,7 +776,20 @@ public class ModificarReserva extends JFrame {
         }
     }
 
-    // Funcion para actualizar Mesas
+    /**
+     * Actualiza la lista de mesas disponibles en función de la ubicación seleccionada y 
+     * la hora elegida. También elimina del JComboBox de mesas aquellas que están ocupadas 
+     * por el servicio en la fecha y hora especificadas.
+     * 
+     * Este método obtiene la ubicación seleccionada del JComboBox de ubicaciones 
+     * (comboUbicaciones) y busca las mesas disponibles mediante el controlador de mesas 
+     * (mesaControlador). Luego, verifica cuáles de estas mesas están ocupadas por 
+     * el servicio correspondiente a la fecha y hora seleccionadas, y las elimina 
+     * del JComboBox de mesas (comboMesa).
+     * 
+     * @return List<Mesa> Una lista de objetos Mesa que representan las mesas disponibles 
+     *                     en la ubicación seleccionada. 
+     */
     private List<Mesa> actualizarMesas() {
         String ubicacionSeleccionada = (String) comboUbicaciones.getSelectedItem();
         List<Mesa> mesasP = new ArrayList<Mesa>();
@@ -633,7 +816,16 @@ public class ModificarReserva extends JFrame {
         return mesasP;
     }
     
-    // Funcion para filtrar por Capacidad
+    /**
+     * Filtra las mesas disponibles en función de la capacidad seleccionada y la ubicación seleccionada.
+     * 
+     * Este método actualiza el JComboBox de mesas (comboMesa) eliminando todas las mesas existentes 
+     * y agregando solo aquellas que cumplen con la capacidad seleccionada. Si la capacidad seleccionada es 0, 
+     * se incluirán todas las mesas de la ubicación seleccionada.
+     * 
+     * @param capacidadSeleccionada La capacidad deseada para filtrar las mesas. 
+     *                              Si es 0, se mostrarán todas las mesas disponibles en la ubicación seleccionada.
+     */
     private void filtrarCapacidad(int capacidadSeleccionada) {
         String ubicacionSeleccionada = (String) comboUbicaciones.getSelectedItem();
         List<Mesa> mesasP;
@@ -651,7 +843,12 @@ public class ModificarReserva extends JFrame {
         }
     }
 
-    // Metodo para obtener la mesa
+    /**
+     * Obtiene el ID de la mesa a partir de una cadena de texto que representa la selección de la mesa.
+     * 
+     * @param seleccionMesa La cadena que representa la mesa seleccionada, que debe contener el ID en la segunda posición después de un espacio.
+     * @return El ID de la mesa como un entero, o -1 si el formato de la mesa es inválido o se produce un error.
+     */
     private int obtenerIdMesa(String seleccionMesa) {
         try {
             String[] partes = seleccionMesa.split(" ");

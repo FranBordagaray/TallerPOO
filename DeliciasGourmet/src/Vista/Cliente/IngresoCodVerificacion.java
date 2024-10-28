@@ -28,12 +28,25 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 @SuppressWarnings("unused")
+/**
+ * Clase que representa un diálogo para ingresar el código de verificación.
+ * Este diálogo se utiliza para solicitar al usuario que introduzca un código
+ * enviado por correo electrónico para validar su identidad durante el proceso
+ * de recuperación de cuenta.
+ */
 public class IngresoCodVerificacion extends JDialog {
 
 	private static final long serialVersionUID = 1L;
+	/** Panel principal del diálogo. */
 	private final JPanel contentPanel = new JPanel();
+
+	/** Campo de texto para ingresar el código de verificación. */
 	private JTextField txtCodVerificacion;
+
+	/** Controlador para manejar la lógica del cliente. */
 	private ClienteControlador controlador;
+
+	/** Correo electrónico del cliente que solicita la verificación. */
 	private String email;
 
 	public static void main(String[] args) {
@@ -46,9 +59,22 @@ public class IngresoCodVerificacion extends JDialog {
 		}
 	}
 
+	/**
+	 * Constructor de la clase IngresoCodVerificacion.
+	 *
+	 * Este constructor inicializa una nueva instancia de la clase 
+	 * IngresoCodVerificacion, que se utiliza para permitir a los usuarios 
+	 * ingresar un código de verificación enviado a su correo electrónico 
+	 * durante el proceso de recuperación de contraseña.
+	 * 
+	 * @param email El correo electrónico asociado a la cuenta del usuario, 
+	 *              utilizado para verificar su identidad y enviar el código de 
+	 *              verificación necesario para proceder con la recuperación.
+	 */
 	public IngresoCodVerificacion(String email) {
 		controlador = new ClienteControlador();
 		this.email = email;
+		
 		// Configuracion del dialog
 		setResizable(false);
 		setUndecorated(true);
@@ -85,7 +111,20 @@ public class IngresoCodVerificacion extends JDialog {
 		contentPanel.add(txtCodVerificacion);
 		txtCodVerificacion.setColumns(10);
 		
-		// Boton para verificar el codigo ingresado
+		/**
+		 * Crea y configura un botón para verificar el código de verificación ingresado por el usuario.
+		 *
+		 * Este botón, al ser presionado, realiza las siguientes acciones:
+		 * 
+		 * Verifica si los campos necesarios están completos.
+		 * Compara el código ingresado por el usuario con el código de recuperación obtenido del controlador.
+		 * Si el código es correcto, abre la ventana para reestablecer la contraseña y cierra la ventana actual.
+		 * Si el código es incorrecto, se muestra un cuadro de diálogo de error al usuario.
+		 * En caso de un error inesperado, se muestra un mensaje de error correspondiente.
+		 * 
+		 *
+		 * También cambia el color de fondo y el texto al pasar el mouse sobre él para mejorar la experiencia del usuario.
+		 */
 		JButton btnVerificar = new JButton("VERIFICAR");
 		btnVerificar.setIcon(new ImageIcon(IngresoCodVerificacion.class.getResource("/Img/icono verificado.png")));
 		btnVerificar.addActionListener(new ActionListener() {
@@ -134,7 +173,16 @@ public class IngresoCodVerificacion extends JDialog {
 		contentPanel.add(btnVerificar);
 	}
 	
-	// Funcion para verificar campos vacios
+	/**
+	 * Verifica si los campos de entrada están vacíos.
+	 *
+	 * Este método comprueba si el campo de texto `txtCodVerificacion` (donde se 
+	 * debe ingresar un código de verificación) está vacío. Si el campo está vacío, 
+	 * se muestra un cuadro de diálogo de advertencia informando al usuario que debe 
+	 * ingresar el código recibido en su bandeja de correos. 
+	 * 
+	 * @return true si el campo está vacío; false en caso contrario.
+	 */
 	private boolean verificarCampos() {
 		String codigo = txtCodVerificacion.getText();
 		if (codigo.isEmpty()) {

@@ -28,20 +28,25 @@ import Controlador.EmpleadoControlador;
 import Modelo.Empleado.Empleado;
 import javax.swing.ImageIcon;
 
+/**
+ * Clase que representa el panel de gestión de empleados.
+ * Permite filtrar, visualizar y manejar la información de los empleados del sistema.
+ */
 public class GestionEmpleados extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private JTextField txtFiltrarApellido;
-    private JTable tblEmpleados;
-    private DefaultTableModel model;
-    private JComboBox<String> roles;
-    private EmpleadoControlador controlador;
+    private JTextField txtFiltrarApellido; // Campo de texto para filtrar por apellido
+    private JTable tblEmpleados; // Tabla para mostrar los empleados
+    private DefaultTableModel model; // Modelo de la tabla
+    private JComboBox<String> roles; // ComboBox para seleccionar roles de empleado
+    private EmpleadoControlador controlador; // Controlador para gestionar los empleados
 
     /**
-     * Create the panel.
+     * Constructor de la clase GestionEmpleados.
+     * Inicializa el panel y sus componentes.
      */
     @SuppressWarnings("serial")
-    public GestionEmpleados() {
+	public GestionEmpleados() {
     	
     	controlador = new EmpleadoControlador();
         // Configuración del panel
@@ -307,7 +312,14 @@ public class GestionEmpleados extends JPanel {
         
     }
     
-    // Funcion para cargar tabla con datos almacenados en base de datos 
+    /**
+     * Método para cargar los datos de los empleados en la tabla.
+     * 
+     * Este método obtiene la lista de empleados desde la base de datos 
+     * a través del controlador correspondiente y los añade a un modelo 
+     * de tabla. Se asegura de que la tabla esté vacía antes de agregar 
+     * los nuevos datos.
+     */
     public void cargarDatos() {
         EmpleadoControlador controlador = new EmpleadoControlador();
         List<Empleado> empleados = controlador.obtenerEmpleados();
@@ -329,7 +341,16 @@ public class GestionEmpleados extends JPanel {
         }
     }
     
-    // Funcion para filtrar los empleados segun su rol
+    /**
+     * Método para filtrar los empleados según su estado.
+     * 
+     * Este método limpia el modelo de la tabla y carga solo los empleados
+     * que coinciden con el estado especificado. Si el estado es "TODOS",
+     * se mostrarán todos los empleados.
+     *
+     * @param estado El estado por el cual filtrar los empleados. Puede ser "TODOS"
+     *               para mostrar todos los empleados o un estado específico.
+     */
     private void filtrarEstado(String estado) {
         model.setRowCount(0);
         EmpleadoControlador controlador = new EmpleadoControlador();
@@ -352,7 +373,14 @@ public class GestionEmpleados extends JPanel {
         }
     }
     
-    // Funcion para buscar empleados por apellido
+    /**
+     * Método para buscar empleados por su apellido.
+     * 
+     * Este método limpia el modelo de la tabla y carga solo aquellos empleados
+     * cuyo apellido contiene la cadena proporcionada, ignorando mayúsculas y minúsculas.
+     *
+     * @param apellido El apellido a buscar en la lista de empleados.
+     */
     private void buscarPorApellido(String apellido) {
         model.setRowCount(0);
         

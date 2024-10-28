@@ -12,6 +12,11 @@ import Modelo.Cliente.HistorialReserva;
 import Modelo.Complementos.Reserva;
 import Modelo.Empleado.Reportes;
 
+/**
+ * Controlador para gestionar las operaciones relacionadas con reservas.
+ * Este controlador permite crear reservas y manejar la conexión
+ * a la base de datos.
+ */
 public class ReservaControlador {
 
 	Conexion cx;
@@ -23,41 +28,52 @@ public class ReservaControlador {
 		connection = cx.conectar();
 	}
 
-	// Función para crear una Reserva
+	/**
+	 * Función para crear una Reserva en la base de datos.
+	 * 
+	 * @param reserva Objeto de tipo Reserva que contiene los datos de la reserva.
+	 * @return true si la reserva se creó exitosamente; false en caso contrario.
+	 */
 	public boolean crearReserva(Reserva reserva) {
-		PreparedStatement ps = null;
-		try {
-			ps = connection.prepareStatement("INSERT INTO Reserva VALUES(null,?,?,?,?,?,?,?,?,?,?)");
-			ps.setInt(1, reserva.getIdCliente());
-			ps.setString(2, reserva.getFecha());
-			ps.setString(3, reserva.getHora());
-			ps.setInt(4, reserva.getIdMesa());
-			ps.setString(5, reserva.getComentario());
-			ps.setString(6, reserva.getDispocicionMesa());
-			ps.setInt(7, reserva.getEstado());
-			ps.setInt(8, reserva.getIdServicio());
-			ps.setInt(9, reserva.getIdComprobante());
-			ps.setString(10, reserva.getTemporada());
+	    PreparedStatement ps = null;
+	    try {
+	        ps = connection.prepareStatement("INSERT INTO Reserva VALUES(null,?,?,?,?,?,?,?,?,?,?)");
+	        ps.setInt(1, reserva.getIdCliente());
+	        ps.setString(2, reserva.getFecha());
+	        ps.setString(3, reserva.getHora());
+	        ps.setInt(4, reserva.getIdMesa());
+	        ps.setString(5, reserva.getComentario());
+	        ps.setString(6, reserva.getDispocicionMesa());
+	        ps.setInt(7, reserva.getEstado());
+	        ps.setInt(8, reserva.getIdServicio());
+	        ps.setInt(9, reserva.getIdComprobante());
+	        ps.setString(10, reserva.getTemporada());
 
-			ps.executeUpdate();
-			System.out.println("Reserva realizada con exito!");
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("Error al Reservar!");
-			return false;
-		} finally {
-			if (ps != null) {
-				try {
-					ps.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+	        ps.executeUpdate();
+	        System.out.println("Reserva realizada con exito!");
+	        return true;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Error al Reservar!");
+	        return false;
+	    } finally {
+	        if (ps != null) {
+	            try {
+	                ps.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
 	}
 
-	// Método para verificar si una mesa está disponible para un servicio específico
+	/**
+	 * Método para verificar si una mesa está disponible para un servicio específico.
+	 * 
+	 * @param idMesa ID de la mesa que se desea verificar.
+	 * @param idServicio ID del servicio asociado a la mesa.
+	 * @return true si la mesa está disponible; false en caso contrario.
+	 */
 	public boolean verificarDisponibilidadMesa(int idMesa, int idServicio) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -92,7 +108,12 @@ public class ReservaControlador {
 	    }
 	}
 
-	// Función para verificar si la Reserva ya existe
+	/**
+	 * Función para verificar si la Reserva ya existe en la base de datos.
+	 * 
+	 * @param Reserva Objeto de tipo Reserva que contiene los datos de la reserva a verificar.
+	 * @return true si la reserva ya existe; false en caso contrario.
+	 */
 	public boolean verificarReserva(Reserva Reserva) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -113,7 +134,7 @@ public class ReservaControlador {
 	        return false;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        System.out.println("Error al verificar el reserva!");
+	        System.out.println("Error al verificar la reserva!");
 	        return false;
 	    } finally {
 	        if (rs != null) {
@@ -133,63 +154,75 @@ public class ReservaControlador {
 	    }
 	}
 
-	// Metodo para verificar si hay solapamientos en una reserva para Evento
-	// Especial
+	/**
+	 * Método para verificar si hay solapamientos en una reserva para un Evento Especial.
+	 * 
+	 * @param reserva Objeto de tipo Reserva que contiene los datos de la reserva a verificar.
+	 * @return true si hay solapamientos de horario; false en caso contrario.
+	 */
 	public boolean verificarSolapamientoReserva(Reserva reserva) {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		ServicioControlador servicioControlador = new ServicioControlador();
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+	    ServicioControlador servicioControlador = new ServicioControlador();
 
-		try {
-			int idServicio = servicioControlador.buscarServicioPorReserva(reserva);
+	    try {
+	        int idServicio = servicioControlador.buscarServicioPorReserva(reserva);
 
-			if (idServicio == -1) {
-				System.out.println("No se encontró un servicio para la reserva.");
-				return false;
-			}
-			ps = connection.prepareStatement("SELECT COUNT(*) FROM Reserva r "
-					+ "JOIN Servicio s ON r.IdServicio = s.idServicio " + "WHERE r.IdMesa = ? AND r.IdServicio = ? "
-					+ "AND ( ? < s.horaFin AND ? > s.horaInicio )");
+	        if (idServicio == -1) {
+	            System.out.println("No se encontró un servicio para la reserva.");
+	            return false;
+	        }
+	        ps = connection.prepareStatement("SELECT COUNT(*) FROM Reserva r "
+	                + "JOIN Servicio s ON r.IdServicio = s.idServicio " + "WHERE r.IdMesa = ? AND r.IdServicio = ? "
+	                + "AND ( ? < s.horaFin AND ? > s.horaInicio )");
 
-			ps.setInt(1, reserva.getIdMesa());
-			ps.setInt(2, idServicio);
+	        ps.setInt(1, reserva.getIdMesa());
+	        ps.setInt(2, idServicio);
 
-			String[] horas = reserva.getHora().split(" - ");
-			ps.setString(3, horas[0]);
-			ps.setString(4, horas[1]);
+	        String[] horas = reserva.getHora().split(" - ");
+	        ps.setString(3, horas[0]);
+	        ps.setString(4, horas[1]);
 
-			rs = ps.executeQuery();
+	        rs = ps.executeQuery();
 
-			if (rs.next()) {
-				int count = rs.getInt(1);
-				if (count > 0) {
-					return true;
-				}
-			}
-			return false;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("Error al verificar solapamiento de reserva!");
-			return false;
-		} finally {
-			if (ps != null) {
-				try {
-					ps.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+	        if (rs.next()) {
+	            int count = rs.getInt(1);
+	            if (count > 0) {
+	                return true;
+	            }
+	        }
+	        return false;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Error al verificar solapamiento de reserva!");
+	        return false;
+	    } finally {
+	        if (ps != null) {
+	            try {
+	                ps.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	        if (rs != null) {
+	            try {
+	                rs.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
 	}
 
-	// Función para verificar si una mesa está ocupada en una fecha y hora específicas
+
+	/**
+	 * Verifica si una mesa está ocupada en una fecha y hora específicas.
+	 *
+	 * @param idMesa El ID de la mesa a verificar.
+	 * @param fecha La fecha en formato 'yyyy-MM-dd' para la cual se verifica la ocupación.
+	 * @param hora La hora en formato 'HH:mm' para la cual se verifica la ocupación.
+	 * @return true si la mesa está ocupada, false en caso contrario.
+	 */
 	public boolean verificarMesaOcupada(int idMesa, String fecha, String hora) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -225,7 +258,12 @@ public class ReservaControlador {
 	    return false;
 	}
 
-	// Función para obtener el historial de Reservas de un cliente
+	/**
+	 * Obtiene el historial de reservas de un cliente.
+	 *
+	 * @param idCliente El ID del cliente cuyo historial se desea obtener.
+	 * @return Una lista de objetos HistorialReserva que representan el historial de reservas del cliente.
+	 */
 	public List<HistorialReserva> obtenerHistorialPorCliente(int idCliente) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -265,7 +303,13 @@ public class ReservaControlador {
 	    return historial;
 	}
 
-	// Función para cargar el combo solamente con las mesas que el cliente reservó
+	/**
+	 * Carga el combo solamente con las mesas que el cliente reservó.
+	 *
+	 * @param idCliente El ID del cliente para el cual se desean obtener las mesas reservadas.
+	 * @return Una lista de IDs de las mesas que el cliente ha reservado.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
 	public List<Integer> obtenerMesasReservadasPorCliente(int idCliente) throws SQLException {
 	    List<Integer> mesasReservadas = new ArrayList<>();
 	    PreparedStatement ps = null;
@@ -299,7 +343,13 @@ public class ReservaControlador {
 	    return mesasReservadas;
 	}
 
-	// Función para cargar el combo solamente con las mesas que el cliente reservó
+	/**
+	 * Obtiene el estado de las reservas de un cliente.
+	 *
+	 * @param idCliente El ID del cliente para el cual se desean obtener los estados de las reservas.
+	 * @return Una lista de estados de reservas asociadas al cliente.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
 	public List<Integer> obtenerEstadoReservasPorCliente(int idCliente) throws SQLException {
 	    List<Integer> estadoReservas = new ArrayList<>();
 	    PreparedStatement ps = null;
@@ -333,7 +383,14 @@ public class ReservaControlador {
 	    return estadoReservas;
 	}
 
-	// Función para obtener el historial de Reservas de un cliente
+
+	/**
+	 * Obtiene el historial de reservas de un cliente en un rango de fechas específico.
+	 *
+	 * @param dateDesde La fecha de inicio del rango de búsqueda en formato 'yyyy-MM-dd'.
+	 * @param dateHasta La fecha de fin del rango de búsqueda en formato 'yyyy-MM-dd'.
+	 * @return Una lista de objetos {@link Reportes} que contiene la información de las reservas en el rango especificado.
+	 */
 	public List<Reportes> obtenerHistorialDeReservas(String dateDesde, String dateHasta) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -372,7 +429,12 @@ public class ReservaControlador {
 	    return reporte;
 	}
 
-	// Función para obtener el historial completo de Reservas de un cliente
+	/**
+	 * Obtiene el historial completo de reservas de un cliente dado su ID.
+	 *
+	 * @param idCliente El ID del cliente cuyo historial de reservas se desea obtener.
+	 * @return Una lista de objetos {@link Reserva} que contiene la información de todas las reservas del cliente.
+	 */
 	public ArrayList<Reserva> obtenerHistorialDeReservasCompleta(int idCliente) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -422,7 +484,12 @@ public class ReservaControlador {
 	    return reservas;
 	}
 
-	// Función para obtener el historial de comensales por temporada
+	/**
+	 * Obtiene el historial de comensales por temporada.
+	 *
+	 * @param Temporada La temporada para la cual se desea obtener el historial de comensales.
+	 * @return Una lista de objetos {@link Reportes} que contiene el total de reservas y la capacidad total para la temporada especificada.
+	 */
 	public List<Reportes> obtenerHistorialComensalesPorTemporada(String Temporada) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -459,7 +526,17 @@ public class ReservaControlador {
 	    return reporte;
 	}
 
-	// Funcion para actualizar la reserva, y asignarle su comprobante
+
+	/**
+	 * Actualiza el comprobante asociado a una reserva existente en la base de datos.
+	 *
+	 * Este método busca una reserva por su ID y actualiza el campo
+	 * `idComprobante` con el nuevo ID proporcionado.
+	 *
+	 * @param idReserva   El ID de la reserva cuya comprobante se va a actualizar.
+	 * @param idComprobante El nuevo ID del comprobante que se asignará a la reserva.
+	 * @return true si el comprobante se actualizó con éxito; false en caso contrario.
+	 */
 	public boolean actualizarComprobante(int idReserva, int idComprobante) {
 		PreparedStatement ps = null;
 		try {
@@ -489,7 +566,17 @@ public class ReservaControlador {
 		}
 	}
 
-	// Funcion que buscar una reserva y retorna su id
+	/**
+	 * Busca una reserva en la base de datos y retorna su ID.
+	 *
+	 * Este método busca una reserva específica utilizando los atributos del
+	 * objeto Reserva proporcionado. Si se encuentra la reserva, se devuelve
+	 * su ID; de lo contrario, se retorna -1.
+	 *
+	 * @param reserva El objeto Reserva que contiene los criterios de búsqueda
+	 *                (idCliente, fecha, hora, idMesa, y temporada).
+	 * @return El ID de la reserva encontrada, o -1 si no se encuentra.
+	 */
 	public int buscarIdReserva(Reserva reserva) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -534,7 +621,14 @@ public class ReservaControlador {
 	    return idReserva;
 	}
 
-	// Funcion para cancelar una Reserva
+	/**
+	 * Cancela una reserva actualizando su estado en la base de datos.
+	 *
+	 * Este método establece el estado de una reserva a 0 (cancelada) en la
+	 * tabla Reserva, utilizando el ID de la reserva proporcionado.
+	 *
+	 * @param idSeleccionado El ID de la reserva que se desea cancelar.
+	 */
 	public void cancelarReserva(int idSeleccionado) {
 		PreparedStatement ps = null;
 		try {
@@ -554,7 +648,14 @@ public class ReservaControlador {
 		}
 	}
 
-	// Funcion para eliminar la mesa de la reserva cancelada
+	/**
+	 * Elimina la mesa asociada a una reserva cancelada de la base de datos.
+	 *
+	 * Este método busca la mesa y el servicio vinculados a una reserva específica
+	 * mediante su ID, y elimina la mesa de la tabla Mesa.
+	 *
+	 * @param idReserva El ID de la reserva cuya mesa se desea eliminar.
+	 */
 	public void eliminarMesa(int idReserva) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -598,7 +699,16 @@ public class ReservaControlador {
 	    }
 	 }
 
-	 //Funcion para cargar datos de la reserva Historial Empleado
+	/**
+	 * Carga los datos del historial de reservas de los clientes.
+	 *
+	 * Este método consulta la base de datos para obtener un historial de reservas
+	 * futuras, incluyendo detalles del cliente, fecha, hora, mesa, capacidad, ubicación,
+	 * estado y comentario. Los resultados son devueltos como una lista de objetos 
+	 * HistorialReserva.
+	 *
+	 * @return una lista de objetos HistorialReserva que contiene el historial de reservas.
+	 */
 	 public List<HistorialReserva> obtenerHistorialReserva() {
 		    PreparedStatement ps = null;
 		    ResultSet rs = null;
@@ -643,7 +753,18 @@ public class ReservaControlador {
 		    return historial;
 		}
 
-	//Metodo para obtener las reservas futuras del cliente
+	 /**
+	  * Obtiene las reservas futuras de un cliente específico.
+	  *
+	  * Este método consulta la base de datos para recuperar todas las reservas
+	  * futuras asociadas al cliente identificado por su ID. Se obtienen detalles
+	  * como el nombre, apellido, fecha, hora, capacidad de la mesa, ubicación 
+	  * y comentario de la reserva.
+	  *
+	  * @param idCliente el ID del cliente cuyas reservas futuras se desean obtener.
+	  * @return una lista de objetos Reportes que representan las reservas futuras
+	  *         del cliente.
+	  */
 	public List<Reportes> obtenerReservasFuturasPorCliente(int idCliente) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -692,7 +813,16 @@ public class ReservaControlador {
 	    return reservasFuturas;
 	}
 
-	// Función para obtener el cliente más frecuente
+	/**
+	 * Obtiene el cliente más frecuente en base al número de reservas realizadas.
+	 *
+	 * Este método consulta la base de datos para identificar al cliente que
+	 * ha realizado la mayor cantidad de reservas. Se obtiene el nombre,
+	 * apellido y la cantidad total de reservas del cliente más frecuente.
+	 *
+	 * @return un objeto Reportes que representa al cliente más frecuente, 
+	 *         o null si no se encontraron reservas.
+	 */
 	public Reportes obtenerClienteMasFrecuente() {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -727,7 +857,18 @@ public class ReservaControlador {
 	    return reporte;
 	}
 
-	// Función para obtener el historial de Reservas de un cliente
+	/**
+	 * Obtiene el comprobante asociado a una reserva específica.
+	 *
+	 * Este método consulta la base de datos para recuperar información
+	 * sobre una reserva dada su ID. Retorna un objeto HistorialReserva
+	 * que contiene detalles como la ubicación de la mesa, fecha, hora,
+	 * capacidad, ID de la mesa y comentario de la reserva.
+	 *
+	 * @param idReserva el ID de la reserva para la cual se busca el comprobante.
+	 * @return un objeto HistorialReserva que contiene la información del comprobante,
+	 *         o null si no se encontró un comprobante para la reserva especificada.
+	 */
 	public HistorialReserva obtenerComprobantePorReserva(int idReserva) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -767,7 +908,18 @@ public class ReservaControlador {
 	}
 
 
-	// Función para obtener el historial de Reservas de un cliente
+	/**
+	 * Obtiene los detalles de una reserva específica a partir de su ID.
+	 *
+	 * Este método consulta la base de datos para recuperar información
+	 * sobre una reserva dada su ID. Retorna un objeto HistorialReserva
+	 * que contiene detalles como la ubicación de la mesa, fecha, hora,
+	 * capacidad, ID de la mesa y comentario de la reserva.
+	 *
+	 * @param idReserva el ID de la reserva para la cual se buscan los detalles.
+	 * @return un objeto HistorialReserva que contiene la información de la reserva,
+	 *         o null si no se encontró una reserva con el ID especificado.
+	 */
 	public HistorialReserva obtenerReservaPorId(int idReserva) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -810,7 +962,18 @@ public class ReservaControlador {
 	}
 
 
-	// Funcion que actualiza los datos de la reserva
+	/**
+	 * Actualiza los datos de una reserva existente en la base de datos.
+	 *
+	 * Este método actualiza la información relacionada con una reserva específica,
+	 * incluyendo la fecha, hora, ID de mesa, comentario, disposición de la mesa,
+	 * ID de servicio, ID del comprobante y temporada. También actualiza la
+	 * información correspondiente en la tabla de comprobantes.
+	 *
+	 * @param idReserva el ID de la reserva que se desea actualizar.
+	 * @param reserva un objeto Reserva que contiene los nuevos datos para la reserva.
+	 * @return true si la actualización fue exitosa; false si ocurrió un error.
+	 */
 	public boolean actualizarReserva(int idReserva, Reserva reserva) {
 		PreparedStatement ps = null;
 		ComprobanteControlador controladorc = new ComprobanteControlador();
@@ -856,7 +1019,18 @@ public class ReservaControlador {
 		}
 	}
 	
-	// Función para obtener el email del cliente asociado a una reserva
+	/**
+	 * Obtiene el email del cliente asociado a una reserva específica.
+	 *
+	 * Este método consulta la base de datos para recuperar el email del cliente
+	 * que tiene una reserva con el ID proporcionado. Si se encuentra el email,
+	 * se devuelve como una cadena. En caso contrario, se indica que no se encontró
+	 * un cliente asociado.
+	 *
+	 * @param idReserva el ID de la reserva para la cual se desea obtener el email del cliente.
+	 * @return el email del cliente asociado a la reserva, o null si no se encontró.
+	 */
+
     public String obtenerEmailClientePorReserva(int idReserva) {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -890,7 +1064,15 @@ public class ReservaControlador {
         return email;
     }
     
-    // Funcion para cambiar estado de la reserva
+    /**
+     * Actualiza el estado de una reserva específica en la base de datos.
+     *
+     * Este método permite cambiar el estado de una reserva identificada por su ID.
+     * Se establece un nuevo estado en la columna correspondiente de la tabla Reserva.
+     *
+     * @param idSeleccionado el ID de la reserva cuyo estado se desea actualizar.
+     * @param nuevoEstado el nuevo estado que se asignará a la reserva.
+     */
     public void actualizarEstadoReserva(int idSeleccionado, int nuevoEstado) {
         PreparedStatement ps = null;
         try {   
@@ -912,7 +1094,16 @@ public class ReservaControlador {
         }
     }
     
-    //Funcion para verificar el estado de una Reserva ante una cancelacion
+    /**
+     * Verifica si una reserva puede ser cancelada.
+     *
+     * Este método consulta el estado de una reserva específica en la base de datos
+     * para determinar si puede ser cancelada. Se considera que una reserva puede
+     * ser cancelada si su estado es igual a 1.
+     *
+     * @param idSeleccionado el ID de la reserva que se desea verificar.
+     * @return true si la reserva puede ser cancelada, false en caso contrario.
+     */
     public boolean verificarEstadoReserva(int idSeleccionado) {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -942,7 +1133,5 @@ public class ReservaControlador {
         return puedeCancelar;
     }
 
-    
-    
 
 }

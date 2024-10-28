@@ -41,12 +41,20 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 
+/**
+ * Clase que representa un panel para generar reportes relacionados con reservas y clientes.
+ * Permite seleccionar un cliente y visualizar sus reportes.
+ */
 public class Reporte extends JPanel {
-    private ReservaControlador controlador;
-    private ClienteControlador controladorCliente;
-    private SeleccionarCliente seleccionarCliente;
+    private static final long serialVersionUID = 1L; // Identificador único de la clase
+    private ReservaControlador controlador; // Controlador para gestionar reservas
+    private ClienteControlador controladorCliente; // Controlador para gestionar clientes
+    private SeleccionarCliente seleccionarCliente; // Componente para seleccionar un cliente
 
-    private static final long serialVersionUID = 1L;
+    /**
+     * Constructor de la clase Reporte.
+     * Inicializa el panel y sus componentes.
+     */
     public Reporte() {
         controlador = new ReservaControlador();
         controladorCliente = new ClienteControlador();
@@ -376,7 +384,16 @@ public class Reporte extends JPanel {
         
     }
     
- // Método para generar el reporte de clientes que no asistieron el ultimo año
+    /**
+     * Genera un reporte en formato PDF de los clientes que no asistieron en el último año.
+     *
+     * Este método crea un documento PDF que incluye una tabla con los detalles de los clientes
+     * filtrados que no asistieron al restaurante durante el último año. Si ya existe un archivo 
+     * con el nombre predeterminado, se generará un nuevo archivo con un sufijo de timestamp.
+     *
+     * @param clientesFiltrados Una lista de objetos {@link Cliente} que representan a los clientes 
+     *                          que no han asistido en el último año.
+     */
     @SuppressWarnings("unused")
     private void generarReporteClientesInasistentes(List<Cliente> clientesFiltrados) {
         Document documento = new Document();

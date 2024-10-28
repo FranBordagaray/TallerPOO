@@ -39,24 +39,38 @@ import Modelo.Complementos.Servicio;
 import Modelo.Empleado.SesionEmpleado;
 import javax.swing.ImageIcon;
 
+/**
+ * Clase que representa la ventana de detalle de reserva para un empleado.
+ * Extiende de JFrame y contiene la información de la reserva, mesa, 
+ * comprobante y servicio relacionados.
+ */
 @SuppressWarnings("unused")
 public class DetalleReservaClienteParaEmpleado extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private Reserva reserva;
-	private Mesa mesa;
-	private Comprobante comprobante;
-	private Servicio servicio;
-	private ServicioControlador servicioControlador;
-	private ReservaControlador reservaControlador;
-	private MesaControlador mesaControlador;
-	private ComprobanteControlador comprobanteControlador;
-	private TarjetaControlador tarjetaControlador;
-	private SesionCliente s;
-	private ArrayList<Mesa> mesasConMismoId;
-	private VistaReservaEmpleado reservaCliente;
+    private static final long serialVersionUID = 1L; // SerialVersionUID para la serialización
+    private JPanel contentPane; // Panel principal de la ventana que contiene todos los componentes visuales
+    private Reserva reserva; // Objeto que representa la reserva actual del cliente
+    private Mesa mesa; // Objeto que representa la mesa reservada por el cliente
+    private Comprobante comprobante; // Objeto que representa el comprobante de pago generado para la reserva
+    private Servicio servicio; // Objeto que representa el servicio asociado a la reserva (ej. comida, bebida)
+    private ServicioControlador servicioControlador; // Controlador para manejar la lógica de los servicios
+    private ReservaControlador reservaControlador; // Controlador para manejar la lógica de las reservas
+    private MesaControlador mesaControlador; // Controlador para manejar la lógica de las mesas
+    private ComprobanteControlador comprobanteControlador; // Controlador para manejar la lógica de los comprobantes
+    private TarjetaControlador tarjetaControlador; // Controlador para manejar la lógica de las tarjetas de pago
+    private SesionCliente s; // Objeto que representa la sesión actual del cliente en el sistema
+    private ArrayList<Mesa> mesasConMismoId; // Lista de mesas que comparten el mismo ID, utilizada para gestionar reservas
+    private VistaReservaEmpleado reservaCliente; // Vista que representa la interfaz de reserva para los empleados
 
+    /**
+     * Constructor de la clase DetalleReservaClienteParaEmpleado.
+     *
+     * @param reserva Objeto Reserva que contiene la información de la reserva.
+     * @param mesa Objeto Mesa que representa la mesa reservada.
+     * @param servicio Objeto Servicio que contiene detalles sobre el servicio.
+     * @param comprobante Objeto Comprobante que contiene información de pago.
+     * @param reservaCliente Objeto VistaReservaEmpleado que representa la vista de reserva para empleados.
+     */
 	public DetalleReservaClienteParaEmpleado(Reserva reserva, Mesa mesa, Servicio servicio, Comprobante comprobante, VistaReservaEmpleado reservaCliente) {
 		this.reserva = reserva;
 		this.mesa = mesa;
@@ -207,7 +221,18 @@ public class DetalleReservaClienteParaEmpleado extends JFrame {
 		textArea.setBounds(200, 384, 250, 100);
 		pnlContenedor.add(textArea);
 
-		// Boton de Confirmar
+		/**
+		 * Botón que confirma la reserva de una mesa y crea un nuevo servicio asociado.
+		 * 
+		 * Este botón ejecuta la lógica necesaria para validar si existen mesas con el mismo ID, 
+		 * verifica solapamientos en las fechas y horas de los servicios asociados a esas mesas, 
+		 * y si todo es válido, crea un nuevo servicio y registra la mesa y la reserva. 
+		 * 
+		 * En caso de que se encuentre un solapamiento, se mostrará un mensaje de error 
+		 * al usuario y no se procederá con la creación del servicio. 
+		 * Si el servicio se crea exitosamente, se actualizarán los estados de la reserva y la mesa,
+		 * y se generará un comprobante asociado a la reserva.
+		 */
 		JButton btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.setIcon(new ImageIcon(DetalleReservaClienteParaEmpleado.class.getResource("/Img/icono verificado.png")));
 		btnConfirmar.addActionListener(new ActionListener() {
@@ -392,7 +417,17 @@ public class DetalleReservaClienteParaEmpleado extends JFrame {
 
 	}
 
-	// Método para verificar solapamiento entre dos servicios
+	/**
+	 * Verifica si hay solapamiento entre dos servicios basándose en las fechas y horas proporcionadas.
+	 *
+	 * @param fecha1      La fecha del primer servicio en formato 'yyyy-MM-dd'.
+	 * @param horaInicio1 La hora de inicio del primer servicio en formato 'HH:mm'.
+	 * @param horaFin1    La hora de fin del primer servicio en formato 'HH:mm'.
+	 * @param fecha2      La fecha del segundo servicio en formato 'yyyy-MM-dd'.
+	 * @param horaInicio2 La hora de inicio del segundo servicio en formato 'HH:mm'.
+	 * @param horaFin2    La hora de fin del segundo servicio en formato 'HH:mm'.
+	 * @return true si hay solapamiento entre los servicios, false si no lo hay.
+	 */
 	private boolean verificarSolapamiento(String fecha1, String horaInicio1, String horaFin1, String fecha2,
 			String horaInicio2, String horaFin2) {
 				
@@ -413,7 +448,13 @@ public class DetalleReservaClienteParaEmpleado extends JFrame {
 	}
 
 	
-	// Método para enviar mail
+	/**
+	 * Envía un correo electrónico de confirmación de reserva al cliente actual.
+	 * 
+	 * Este método obtiene el correo electrónico del cliente desde la sesión activa,
+	 * construye un mensaje de confirmación con los detalles de la reserva,
+	 * y envía el correo utilizando la clase {@link EnviarMail}.
+	 */
 	@SuppressWarnings("static-access")
 	public void enviarDetalles() {
 	    SesionCliente s = new SesionCliente();

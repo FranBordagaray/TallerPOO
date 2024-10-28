@@ -53,26 +53,33 @@ import Modelo.Complementos.Comprobante;
 import Vista.Cliente.ModificarReserva;
 import javax.swing.ImageIcon;
 
+/**
+ * Clase que representa el panel de gestión de reservas.
+ * Permite a los recepcionistas buscar, visualizar y gestionar las reservas de los clientes.
+ */
 public class GestionReserva extends JPanel {
 
-	private static final long serialVersionUID = 1L;
-	private JTable tblRecepcionista;
-	private JTextField txtBuscarCliente;
-	private JLabel lblFechaHora;
-	private ReservaControlador reservaControlador;
-	private ComprobanteControlador comprobanteControlador;
-	private TarjetaControlador tarjetaControlador;
-	private int idReservaSeleccionada; 
-	private String fechaReservaSeleccionada; 
-	private String horaReservaSeleccionada; 
-	private String mesaSeleccionada;
-	private String capacidadSeleccionada;
-	private String ubicacionSeleccionada;
-	private String ruta;
-	private String email;
-	
+    private static final long serialVersionUID = 1L;
+    private JTable tblRecepcionista; // Tabla para mostrar las reservas
+    private JTextField txtBuscarCliente; // Campo de texto para buscar reservas por cliente
+    private JLabel lblFechaHora; // Etiqueta para mostrar la fecha y hora de la reserva
+    private ReservaControlador reservaControlador; // Controlador para gestionar reservas
+    private ComprobanteControlador comprobanteControlador; // Controlador para gestionar comprobantes
+    private TarjetaControlador tarjetaControlador; // Controlador para gestionar tarjetas
+    private int idReservaSeleccionada; // ID de la reserva seleccionada
+    private String fechaReservaSeleccionada; // Fecha de la reserva seleccionada
+    private String horaReservaSeleccionada; // Hora de la reserva seleccionada
+    private String mesaSeleccionada; // Mesa seleccionada para la reserva
+    private String capacidadSeleccionada; // Capacidad de la mesa seleccionada
+    private String ubicacionSeleccionada; // Ubicación de la mesa seleccionada
+    private String ruta; // Ruta para almacenar información adicional
+    private String email; // Email asociado a la reserva
 
-	@SuppressWarnings("serial")
+    /**
+     * Constructor de la clase GestionReserva.
+     * Inicializa el panel y sus componentes.
+     */
+    @SuppressWarnings("serial")
 	public GestionReserva() {
 		
 		reservaControlador = new ReservaControlador();
@@ -252,6 +259,18 @@ public class GestionReserva extends JPanel {
 	JButton btnCancelar = new JButton("CANCELAR");
 	btnCancelar.setIcon(new ImageIcon(GestionReserva.class.getResource("/Img/icono cancelar.png")));
 	btnCancelar.addActionListener(new ActionListener() {
+		/**
+	     * Acción a realizar cuando se presiona el botón cancelar.
+	     * 
+	     * Este método verifica si hay una reserva seleccionada y, de ser así, 
+	     * solicita una confirmación al usuario. Si el usuario confirma, se 
+	     * procede a cancelar la reserva si cumple con los criterios de tiempo.
+	     *
+	     * Si la cancelación se realiza con éxito, se muestra un mensaje 
+	     * de éxito al usuario; si no, se maneja el error adecuadamente.
+	     *
+	     * @param e El evento de acción que ocurre al presionar el botón.
+	     */
 		public void actionPerformed(ActionEvent e) {
 		    if (idReservaSeleccionada != 0) {
 		        ConfirmacionDeCancelacion confirmacionDialog = new ConfirmacionDeCancelacion();
@@ -316,6 +335,16 @@ public class GestionReserva extends JPanel {
 	JButton btnModificar = new JButton("MODIFICAR");
 	btnModificar.setIcon(new ImageIcon(GestionReserva.class.getResource("/Img/icono modificar.png")));
 	btnModificar.addActionListener(new ActionListener() {
+		/**
+	     * Acción a realizar cuando se presiona el botón modificar.
+	     * 
+	     * Este método verifica si hay una reserva seleccionada. Si es así, 
+	     * se abre la ventana de modificación de la reserva con los datos 
+	     * de la reserva seleccionada. Si no hay reserva seleccionada, 
+	     * se muestra un mensaje de error al usuario.
+	     *
+	     * @param e El evento de acción que ocurre al presionar el botón.
+	     */
 		public void actionPerformed(ActionEvent e) {
 			if(idReservaSeleccionada != 0) {
 				ModificarReserva reserva = new ModificarReserva(reservaControlador.obtenerReservaPorId(idReservaSeleccionada));
@@ -350,6 +379,16 @@ public class GestionReserva extends JPanel {
 	JButton enviarRecordatorio = new JButton("ENVIAR RECORDATORIO");
 	enviarRecordatorio.setIcon(new ImageIcon(GestionReserva.class.getResource("/Img/icono de eventos especiales.png")));
 	enviarRecordatorio.addActionListener(new ActionListener() {
+		/**
+	     * Acción a realizar cuando se presiona el botón de enviar recordatorio.
+	     * 
+	     * Este método verifica si hay una reserva seleccionada. Si es así, 
+	     * obtiene el correo electrónico del cliente asociado a la reserva y 
+	     * envía un recordatorio. Si no hay reserva seleccionada, se muestra 
+	     * un mensaje de error al usuario.
+	     *
+	     * @param e El evento de acción que ocurre al presionar el botón.
+	     */
 		public void actionPerformed(ActionEvent e) {
 			
 			if(idReservaSeleccionada != 0) {
@@ -385,6 +424,16 @@ public class GestionReserva extends JPanel {
 	JButton btnNoConcurrio = new JButton("INASISTENCIA");
 	btnNoConcurrio.setIcon(new ImageIcon(GestionReserva.class.getResource("/Img/icono inasistido.png")));
 	btnNoConcurrio.addActionListener(new ActionListener() {
+		/**
+	     * Acción a realizar cuando se presiona el botón de inasistencia.
+	     *
+	     * Este método verifica si hay una reserva seleccionada. Si es así, 
+	     * actualiza el estado de la reserva a "inasistencia" (estado 3) 
+	     * y genera un comprobante que se envía al cliente por correo. 
+	     * Si no hay reserva seleccionada, se muestra un mensaje de error al usuario.
+	     *
+	     * @param e El evento de acción que ocurre al presionar el botón.
+	     */
 		public void actionPerformed(ActionEvent e) {
 			if(idReservaSeleccionada != 0) {
 				reservaControlador.actualizarEstadoReserva(idReservaSeleccionada, 3);
@@ -421,6 +470,15 @@ public class GestionReserva extends JPanel {
 	JButton btnConcurrio = new JButton("CONCURRIO");
 	btnConcurrio.setIcon(new ImageIcon(GestionReserva.class.getResource("/Img/icono verificado.png")));
 	btnConcurrio.addActionListener(new ActionListener() {
+		 /**
+	     * Acción a realizar cuando se presiona el botón de asistencia.
+	     *
+	     * Este método verifica si hay una reserva seleccionada. Si es así, 
+	     * actualiza el estado de la reserva a "asistido" (estado 2). 
+	     * Si no hay reserva seleccionada, se muestra un mensaje de error al usuario.
+	     *
+	     * @param e El evento de acción que ocurre al presionar el botón.
+	     */
 		public void actionPerformed(ActionEvent e) {
 			if(idReservaSeleccionada != 0) {
 				reservaControlador.actualizarEstadoReserva(idReservaSeleccionada, 2);
@@ -466,6 +524,15 @@ public class GestionReserva extends JPanel {
 	
 	// Método para actualizar la fecha y hora
     private void actualizarFechaHora() {
+    	/**
+         * Actualiza la etiqueta de fecha y hora con la fecha y hora actual.
+         *
+         * Este método obtiene la fecha y hora actuales, las formatea en 
+         * el patrón "dd/MM/yyyy HH:mm" y actualiza la etiqueta correspondiente
+         * en la interfaz de usuario. Se utiliza SwingUtilities.invokeLater
+         * para garantizar que la actualización se realice en el hilo de eventos
+         * de Swing, evitando problemas de concurrencia.
+         */
         LocalDateTime fechaHoraActual = LocalDateTime.now();
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         String fechaHoraFormateada = fechaHoraActual.format(formato);
@@ -474,6 +541,18 @@ public class GestionReserva extends JPanel {
 
 	// Función para cargar tabla con datos almacenados en la base de datos
  	private void cargarDatos() {
+ 		/**
+ 	     * Carga los datos del historial de reservas en la tabla de recepción.
+ 	     *
+ 	     * Este método recupera el historial de reservas a través del controlador 
+ 	     * de reservas y lo muestra en la tabla de recepción. Se ignoran las 
+ 	     * reservas con estado CANCELADA (estado 0). Para cada reserva, se evalúa 
+ 	     * su estado y se asigna una representación textual adecuada (como "VIGENTE", 
+ 	     * "COMPLETADA", etc.). Los datos se añaden a un modelo de tabla 
+ 	     * (DefaultTableModel) que representa la tabla de recepción.
+ 	     *
+ 	     * En caso de error al obtener el historial, se imprime la traza de la excepción.
+ 	     */
  		List<HistorialReserva> historial;
  		try {
  			historial = reservaControlador.obtenerHistorialReserva();
@@ -521,6 +600,22 @@ public class GestionReserva extends JPanel {
 	
  	// Función para filtrar la busqueda por apellido
    	private void buscarPorApellido(String apellido) {
+   		/**
+   	     * Filtra y carga las reservas en la tabla según el apellido proporcionado.
+   	     *
+   	     * Este método recupera el historial de reservas a través del controlador 
+   	     * de reservas y filtra las reservas basándose en el apellido del cliente. 
+   	     * Si el apellido de una reserva contiene el texto especificado (sin 
+   	     * distinguir mayúsculas de minúsculas) y el estado de la reserva no 
+   	     * es CANCELADA (estado 0), se añade a la tabla de recepción. 
+   	     * Se asigna una representación textual adecuada al estado de cada 
+   	     * reserva antes de agregarla a la tabla.
+   	     *
+   	     * En caso de error al obtener el historial, se imprime la traza de la 
+   	     * excepción.
+   	     *
+   	     * @param apellido El apellido a buscar en el historial de reservas.
+   	     */
    		List<HistorialReserva> historial;
    		try {
    			historial = reservaControlador.obtenerHistorialReserva();
@@ -568,8 +663,23 @@ public class GestionReserva extends JPanel {
    			e.printStackTrace();
    		}
    	}
+   	
 	// Metodo para enviar mail con Comprobante
  	public void enviarMailComprobante() {
+ 		/**
+ 	     * Envía un correo electrónico con el comprobante de pago al cliente.
+ 	     *
+ 	     * Este método genera un asunto y un mensaje formateado que incluye los
+ 	     * detalles de la reserva correspondiente, incluyendo el ID de la reserva, 
+ 	     * número de mesa, ubicación, capacidad, fecha y hora de la reserva. 
+ 	     * Se utiliza la clase EnviarMail para enviar el correo al cliente.
+ 	     * 
+ 	     * Se espera que el atributo 'email' contenga la dirección de correo 
+ 	     * del cliente y 'ruta' la ubicación del comprobante, que se adjunta al 
+ 	     * correo.
+ 	     *
+ 	     * @throws Exception Si ocurre un error al enviar el correo.
+ 	     */
  		String asunto = "Comprobante de Pago - Multa por Cancelación o No Concurrencia - Delicias Gourmet";
  		String mensaje = String.format(
  			    "Estimado/a cliente,\n\n" +
@@ -599,6 +709,24 @@ public class GestionReserva extends JPanel {
  	//Metodo para generar pdf del comprobante
     @SuppressWarnings("unused")
 	private void generarComprobanteMail(Comprobante  comprobante) {
+    	/**
+         * Genera un archivo PDF que contiene el comprobante de pago.
+         *
+         * Este método recibe un objeto Comprobante y utiliza la información de
+         * la tarjeta asociada para crear un documento PDF que incluye detalles
+         * como el ID del comprobante, fecha, hora, importe, ID de reserva y
+         * detalles de la tarjeta del cliente.
+         * 
+         * El PDF se guarda en la carpeta "Comprobantes" dentro de la ruta del
+         * proyecto, y el nombre del archivo incluye el ID del comprobante y
+         * un timestamp para garantizar que sea único. Si el archivo ya existe,
+         * se genera un nuevo nombre para evitar conflictos.
+         *
+         * @param comprobante El objeto Comprobante que contiene la información
+         *                    necesaria para generar el PDF.
+         * @throws IOException Si ocurre un error al crear el archivo PDF.
+         * @throws DocumentException Si ocurre un error al manipular el documento PDF.
+         */
     	Tarjeta tarjeta = new Tarjeta();
     	tarjeta = tarjetaControlador.obtenerDatosTarjeta(comprobante.getIdTarjeta());
        
@@ -651,9 +779,20 @@ public class GestionReserva extends JPanel {
         }
     }
     
-   // Metodo para enviar mail recordatorio
- 	public void enviarRecordatorio() {
- 
+    /**
+	     * Envía un correo electrónico de recordatorio al cliente sobre su reserva próxima.
+	     *
+	     * Este método genera un mensaje que incluye los detalles de la reserva,
+	     * como el número de mesa, ubicación, capacidad, fecha y hora. El asunto
+	     * del correo es "Recordatorio de Reserva - Delicias Gourmet".
+	     * 
+	     * Se utiliza el método `EnviarMail.enviarCorreo` para enviar el mensaje
+	     * al correo electrónico del cliente.
+	     *
+	     * @throws NullPointerException Si alguna de las variables que contienen
+	     *                              los detalles de la reserva no están inicializadas.
+	     */
+ 	public void enviarRecordatorio() { 	 
  		String asunto =  "Recordatorio de Reserva - Delicias Gourmet";
  		String mensaje = String.format(
  				"Estimado/a cliente,\n\n" +

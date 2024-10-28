@@ -15,14 +15,25 @@ import java.io.File;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+/**
+ * Clase que gestiona el envío de correos electrónicos desde el sistema de Delicias Gourmet.
+ * Permite enviar correos simples y correos con archivos adjuntos como comprobantes en formato PDF.
+ */
 public class EnviarMail {
-	
-	public static void enviarCorreo(String destinatario, String asunto, String cuerpo) {
-        // Mail y clave de aplicacion del restaurant
+
+    /**
+     * Envía un correo electrónico sin archivos adjuntos.
+     *
+     * @param destinatario Dirección de correo electrónico del destinatario.
+     * @param asunto       Asunto del correo electrónico.
+     * @param cuerpo       Contenido del cuerpo del correo electrónico.
+     */
+    public static void enviarCorreo(String destinatario, String asunto, String cuerpo) {
+        // Mail y clave de aplicación del restaurante
         final String remitente = "deliciasgourmet.recuperar@gmail.com";
         final String password = "ygjc cwvz xigu rxhk";
 
-        // Configura el host para enviar correos
+        // Configuración del servidor de correo
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
@@ -31,15 +42,15 @@ public class EnviarMail {
         props.setProperty("mail.smtp.user", remitente);
         props.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
         props.setProperty("mail.smtp.auth", "true");
-        
-        // Crea una sesión de correo
+
+        // Crea una sesión con autenticación
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(remitente, password);
             }
         });
 
-        // Crea el mensaje con sus campos necesarios
+        // Envío del mensaje
         try {
             MimeMessage mensaje = new MimeMessage(session);
             mensaje.setFrom(new InternetAddress(remitente));
@@ -52,60 +63,68 @@ public class EnviarMail {
             throw new RuntimeException(e);
         }
     }
-	//Metodo enviarCorreo modificado para que tambien envie un pdf(Comprobante)
-	public static void enviarCorreoComprobante(String destinatario, String asunto, String cuerpo, String ruta) {
-	    // Mail y clave de aplicación del restaurante
-	    final String remitente = "deliciasgourmet.recuperar@gmail.com";
-	    final String password = "ygjc cwvz xigu rxhk";
 
-	    // Configura el host para enviar correos
-	    Properties props = new Properties();
-	    props.put("mail.smtp.host", "smtp.gmail.com");
-	    props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-	    props.setProperty("mail.smtp.starttls.enable", "true");
-	    props.setProperty("mail.smtp.port", "587");
-	    props.setProperty("mail.smtp.user", remitente);
-	    props.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
-	    props.setProperty("mail.smtp.auth", "true");
+    /**
+     * Envía un correo electrónico con un archivo adjunto, como un comprobante en formato PDF.
+     *
+     * @param destinatario Dirección de correo electrónico del destinatario.
+     * @param asunto       Asunto del correo electrónico.
+     * @param cuerpo       Contenido del cuerpo del correo electrónico.
+     * @param ruta         Ruta del archivo adjunto a enviar.
+     */
+    public static void enviarCorreoComprobante(String destinatario, String asunto, String cuerpo, String ruta) {
+        // Mail y clave de aplicación del restaurante
+        final String remitente = "deliciasgourmet.recuperar@gmail.com";
+        final String password = "ygjc cwvz xigu rxhk";
 
-	    // Crear una sesión con autenticación
-	    Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-	        protected PasswordAuthentication getPasswordAuthentication() {
-	            return new PasswordAuthentication(remitente, password);
-	        }
-	    });
+        // Configuración del servidor de correo
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        props.setProperty("mail.smtp.starttls.enable", "true");
+        props.setProperty("mail.smtp.port", "587");
+        props.setProperty("mail.smtp.user", remitente);
+        props.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
+        props.setProperty("mail.smtp.auth", "true");
 
-	    try {
-	        // Crear un objeto MimeMessage
-	        MimeMessage mensaje = new MimeMessage(session);
-	        mensaje.setFrom(new InternetAddress(remitente));
-	        mensaje.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
-	        mensaje.setSubject(asunto);
+        // Crear una sesión con autenticación
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(remitente, password);
+            }
+        });
 
-	        // Crear la parte del cuerpo del correo
-	        MimeBodyPart bodyPart = new MimeBodyPart();
-	        bodyPart.setText(cuerpo);
+        // Creación y envío del mensaje con archivo adjunto
+        try {
+            MimeMessage mensaje = new MimeMessage(session);
+            mensaje.setFrom(new InternetAddress(remitente));
+            mensaje.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
+            mensaje.setSubject(asunto);
 
-	        // Crear la parte del archivo adjunto
-	        MimeBodyPart adjuntoPart = new MimeBodyPart();
-	        FileDataSource source = new FileDataSource(ruta);
-	        adjuntoPart.setDataHandler(new DataHandler(source));
-	        adjuntoPart.setFileName(new File(ruta).getName());
+            // Crea la parte del cuerpo del correo
+            MimeBodyPart bodyPart = new MimeBodyPart();
+            bodyPart.setText(cuerpo);
 
-	        // Crear un objeto Multipart para combinar las partes
-	        MimeMultipart multipart = new MimeMultipart();
-	        multipart.addBodyPart(bodyPart);  // Añadir la parte del cuerpo
-	        multipart.addBodyPart(adjuntoPart);  // Añadir la parte del archivo adjunto
+            // Crea la parte del archivo adjunto
+            MimeBodyPart adjuntoPart = new MimeBodyPart();
+            FileDataSource source = new FileDataSource(ruta);
+            adjuntoPart.setDataHandler(new DataHandler(source));
+            adjuntoPart.setFileName(new File(ruta).getName());
 
-	        // Establecer el contenido del mensaje como multipart
-	        mensaje.setContent(multipart);
+            // Combina las partes del mensaje
+            MimeMultipart multipart = new MimeMultipart();
+            multipart.addBodyPart(bodyPart);
+            multipart.addBodyPart(adjuntoPart);
 
-	        // Enviar el mensaje
-	        Transport.send(mensaje);
-	        System.out.println("Correo enviado con éxito!");
-	    } catch (MessagingException e) {
-	        e.printStackTrace();  // Imprimir el error para ayudar en la depuración
-	        throw new RuntimeException(e);
-	    }
-	}
+            // Establece el contenido del mensaje como multipart
+            mensaje.setContent(multipart);
+
+            // Envía el mensaje
+            Transport.send(mensaje);
+            System.out.println("Correo enviado con éxito!");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 }

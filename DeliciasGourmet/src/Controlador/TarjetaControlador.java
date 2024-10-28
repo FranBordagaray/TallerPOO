@@ -8,16 +8,40 @@ import java.sql.SQLException;
 import Conexion.Conexion;
 import Modelo.Cliente.Tarjeta;
 
+/**
+ * Controlador para gestionar las operaciones relacionadas con las tarjetas.
+ * Proporciona métodos para ingresar tarjetas y realizar otras operaciones
+ * en la base de datos.
+ */
 public class TarjetaControlador {
     Conexion cx;
     private Connection connection;
 
+    /**
+     * Ingresa una tarjeta en la base de datos para completar una reserva.
+     *
+     * Este método inserta un nuevo registro de tarjeta en la tabla Tarjeta
+     * de la base de datos. Si la operación se realiza con éxito, se retorna 
+     * true; de lo contrario, se retorna false.
+     *
+     * @param tarjeta El objeto Tarjeta que se desea ingresar.
+     * @return true si la tarjeta se ingresó correctamente; false en caso contrario.
+     */
     public TarjetaControlador() {
         cx = new Conexion();
         connection = cx.conectar();
     }
     
-    // Funcion para ingresar tarjetas para completar una reserva
+    /**
+     * Ingresa una tarjeta en la base de datos.
+     *
+     * Este método inserta un nuevo registro de tarjeta en la tabla Tarjeta
+     * de la base de datos. Si la operación se realiza con éxito, se retorna 
+     * true; de lo contrario, se retorna false.
+     *
+     * @param tarjeta El objeto Tarjeta que se desea ingresar.
+     * @return true si la tarjeta se ingresó correctamente; false en caso contrario.
+     */
     public boolean ingresarTarjeta(Tarjeta tarjeta) {
         PreparedStatement ps = null;
         try {
@@ -44,7 +68,14 @@ public class TarjetaControlador {
         }
     }
     
- // Función que te retorna el id de la última tarjeta ingresada
+    /**
+     * Función que retorna el ID de la última tarjeta ingresada en la base de datos.
+     *
+     * Este método consulta la tabla Tarjeta para obtener el valor máximo del campo
+     * idTarjeta. Si no hay tarjetas registradas, retorna -1.
+     *
+     * @return El ID de la última tarjeta ingresada, o -1 si no se encontró ninguna.
+     */
     public int obtenerUltimoIdTarjeta() {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -79,7 +110,16 @@ public class TarjetaControlador {
     }
 
     
- // Función para obtener los datos de una tarjeta mediante el número de tarjeta como String
+    /**
+     * Función para obtener los datos de una tarjeta mediante el número de tarjeta.
+     *
+     * Este método consulta la tabla Tarjeta utilizando el número de tarjeta como criterio
+     * de búsqueda y retorna un objeto Tarjeta con los detalles correspondientes.
+     * Si no se encuentra la tarjeta, se retorna null.
+     *
+     * @param nroTarjeta El número de tarjeta como String que se desea buscar.
+     * @return Un objeto Tarjeta con los datos correspondientes, o null si no se encontró.
+     */
     public Tarjeta obtenerDatosTarjetaConNumTarjeta(String nroTarjeta) {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -126,7 +166,16 @@ public class TarjetaControlador {
     }
 
 
- // Función para obtener los datos de una tarjeta mediante el id
+    /**
+     * Función para obtener los datos de una tarjeta mediante su ID.
+     *
+     * Este método consulta la tabla Tarjeta utilizando el ID de la tarjeta como criterio
+     * de búsqueda y retorna un objeto Tarjeta con los detalles correspondientes.
+     * Si no se encuentra la tarjeta, se retorna null.
+     *
+     * @param idTarjeta El ID de la tarjeta que se desea buscar.
+     * @return Un objeto Tarjeta con los datos correspondientes, o null si no se encontró.
+     */
  	public Tarjeta obtenerDatosTarjeta(int idTarjeta) {
  	    PreparedStatement ps = null;
  	    ResultSet rs = null;
@@ -170,7 +219,16 @@ public class TarjetaControlador {
  	}
 
     
- // Función para obtener los datos de una tarjeta mediante el id del comprobante
+ 	/**
+ 	 * Función para obtener los datos de una tarjeta mediante el ID del comprobante.
+ 	 *
+ 	 * Este método consulta la tabla Comprobante para encontrar el ID de la tarjeta
+ 	 * asociada al comprobante dado. Si se encuentra, se llama al método
+ 	 * obtenerDatosTarjeta para recuperar los datos de la tarjeta.
+ 	 *
+ 	 * @param idComprobante El ID del comprobante para el cual se desea obtener la tarjeta.
+ 	 * @return Un objeto Tarjeta con los datos correspondientes, o null si no se encontró.
+ 	 */
     public Tarjeta obtenerTarjetaPorComprobante(int idComprobante) {
         PreparedStatement ps = null;
         ResultSet rs = null;

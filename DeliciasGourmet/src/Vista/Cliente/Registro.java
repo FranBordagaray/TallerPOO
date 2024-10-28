@@ -23,20 +23,75 @@ import javax.swing.border.EmptyBorder;
 
 import Controlador.ClienteControlador;
 import Modelo.Cliente.Cliente;
-
+/**
+ * Clase que representa la ventana de registro de un nuevo cliente en el sistema.
+ * Extiende {@link JFrame} para proporcionar una interfaz gráfica de usuario 
+ * para ingresar los datos necesarios para el registro.
+ * 
+ * La clase incluye campos para el nombre, apellido, domicilio, teléfono, 
+ * correo electrónico y contraseña del cliente, así como un controlador para 
+ * gestionar la lógica de registro.
+ * 
+ */
 public class Registro extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField txtDomicilio;
-	private JTextField txtTelefono;
-	private JTextField txtEmail;
-	private JTextField txtNombre;
-	private JTextField txtApellido;
-	private JPasswordField txtContrasenia;
-	private JPasswordField txtRepetirContrasenia;
-	ClienteControlador controlador = new ClienteControlador();
+	 /**
+     * Panel que contiene todos los componentes de la interfaz de usuario.
+     */
+    private JPanel contentPane;
 
+    /**
+     * Campo de texto para ingresar el domicilio del cliente.
+     */
+    private JTextField txtDomicilio;
+
+    /**
+     * Campo de texto para ingresar el teléfono del cliente.
+     */
+    private JTextField txtTelefono;
+
+    /**
+     * Campo de texto para ingresar el correo electrónico del cliente.
+     */
+    private JTextField txtEmail;
+
+    /**
+     * Campo de texto para ingresar el nombre del cliente.
+     */
+    private JTextField txtNombre;
+
+    /**
+     * Campo de texto para ingresar el apellido del cliente.
+     */
+    private JTextField txtApellido;
+
+    /**
+     * Campo de contraseña para ingresar la contraseña del cliente.
+     */
+    private JPasswordField txtContrasenia;
+
+    /**
+     * Campo de contraseña para repetir la contraseña del cliente.
+     */
+    private JPasswordField txtRepetirContrasenia;
+
+    /**
+     * Controlador que gestiona las operaciones relacionadas con el cliente.
+     */
+    private ClienteControlador controlador = new ClienteControlador();
+
+    /**
+     * Constructor de la clase Registro.
+     *
+     * Este constructor inicializa una nueva instancia de la clase 
+     * Registro, que representa la interfaz gráfica para registrar 
+     * un nuevo usuario en el sistema. La vista permite al usuario 
+     * ingresar sus datos personales, como nombre, correo electrónico, 
+     * contraseña, y otra información necesaria para completar el 
+     * proceso de registro. Además, maneja la validación de datos 
+     * y la creación de la cuenta del usuario en la base de datos.
+     */
 	public Registro() {
 		// Configuración de la ventana principal
 		setTitle("Registro");
@@ -182,7 +237,23 @@ public class Registro extends JFrame {
 		txtRepetirContrasenia.setBounds(300, 491, 300, 30);
 		pnlContenedor.add(txtRepetirContrasenia);
 
-		// Boton para crear cuenta
+		/**
+		 * Crea un botón que permite a los usuarios crear una nueva cuenta.
+		 * 
+		 * Este botón, al ser presionado, ejecuta una serie de validaciones antes de proceder 
+		 * con el registro de un nuevo cliente. Las validaciones incluyen:
+		 * Comprobar que todos los campos del formulario están completos.
+		 * Verificar que el correo electrónico ingresado no esté ya en uso.
+		 * Validar que el formato del correo electrónico sea correcto.
+		 * 
+		 * Si todas las validaciones son exitosas, se crea un nuevo objeto Cliente y se 
+		 * intenta registrar en el sistema. En caso de éxito, se muestra un mensaje de 
+		 * confirmación y se redirige al usuario a la pantalla de inicio de sesión. Si 
+		 * ocurre algún error, se informa al usuario mediante un cuadro de diálogo.
+		 * 
+		 * El botón también incluye efectos visuales, como cambiar el color de fondo y 
+		 * el color del texto cuando el cursor pasa sobre él.
+		 */
 		JButton btnRegistro = new JButton("Crear cuenta");
 		btnRegistro.setIcon(new ImageIcon(Registro.class.getResource("/Img/icono de crear cuenta.png")));
 		btnRegistro.addActionListener(new ActionListener() {
@@ -253,7 +324,20 @@ public class Registro extends JFrame {
 
 	}
 
-	// Funcion para verificar campos vacios
+	/**
+	 * Verifica si los campos del formulario están completos y si las contraseñas son válidas.
+	 * 
+	 * Este método comprueba que ninguno de los campos requeridos (nombre, apellido, domicilio, 
+	 * teléfono, correo electrónico, contraseña y repetir contraseña) esté vacío. También verifica
+	 * que las contraseñas ingresadas coincidan y que la contraseña tenga al menos 8 caracteres.
+	 * 
+	 * Si se encuentra algún problema, se muestra un mensaje de advertencia o error al usuario 
+	 * utilizando un cuadro de diálogo y se devuelve true. Si todos los campos son válidos, 
+	 * se devuelve false.
+	 *
+	 * @return true si hay campos vacíos o si hay errores de validación de la contraseña; 
+	 *         false si todos los campos son válidos.
+	 */
 	private boolean verificarCampos() {
 		String nombre = txtNombre.getText();
 		String apellido = txtApellido.getText();
@@ -278,7 +362,17 @@ public class Registro extends JFrame {
 		return false;
 	}
 
-	// Metodo para verificar si esta bien el email
+	/**
+	 * Verifica si el correo electrónico proporcionado es válido.
+	 * 
+	 * Este método utiliza una expresión regular para comprobar que el formato
+	 * del correo electrónico cumple con los estándares comunes. El correo es
+	 * considerado válido si contiene un nombre de usuario seguido de una '@',
+	 * un dominio y una extensión de al menos dos caracteres.
+	 *
+	 * @param correo El correo electrónico que se desea validar.
+	 * @return true si el correo es válido, false en caso contrario.
+	 */
 	public static boolean esCorreoValido(String correo) {
 		String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 		Pattern pattern = Pattern.compile(regex);

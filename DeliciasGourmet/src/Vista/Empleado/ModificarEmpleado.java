@@ -27,19 +27,30 @@ import Modelo.Empleado.Empleado;
 import Modelo.Empleado.EnumRoles;
 import javax.swing.DefaultComboBoxModel;
 
+/**
+ * Clase que representa la ventana para modificar los datos de un empleado en el sistema.
+ * Permite editar la información personal y de contacto del empleado seleccionado.
+ */
 public class ModificarEmpleado extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField txtDomicilio;
-	private JTextField txtTelefono;
-	private JTextField txtEmail;
-	private JTextField txtNombre;
-	private JTextField txtApellido;
-	private JTextField txtUsuario;
-	EmpleadoControlador controlador;
+    private static final long serialVersionUID = 1L; // Identificador único de la clase
+    private JPanel contentPane; // Panel principal de la ventana
+    private JTextField txtDomicilio; // Campo de texto para el domicilio del empleado
+    private JTextField txtTelefono; // Campo de texto para el teléfono del empleado
+    private JTextField txtEmail; // Campo de texto para el correo electrónico del empleado
+    private JTextField txtNombre; // Campo de texto para el nombre del empleado
+    private JTextField txtApellido; // Campo de texto para el apellido del empleado
+    private JTextField txtUsuario; // Campo de texto para el nombre de usuario del empleado
+    private EmpleadoControlador controlador; // Controlador para la gestión de empleados
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+    /**
+     * Constructor de la clase ModificarEmpleado.
+     * Inicializa la ventana con los campos pre-rellenados con la información del empleado 
+     * que se va a modificar.
+     *
+     * @param empleado El empleado cuyas datos se desean modificar.
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
 	public ModificarEmpleado(Empleado empleado) {
 		
 		controlador = new EmpleadoControlador();
@@ -293,6 +304,18 @@ public class ModificarEmpleado extends JFrame {
 
 	// Funcion para verificar campos vacios
 	private boolean verificarCampos() {
+		/**
+	     * Verifica si los campos requeridos en el formulario están vacíos.
+	     *
+	     * Este método obtiene los valores de los campos de texto del formulario
+	     * (nombre, apellido, domicilio, teléfono, email y usuario) y comprueba
+	     * si alguno de ellos está vacío. Si se encuentra algún campo vacío, se
+	     * muestra un mensaje de advertencia y se retorna `true`. Si todos los
+	     * campos están completos, se retorna `false`.
+	     *
+	     * @return boolean `true` si hay campos vacíos, `false` si todos los
+	     *                 campos están completos.
+	     */
 		String nombre = txtNombre.getText();
 		String apellido = txtApellido.getText();
 		String domicilio = txtDomicilio.getText();
@@ -310,6 +333,18 @@ public class ModificarEmpleado extends JFrame {
 
 	// Metodo para verificar si esta bien el email
 	public static boolean esCorreoValido(String correo) {
+		/**
+	     * Verifica si la dirección de correo electrónico proporcionada es válida.
+	     *
+	     * Este método utiliza una expresión regular para comprobar si el formato
+	     * del correo electrónico es correcto. La expresión regular permite
+	     * letras, números y ciertos caracteres especiales antes del símbolo '@',
+	     * seguido de un dominio que incluye al menos un punto y una extensión
+	     * de al menos dos letras.
+	     *
+	     * @param correo La dirección de correo electrónico a validar.
+	     * @return boolean `true` si el correo es válido, `false` en caso contrario.
+	     */
 		String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 		Pattern pattern = Pattern.compile(regex);
 		return pattern.matcher(correo).matches();

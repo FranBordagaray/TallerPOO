@@ -40,6 +40,10 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Cursor;
 
+/**
+ * Clase que representa el panel del dashboard para empleados.
+ * Proporciona la interfaz para gestionar las reservas y eventos especiales.
+ */
 public class DashboardEmpleado extends JPanel {
     private static final long serialVersionUID = 1L;
     private JLabel lblFechaHora;
@@ -51,6 +55,10 @@ public class DashboardEmpleado extends JPanel {
     private MesaControlador mesaControlador;
     
 
+    /**
+     * Constructor por defecto de la clase DashboardEmpleado.
+     * Inicializa los componentes de la interfaz y los controladores necesarios.
+     */
     @SuppressWarnings({ "static-access", "serial" })
     public DashboardEmpleado() {
     	
@@ -359,7 +367,14 @@ public class DashboardEmpleado extends JPanel {
  		}
  	}
  	
- 	// Función para cargar tabla con datos almacenados en la base de datos
+ 	/**
+ 	 * Carga los datos de los servicios especiales desde la base de datos 
+ 	 * y los muestra en la tabla de eventos especiales. 
+ 	 * Obtiene una lista de servicios con evento especial y llena el modelo de la tabla 
+ 	 * con la ubicación, fecha y hora de inicio de cada servicio.
+ 	 * 
+ 	 * Si ocurre una excepción durante la carga, se imprime el seguimiento de la pila.
+ 	 */
  		private void cargarServicioEspecial() {
  	 		List<Servicio> servicios;
  	 		try {
@@ -380,7 +395,17 @@ public class DashboardEmpleado extends JPanel {
  	 		}
  	 	}
  	
- 	// Función para filtrar la busqueda por apellido
+ 		/**
+ 		 * Filtra y busca reservas en el historial según el apellido proporcionado.
+ 		 * Obtiene el historial de reservas y llena el modelo de la tabla 
+ 		 * solo con aquellas reservas cuyo apellido contenga la cadena de búsqueda (insensible a mayúsculas y minúsculas).
+ 		 * 
+ 		 * Las reservas con estados "CANCELADA", "COMPLETADA", o "NO ASISTIÓ" son ignoradas en el filtrado.
+ 		 * El método asigna un estado descriptivo basado en el código del estado de la reserva 
+ 		 * y agrega la información relevante a la tabla.
+ 		 * 
+ 		 * Si ocurre una excepción durante la búsqueda, se imprime el seguimiento de la pila.
+ 		 */
   	private void buscarPorApellido(String apellido) {
   		List<HistorialReserva> historial;
   		try {
@@ -430,7 +455,18 @@ public class DashboardEmpleado extends JPanel {
   		}
   	}
  	
- 	// Método para formatear el comentario
+  	/**
+  	 * Formatea un comentario dividiéndolo en varias líneas según un límite de caracteres especificado.
+  	 * 
+  	 * Este método toma un comentario como entrada y lo separa en palabras. Si la longitud actual de la línea 
+  	 * más la longitud de la siguiente palabra excede el límite de caracteres, se agrega un salto de línea antes 
+  	 * de continuar con la próxima palabra. El resultado es un String con el comentario original formateado 
+  	 * de manera que ninguna línea supere el límite especificado.
+  	 * 
+  	 * @param comentario el comentario a formatear
+  	 * @param limiteCaracteres el número máximo de caracteres permitidos en una línea
+  	 * @return el comentario formateado, con saltos de línea donde sea necesario
+  	 */
   	private String formatearComentario(String comentario, int limiteCaracteres) {
   	    StringBuilder resultado = new StringBuilder();
   	    String[] palabras = comentario.split(" "); 

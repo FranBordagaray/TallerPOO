@@ -38,16 +38,48 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-
+/**
+ * Clase que representa el panel principal del dashboard, donde se muestran las reservas y notificaciones.
+ */
 public class Dashboard extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private JTable tblResumenReserva;
-	private JLabel lblFechaHora;
-	private ServicioControlador servicioControlador;
-	private MesaControlador mesaControlador;
-	private JPanel panelNotificaciones;
 
+    /**
+     * Tabla que muestra un resumen de las reservas realizadas.
+     */
+    private JTable tblResumenReserva;
+
+    /**
+     * Etiqueta que muestra la fecha y hora actual.
+     */
+    private JLabel lblFechaHora;
+
+    /**
+     * Controlador encargado de gestionar las operaciones relacionadas con los servicios.
+     */
+    private ServicioControlador servicioControlador;
+
+    /**
+     * Controlador encargado de gestionar las operaciones relacionadas con las mesas.
+     */
+    private MesaControlador mesaControlador;
+
+    /**
+     * Panel que contiene las notificaciones relevantes para el usuario.
+     */
+    private JPanel panelNotificaciones;
+	
+    /**
+     * Constructor de la clase Dashboard.
+     *
+     * Este constructor inicializa una nueva instancia de la clase Dashboard,
+     * que representa la interfaz principal de la aplicación. El Dashboard proporciona 
+     * acceso a las funcionalidades principales del sistema, como la gestión de reservas,
+     * la visualización de informes y la administración de servicios. 
+     * Al invocar este constructor, se configuran los componentes visuales 
+     * y se establecen las propiedades iniciales de la interfaz.
+     */
 	@SuppressWarnings({ "static-access", "serial" })
 	public Dashboard() {
 		mesaControlador = new MesaControlador();
@@ -211,9 +243,16 @@ public class Dashboard extends JPanel {
         }, 0, 1000);
 	}
 	
-	
-
-	// Función para cargar tabla con datos almacenados en la base de datos
+	/**
+	 * Carga los datos del historial de reservas del cliente en la tabla de resumen de reservas.
+	 *
+	 * Este método utiliza el identificador del cliente para obtener su historial de reservas
+	 * desde la base de datos a través del controlador de reservas. Luego, llena la tabla
+	 * `tblResumenReserva` con los datos obtenidos, incluyendo el ID de la mesa, la fecha,
+	 * la hora y la ubicación de cada reserva.
+	 *
+	 * @param idCliente el identificador único del cliente cuyo historial de reservas se va a cargar.	 
+	 */
 	public void cargarDatos(int idCliente) {
 		ReservaControlador controlador = new ReservaControlador();
 		List<HistorialReserva> historial;
@@ -231,6 +270,20 @@ public class Dashboard extends JPanel {
 		}
 	}
 	
+	/**
+	 * Filtra los servicios de acuerdo a la fecha, devolviendo solo aquellos que 
+	 * son iguales o posteriores a la fecha actual.
+	 *
+	 * Este método toma una lista de servicios y verifica la fecha de cada uno 
+	 * utilizando el formato "dd-MM-yyyy". Si la fecha de un servicio es 
+	 * igual o posterior a la fecha actual, se añade a la lista de servicios 
+	 * filtrados.
+	 *
+	 * @param servicios la lista de servicios a filtrar.
+	 * @return una lista de servicios que ocurren desde la fecha actual en adelante.
+	 * @throws DateTimeParseException si no se puede analizar la fecha de un servicio
+	 *         debido a un formato incorrecto.
+	 */
 	//Metodo para filtrar servicio de la fecha de hoy en adelante
 	public List<Servicio> filtrarServiciosPorFecha(List<Servicio> servicios) {
 	    List<Servicio> serviciosFiltrados = new ArrayList<>();
@@ -251,7 +304,18 @@ public class Dashboard extends JPanel {
 	    return serviciosFiltrados;
 	}
 	
-	//Metodo para cargar las notificaciones en el Panel
+	/**
+	 * Carga y visualiza notificaciones de eventos especiales en el panel de notificaciones.
+	 *
+	 * Este método toma una lista de servicios y crea un panel para cada servicio que contiene
+	 * información relevante como el icono del evento, título, fecha, hora y ubicación.
+	 * Los paneles de servicio se organizan utilizando un {@code GridBagLayout} para un 
+	 * diseño flexible y responsivo.
+	 *
+	 * @param servicios la lista de servicios que representan eventos especiales a mostrar.
+	 * @throws NullPointerException si la lista de servicios es {@code null} o si se produce 
+	 *         un error al buscar la ubicación del servicio.
+	 */
 	private void cargarNotificacionesVisual(List<Servicio> servicios) {
 	    panelNotificaciones.removeAll();
 	    panelNotificaciones.setLayout(new GridBagLayout());
@@ -299,12 +363,33 @@ public class Dashboard extends JPanel {
 	    panelNotificaciones.repaint();
 	}
 
-	// Método para cargar un icono de imagen
+	/**
+	 * Carga un icono de imagen desde la ruta especificada en los recursos de la clase.
+	 *
+	 * Este método utiliza {@code getClass().getResource(ruta)} para localizar 
+	 * la imagen en el classpath y devuelve un {@code ImageIcon} que puede ser 
+	 * utilizado en componentes de la interfaz gráfica de usuario (GUI).
+	 *
+	 * @param ruta la ruta del recurso de la imagen (por ejemplo, "/Img/icono.png").
+	 * @return un objeto {@code ImageIcon} que representa la imagen cargada.
+	 * @throws NullPointerException si la ruta especificada no se encuentra en los recursos.
+	 */
 	private ImageIcon cargarIcono(String ruta) {
 	    return new ImageIcon(getClass().getResource(ruta));
 	}
 	
-	// Método para actualizar la fecha y hora
+	/**
+	 * Actualiza la etiqueta de fecha y hora en la interfaz gráfica.
+	 * 
+	 * Este método obtiene la fecha y hora actuales del sistema, las formatea
+	 * en el patrón "dd/MM/yyyy HH:mm" y actualiza la etiqueta {@code lblFechaHora}
+	 * para mostrar el resultado.
+	 * 
+	 * La actualización de la etiqueta se realiza en el hilo de despacho de eventos
+	 * de Swing mediante {@code SwingUtilities.invokeLater}, asegurando que la 
+	 * interfaz gráfica se mantenga responsiva y actualizada correctamente.
+	 */
+
     private void actualizarFechaHora() {
         LocalDateTime fechaHoraActual = LocalDateTime.now();
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");

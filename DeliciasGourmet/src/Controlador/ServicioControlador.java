@@ -11,16 +11,42 @@ import Conexion.Conexion;
 import Modelo.Complementos.Reserva;
 import Modelo.Complementos.Servicio;
 
+/**
+ * Clase ServicioControlador.
+ * 
+ * Esta clase gestiona las operaciones relacionadas con los servicios en la base de datos,
+ * incluyendo el registro de nuevos servicios y la verificación de solapamientos.
+ */
 public class ServicioControlador {
 	Conexion cx;
 	private Connection connection;
 
+	/**
+	 * Registra un nuevo servicio en la base de datos.
+	 *
+	 * Este método inserta un nuevo registro de servicio en la tabla correspondiente,
+	 * después de verificar que no haya solapamientos de horarios con otros servicios
+	 * existentes. Si el servicio se registra correctamente, se retorna true; de lo contrario,
+	 * se retorna false.
+	 *
+	 * @param servicio el objeto Servicio que contiene los detalles del servicio a registrar.
+	 * @return true si el servicio fue registrado exitosamente, false en caso contrario.
+	 */
 	public ServicioControlador() {
 		cx = new Conexion();
 		connection = cx.conectar();
 	}
 
-	// Función para registrar un servicio con verificación previa
+	/**
+	 * Registra un nuevo servicio en la base de datos.
+	 *
+	 * Este método verifica si el servicio ya existe en la base de datos para la fecha y hora
+	 * especificadas. Si no existe, procede a crear el nuevo servicio. Si el servicio se registra
+	 * correctamente, se retorna true; de lo contrario, se retorna false.
+	 *
+	 * @param servicio el objeto Servicio que contiene los detalles del servicio a registrar.
+	 * @return true si el servicio fue registrado exitosamente, false en caso contrario.
+	 */
 	public boolean registrarServicio(Servicio servicio) {
 		if (verificarServicio(servicio)) {
 			System.out.println("El servicio ya existe en esa fecha y hora. No se puede registrar.");
@@ -37,7 +63,16 @@ public class ServicioControlador {
 		}
 	}
 
-	// Función para registrar un servicio en la base de datos
+	/**
+	 * Registra un nuevo servicio en la base de datos.
+	 *
+	 * Este método inserta un nuevo registro de servicio en la tabla `Servicio`. Después de
+	 * insertar el servicio, recupera el ID del último registro insertado para poder retornar
+	 * dicho ID. En caso de error durante el proceso de inserción, se retorna -1.
+	 *
+	 * @param servicio el objeto Servicio que contiene los detalles del servicio a registrar.
+	 * @return el ID del servicio registrado, o -1 si ocurrió un error durante la inserción.
+	 */
 	public int crearServicio(Servicio servicio) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -80,7 +115,16 @@ public class ServicioControlador {
 	}
 
 
-	// Función para verificar si un servicio ya existe en una fecha y hora específicas
+	/**
+	 * Verifica si un servicio ya existe en una fecha y hora específicas.
+	 *
+	 * Este método consulta la base de datos para determinar si ya hay un servicio registrado
+	 * con la misma fecha y hora de inicio. Retorna true si existe al menos un servicio
+	 * coincidente, y false en caso contrario.
+	 *
+	 * @param servicio el objeto Servicio que contiene la fecha y la hora de inicio a verificar.
+	 * @return true si ya existe un servicio en la fecha y hora especificadas; false en caso contrario.
+	 */
 	public boolean verificarServicio(Servicio servicio) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -115,7 +159,16 @@ public class ServicioControlador {
 	    return false;
 	}
 
-	// Método para buscar un servicio basado en una reserva
+	/**
+	 * Busca un servicio basado en una reserva específica.
+	 *
+	 * Este método consulta la base de datos para encontrar un servicio que coincida
+	 * con la fecha y la hora de inicio de la reserva proporcionada. Si se encuentra
+	 * un servicio, se retorna su ID; de lo contrario, se devuelve -1.
+	 *
+	 * @param reserva el objeto Reserva que contiene la fecha y hora de la reserva.
+	 * @return el ID del servicio asociado a la reserva, o -1 si no se encuentra.
+	 */
 	public int buscarServicioPorReserva(Reserva reserva) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -153,6 +206,18 @@ public class ServicioControlador {
 	    return idServicio;
 	}
 
+	/**
+	 * Busca un servicio basado en una fecha y hora específicas.
+	 *
+	 * Este método consulta la base de datos para encontrar un servicio que coincida
+	 * con la fecha y la hora de inicio proporcionadas. Además, solo busca servicios
+	 * que tengan el estado de evento privado. Si se encuentra un servicio, se retorna
+	 * su ID; de lo contrario, se devuelve -1.
+	 *
+	 * @param fecha la fecha del servicio que se está buscando.
+	 * @param hora  el rango horario del servicio que se está buscando en formato "horaInicio - horaFin".
+	 * @return el ID del servicio asociado a la fecha y hora especificadas, o -1 si no se encuentra.
+	 */
 	public int buscarServicioPorFecha(String fecha, String hora) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -193,7 +258,17 @@ public class ServicioControlador {
 	    return idServicio;
 	}
 	
-	// Método para verificar si hay un servicio solapado
+	/**
+	 * Verifica si hay servicios solapados en una fecha y horario específicos.
+	 *
+	 * Este método consulta la base de datos para determinar si existe algún servicio
+	 * que se solape con el servicio proporcionado, basándose en la fecha y las horas
+	 * de inicio y fin. Se considera que hay solapamiento si las horas de inicio y fin
+	 * de cualquier servicio existente se intersectan con las horas del servicio dado.
+	 *
+	 * @param servicio el servicio a verificar para solapamientos.
+	 * @return true si hay servicios solapados; false en caso contrario.
+	 */
 	public boolean verificarSolapamientoServicio(Servicio servicio) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -239,7 +314,16 @@ public class ServicioControlador {
 	}
 
 	
-	// Método para buscar un servicio por su ID
+	/**
+	 * Busca un servicio en la base de datos por su ID.
+	 *
+	 * Este método consulta la base de datos para recuperar un objeto Servicio
+	 * correspondiente al ID proporcionado. Si se encuentra el servicio, se
+	 * crea un nuevo objeto Servicio y se llena con los datos recuperados.
+	 *
+	 * @param idServicio el ID del servicio a buscar.
+	 * @return un objeto Servicio si se encuentra; null en caso contrario.
+	 */
 		public Servicio buscarServicioPorId(int idServicio) {
 		    PreparedStatement ps = null;
 		    ResultSet rs = null;
@@ -276,7 +360,16 @@ public class ServicioControlador {
 		    return servicio;
 		}
 		
-		// Método para buscar todos los servicios con evento especial
+		/**
+		 * Busca todos los servicios que son eventos especiales.
+		 *
+		 * Este método consulta la base de datos para recuperar una lista de
+		 * objetos Servicio que tienen el estado de evento privado (eventoPrivado)
+		 * establecido en 1. Cada servicio encontrado se añade a una lista que
+		 * se retorna al final.
+		 *
+		 * @return una lista de objetos Servicio que representan los eventos especiales.
+		 */
 		public List<Servicio> buscarServiciosConEventoEspecial() {
 		    PreparedStatement ps = null;
 		    ResultSet rs = null;
@@ -316,7 +409,19 @@ public class ServicioControlador {
 
 
 
-		// Método para registrar un servicio con verificación de solapamiento
+		/**
+		 * Registra un servicio en la base de datos después de verificar que no se solape
+		 * con otros servicios existentes.
+		 *
+		 * Este método primero comprueba si el servicio que se desea registrar
+		 * se solapa con otro servicio en la misma fecha y hora. Si hay un solapamiento,
+		 * se imprime un mensaje indicando que no se puede registrar el servicio.
+		 * De lo contrario, se procede a registrar el servicio llamando al método 
+		 * {@link #registrarServicio(Servicio)}.
+		 *
+		 * @param servicio El objeto Servicio que se desea registrar.
+		 * @return true si el servicio fue registrado con éxito; false si se solapó con otro servicio.
+		 */
 		public boolean registrarServicioConSolapamiento(Servicio servicio) {
 			if (verificarSolapamientoServicio(servicio)) {
 				System.out.println("El servicio se solapa con otro existente. No se puede registrar.");

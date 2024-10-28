@@ -11,6 +11,11 @@ import Conexion.Conexion;
 import Modelo.Complementos.EnumEstado;
 import Modelo.Complementos.Mesa;
 
+/**
+ * Controlador para gestionar las operaciones relacionadas con mesas.
+ * Este controlador permite crear mesas y manejar la conexión
+ * a la base de datos.
+ */
 public class MesaControlador {
 	Conexion cx;
 	private Connection connection;
@@ -20,35 +25,45 @@ public class MesaControlador {
 		connection = cx.conectar();
 	}
 
-	// Funcion para cargar Mesa
+	/**
+	 * Función para cargar Mesa.
+	 * 
+	 * @param mesa Objeto Mesa que contiene los datos a ser registrados.
+	 * @return true si la mesa fue registrada con éxito, false en caso contrario.
+	 */
 	public boolean crearMesa(Mesa mesa) {
-		PreparedStatement ps = null;
-		try {
-			ps = connection.prepareStatement("INSERT INTO Mesa  VALUES (?, ?, ?, ?, ?)");
-			ps.setInt(1, mesa.getIdMesa());
-			ps.setInt(2, mesa.getCapacidad());
-			ps.setString(3, mesa.getUbicacion());
-			ps.setString(4, mesa.getEstado().name());
-			ps.setInt(5, mesa.getIdServicio());
-			ps.executeUpdate();
-			System.out.println("Servicio registrado con éxito!");
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("Error al registrar el servicio!");
-			return false;
-		} finally {
-			if (ps != null) {
-				try {
-					ps.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+	    PreparedStatement ps = null;
+	    try {
+	        ps = connection.prepareStatement("INSERT INTO Mesa VALUES (?, ?, ?, ?, ?)");
+	        ps.setInt(1, mesa.getIdMesa());
+	        ps.setInt(2, mesa.getCapacidad());
+	        ps.setString(3, mesa.getUbicacion());
+	        ps.setString(4, mesa.getEstado().name());
+	        ps.setInt(5, mesa.getIdServicio());
+	        ps.executeUpdate();
+	        System.out.println("Servicio registrado con éxito!");
+	        return true;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Error al registrar el servicio!");
+	        return false;
+	    } finally {
+	        if (ps != null) {
+	            try {
+	                ps.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
 	}
 
-	// Función para buscar mesas por Ubicacion
+	/**
+	 * Función para buscar mesas por ubicación.
+	 * 
+	 * @param ubicacion La ubicación a filtrar para buscar mesas.
+	 * @return Lista de mesas que coinciden con la ubicación especificada.
+	 */
 	public List<Mesa> buscarMesasPorUbicacion(String ubicacion) {
 	    List<Mesa> mesasP = new ArrayList<>();
 	    PreparedStatement ps = null;
@@ -85,8 +100,16 @@ public class MesaControlador {
 	    return mesasP;
 	}
 
-
-	//Metodo para verificar si hay solapamiento de servicios
+	/**
+	 * Método para verificar si hay solapamiento de servicios.
+	 * 
+	 * @param mesa Mesa a verificar.
+	 * @param fecha Fecha del servicio.
+	 * @param horaInicioNueva Hora de inicio del nuevo servicio.
+	 * @param horaFinNueva Hora de fin del nuevo servicio.
+	 * @return true si hay solapamiento, false si no lo hay.
+	 */
+	@SuppressWarnings("unused")
 	public boolean verificarMesaConServicio(Mesa mesa, String fecha, String horaInicioNueva, String horaFinNueva) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -108,7 +131,7 @@ public class MesaControlador {
 	            rsServicio = psServicio.executeQuery();
 
 	            if (rsServicio.next()) {
-					String horaInicioServicio = rsServicio.getString("horaInicio");
+	                String horaInicioServicio = rsServicio.getString("horaInicio");
 	                String horaFinServicio = rsServicio.getString("horaFin");
 
 	                psReserva = connection.prepareStatement(
@@ -153,8 +176,13 @@ public class MesaControlador {
 	    return false;
 	}
 
-
-	// Función busca mesas con estado "Ocupado" en una fecha y hora
+	/**
+	 * Función que busca mesas con estado "Ocupado" en una fecha y hora específicas.
+	 * 
+	 * @param fecha Fecha a filtrar.
+	 * @param hora Hora a filtrar.
+	 * @return Lista de IDs de mesas ocupadas.
+	 */
 	public List<Integer> buscarMesasOcupadasPorServicio(String fecha, String hora) {
 	    List<Integer> mesasOcupadasIds = new ArrayList<>();
 	    PreparedStatement ps = null;
@@ -189,7 +217,13 @@ public class MesaControlador {
 	}
 
 
-	// Función para buscar mesas por Ubicacion
+
+	/**
+	 * Función para filtrar la capacidad de una mesa por su ID.
+	 * 
+	 * @param idMesa ID de la mesa a buscar.
+	 * @return Capacidad de la mesa, o 0 si no se encuentra.
+	 */
 	public int filtrarCapacidad(int idMesa) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -223,100 +257,120 @@ public class MesaControlador {
 	    return capacidad;
 	}
 
-	
-	//Funcion para actualizar los datos de una mesa
+	/**
+	 * Función para eliminar una mesa dado su ID y el ID del servicio asociado.
+	 * 
+	 * @param idMesa ID de la mesa a eliminar.
+	 * @param idServicio ID del servicio asociado a la mesa.
+	 * @return true si la mesa fue eliminada con éxito, false en caso contrario.
+	 */
 	public boolean eliminarMesa(int idMesa, int idServicio) {
-		PreparedStatement ps = null;
-		boolean eliminado = false; 
+	    PreparedStatement ps = null;
+	    boolean eliminado = false;
 
-		try {
-		     ps = connection.prepareStatement("DELETE FROM Mesa WHERE idMesa = ? AND idServicio = ?");
-		     ps.setInt(1, idMesa);
-		     ps.setInt(2, idServicio);
+	    try {
+	        ps = connection.prepareStatement("DELETE FROM Mesa WHERE idMesa = ? AND idServicio = ?");
+	        ps.setInt(1, idMesa);
+	        ps.setInt(2, idServicio);
 
-		     int filasAfectadas = ps.executeUpdate(); 
-		     eliminado = filasAfectadas > 0; 
+	        int filasAfectadas = ps.executeUpdate();
+	        eliminado = filasAfectadas > 0;
 
-		 } catch (SQLException e) {
-		        e.printStackTrace();
-		 } finally {
-		    if (ps != null) {
-		        try {
-		            ps.close();
-		        } catch (SQLException e) {
-		            e.printStackTrace();
-		        }
-		    }
-		 }
-		return eliminado; 
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        if (ps != null) {
+	            try {
+	                ps.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	    return eliminado;
 	}
 
-	// Función para actualizar el idServicio de una Mesa
+	/**
+	 * Función para actualizar el ID del servicio de una mesa.
+	 * 
+	 * @param nuevoIdServicio Nuevo ID del servicio.
+	 * @param idMesa ID de la mesa a actualizar.
+	 * @param idServicioAntiguo ID del servicio antiguo que se está reemplazando.
+	 * @return true si el ID del servicio fue actualizado con éxito, false en caso contrario.
+	 */
 	public boolean actualizarIdServicio(int nuevoIdServicio, int idMesa, int idServicioAntiguo) {
-		PreparedStatement ps = null;
-		try {
+	    PreparedStatement ps = null;
+	    try {
+	        ps = connection.prepareStatement("UPDATE Mesa SET idServicio = ? WHERE idMesa = ? AND idServicio = ?");
+	        ps.setInt(1, nuevoIdServicio);
+	        ps.setInt(2, idMesa);
+	        ps.setInt(3, idServicioAntiguo);
+	        ps.executeUpdate();
 
-			ps = connection.prepareStatement("UPDATE Mesa SET idServicio = ? WHERE idMesa = ? AND idServicio = ?");
-			ps.setInt(1, nuevoIdServicio);
-			ps.setInt(2, idMesa);
-			ps.setInt(3, idServicioAntiguo);
-			ps.executeUpdate();
-
-			System.out.println("ID del servicio actualizado con éxito!");
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("Error al actualizar el ID del servicio!");
-			return false;
-		} finally {
-			if (ps != null) {
-				try {
-					ps.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+	        System.out.println("ID del servicio actualizado con éxito!");
+	        return true;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Error al actualizar el ID del servicio!");
+	        return false;
+	    } finally {
+	        if (ps != null) {
+	            try {
+	                ps.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
 	}
-		
-	// Método para buscar mesas por ID
+
+	/**
+	 * Método para buscar mesas por su ID.
+	 * 
+	 * @param idMesa ID de la mesa a buscar.
+	 * @return Lista de mesas que coinciden con el ID especificado.
+	 */
 	public ArrayList<Mesa> buscarMesaPorId(int idMesa) {
-		ArrayList<Mesa> mesas = new ArrayList<>();
-		PreparedStatement ps = null;
-		ResultSet rs = null;
+	    ArrayList<Mesa> mesas = new ArrayList<>();
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
 
-		try {
-			ps = connection.prepareStatement("SELECT * FROM Mesa WHERE idMesa = ?");
-			ps.setInt(1, idMesa);
-			rs = ps.executeQuery();
-		          
-			while (rs.next()) {
-				Mesa mesa = new Mesa();
-				mesa.setIdMesa(rs.getInt("idMesa"));
-				mesa.setCapacidad(rs.getInt("capacidad"));
-				mesa.setEstado(EnumEstado.valueOf(rs.getString("estado"))); 
-				mesa.setIdServicio(rs.getInt("idServicio"));
-				mesas.add(mesa);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
+	    try {
+	        ps = connection.prepareStatement("SELECT * FROM Mesa WHERE idMesa = ?");
+	        ps.setInt(1, idMesa);
+	        rs = ps.executeQuery();
 
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-				if (ps != null) {
-					ps.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			}
-		return mesas;
-	 	}
-	
-	// Método para buscar la ubicación de la mesa por idServicio
+	        while (rs.next()) {
+	            Mesa mesa = new Mesa();
+	            mesa.setIdMesa(rs.getInt("idMesa"));
+	            mesa.setCapacidad(rs.getInt("capacidad"));
+	            mesa.setEstado(EnumEstado.valueOf(rs.getString("estado")));
+	            mesa.setIdServicio(rs.getInt("idServicio"));
+	            mesas.add(mesa);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (rs != null) {
+	                rs.close();
+	            }
+	            if (ps != null) {
+	                ps.close();
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    return mesas;
+	}
+
+	/**
+	 * Método para buscar la ubicación de una mesa por el ID del servicio asociado.
+	 * 
+	 * @param idServicio ID del servicio a buscar.
+	 * @return Ubicación de la mesa asociada al servicio, o null si no se encuentra.
+	 */
 	public String buscarUbicacionPorIdServicio(int idServicio) {
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
@@ -325,7 +379,7 @@ public class MesaControlador {
 	        ps = connection.prepareStatement("SELECT ubicacion FROM Mesa WHERE idServicio = ? LIMIT 1");
 	        ps.setInt(1, idServicio);
 	        rs = ps.executeQuery();
-	        
+
 	        if (rs.next()) {
 	            return rs.getString("ubicacion");
 	        }
@@ -345,4 +399,5 @@ public class MesaControlador {
 	    }
 	    return null;
 	}
+
 }

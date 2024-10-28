@@ -39,36 +39,48 @@ import Modelo.Complementos.Servicio;
 import Modelo.Empleado.SesionEmpleado;
 import Vista.Cliente.DetalleReservaCliente;
 
+/**
+ * Clase que representa la ventana de detalle de reserva para un empleado.
+ * Extiende de JFrame y contiene la información de la reserva, mesa,
+ * comprobante y servicio relacionados.
+ */
 @SuppressWarnings("unused")
 public class DetalleReservaEmpleado extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private Reserva reserva;
-	private Mesa mesa;
-	private String[] mesasSeleccionadas;
-	private Comprobante comprobante;
-	private Servicio servicio;
-	private ServicioControlador servicioControlador;
-	private ReservaControlador reservaControlador;
-	private MesaControlador mesaControlador;
-	private ComprobanteControlador comprobanteControlador;
-	private TarjetaControlador tarjetaControlador;
-	private SesionCliente s;
-	private SesionEmpleado v;
-	private String rangoHoras;
-	private String destinatario;
-	private String ubicacion;
-	private String fecha;
-	private String horaInicio;
-	private String horaFin;
-	private String comentario;
-	private String[] mesasSeleccionadasEvento;
-	private VistaReservaEmpleado reservaCliente;
+    private static final long serialVersionUID = 1L; // SerialVersionUID para la serialización
+    private JPanel contentPane; // Panel principal de la ventana que contiene todos los componentes visuales
+    private Reserva reserva; // Objeto que representa la reserva actual del cliente
+    private Mesa mesa; // Objeto que representa la mesa reservada por el cliente
+    private String[] mesasSeleccionadas; // Array de cadenas que contiene las mesas seleccionadas para la reserva
+    private Comprobante comprobante; // Objeto que representa el comprobante de pago generado para la reserva
+    private Servicio servicio; // Objeto que representa el servicio asociado a la reserva (ej. comida, bebida)
+    private ServicioControlador servicioControlador; // Controlador para manejar la lógica de los servicios
+    private ReservaControlador reservaControlador; // Controlador para manejar la lógica de las reservas
+    private MesaControlador mesaControlador; // Controlador para manejar la lógica de las mesas
+    private ComprobanteControlador comprobanteControlador; // Controlador para manejar la lógica de los comprobantes
+    private TarjetaControlador tarjetaControlador; // Controlador para manejar la lógica de las tarjetas de pago
+    private SesionCliente s; // Objeto que representa la sesión actual del cliente en el sistema
+    private SesionEmpleado v; // Objeto que representa la sesión actual del empleado en el sistema
+    private String rangoHoras; // String que define el rango de horas disponible para la reserva
+    private String destinatario; // String que representa el destinatario de la confirmación de reserva
+    private String ubicacion; // String que indica la ubicación de la reserva
+    private String fecha; // String que representa la fecha de la reserva
+    private String horaInicio; // String que representa la hora de inicio de la reserva
+    private String horaFin; // String que representa la hora de fin de la reserva
+    private String comentario; // String que contiene un comentario adicional sobre la reserva
+    private String[] mesasSeleccionadasEvento; // Array de cadenas que contiene las mesas seleccionadas para un evento especial
+    private VistaReservaEmpleado reservaCliente; // Vista que representa la interfaz de reserva para los empleados
 
-	/**
-	 * @wbp.parser.constructor
-	 */
+    /**
+     * Constructor de la clase DetalleReservaEmpleado.
+     *
+     * @param reserva Objeto Reserva que contiene la información de la reserva.
+     * @param mesa Objeto Mesa que representa la mesa reservada.
+     * @param servicio Objeto Servicio que contiene detalles sobre el servicio.
+     * @param comprobante Objeto Comprobante que contiene información de pago.
+     * @param mesasSeleccionadasEvento Array de cadenas con las mesas seleccionadas para el evento.
+     * @param reservaCliente Objeto VistaReservaEmpleado que representa la vista de reserva para empleados.
+     */
 	public DetalleReservaEmpleado(Reserva reserva, Mesa mesa, Servicio servicio, Comprobante comprobante, 
 		String[] mesasSeleccionadasEvento, VistaReservaEmpleado reservaCliente) {
 		
@@ -285,7 +297,16 @@ public class DetalleReservaEmpleado extends JFrame {
 
 	}
 	
-	// Metodo para concatenar las mesas
+	/**
+	 * Concatenar los IDs de las mesas seleccionadas en una sola cadena, separadas por comas.
+	 *
+	 * Este método recibe un array de IDs de mesas seleccionadas para un evento y construye
+	 * una representación en cadena de estos IDs, agregando cada ID seguido de una coma.
+	 * Se elimina la coma final antes de devolver la cadena resultante.
+	 *
+	 * @param mesasSeleccionadasEvento Un array de IDs de mesas seleccionadas.
+	 * @return Una cadena que contiene los IDs concatenados de las mesas, separados por comas.
+	 */
 	public String concatenarIdsMesas(String[] mesasSeleccionadasEvento) {
 		StringBuilder sb = new StringBuilder();
 		for (String mesa : mesasSeleccionadasEvento) {
@@ -300,7 +321,16 @@ public class DetalleReservaEmpleado extends JFrame {
 		
 	}
 
-	//Metodo para verificar disponibilidad de las Mesas
+	/**
+	 * Verifica la disponibilidad de las mesas para la reserva solicitada.
+	 *
+	 * Este método busca todas las mesas que tienen el mismo ID y comprueba
+	 * si hay solapamientos en las fechas y horas con servicios existentes.
+	 * Si se encuentra un solapamiento, el método retorna false; de lo contrario,
+	 * retorna true, indicando que las mesas están disponibles.
+	 *
+	 * @return true si las mesas están disponibles, false si hay solapamientos o si ocurre un error.
+	 */
 	public boolean verificarDisponibilidadMesas() {
 	    try {
 	        // 1. Obtener todas las mesas con el mismo idMesa
@@ -346,7 +376,17 @@ public class DetalleReservaEmpleado extends JFrame {
 	    }
 	}
 	
-	
+	/**
+	 * Crea un nuevo servicio y retorna su ID.
+	 *
+	 * Este método invoca al controlador de servicios para crear un nuevo servicio.
+	 * Si la creación es exitosa, se devuelve el ID del servicio creado. 
+	 * Si hay un error durante la creación, se devuelve -1 y se imprime un mensaje
+	 * de error en la consola.
+	 *
+	 * @param servicio El objeto Servicio que contiene los detalles del servicio a crear.
+	 * @return El ID del servicio creado o -1 si hubo un error en la creación.
+	 */
 	public int crearServicioYRetornarId(Servicio servicio) {
 	    int idServicio = -1;
 	    try {
@@ -361,7 +401,16 @@ public class DetalleReservaEmpleado extends JFrame {
 	}
 	
 	
-	// Método para crear las mesas y las reservas
+	/**
+	 * Crea una mesa y la asocia a un servicio existente.
+	 *
+	 * Este método establece el ID del servicio y el estado de la mesa a "OCUPADA".
+	 * Luego, intenta registrar la mesa a través del controlador de mesas. Si el registro
+	 * es exitoso, se cierra la ventana actual. En caso de error, se imprime un mensaje
+	 * de error en la consola.
+	 *
+	 * @param idServicio El ID del servicio al que se asociará la mesa.
+	 */
 	public void crearMesas(int idServicio) {
 	    try {
 	        mesa.setIdServicio(idServicio);
@@ -377,7 +426,15 @@ public class DetalleReservaEmpleado extends JFrame {
 	    }
 	}
 	
-	//Otro constructor para solo hacer Bloqueos de Mesas
+	/**
+	 * Constructor para crear un objeto DetalleReservaEmpleado que solo maneja bloqueos de mesas.
+	 *
+	 * Este constructor inicializa la mesa y el servicio asociados al objeto.
+	 * También crea instancias de los controladores necesarios para gestionar servicios y mesas.
+	 *
+	 * @param mesa La mesa que se va a bloquear.
+	 * @param servicio El servicio asociado a la mesa que se va a bloquear.
+	 */
 	public DetalleReservaEmpleado(Mesa mesa, Servicio servicio) {
 		this.mesa = mesa;
 		this.servicio = servicio;
@@ -388,7 +445,13 @@ public class DetalleReservaEmpleado extends JFrame {
 	}
 	
 	
-	// Método para bloquear mesas
+	/**
+	 * Método para bloquear mesas en el sistema.
+	 *
+	 * Este método crea un servicio asociado a la mesa que se va a bloquear y
+	 * actualiza el estado de la mesa a "BLOQUEADA". Si la creación del servicio
+	 * o de la mesa falla, se imprime un mensaje correspondiente en la consola.
+	 */
     public void BloquearMesas() {
         try {
             int idServicio = servicioControlador.crearServicio(servicio);
@@ -410,7 +473,18 @@ public class DetalleReservaEmpleado extends JFrame {
         }
     }
 		
-	// Método para verificar solapamiento entre dos servicios
+    /**
+     * Método para verificar el solapamiento entre dos servicios basándose en la fecha
+     * y el rango de horas de inicio y fin.
+     *
+     * @param fecha1      La fecha del primer servicio.
+     * @param horaInicio1 La hora de inicio del primer servicio.
+     * @param horaFin1    La hora de fin del primer servicio.
+     * @param fecha2      La fecha del segundo servicio.
+     * @param horaInicio2 La hora de inicio del segundo servicio.
+     * @param horaFin2    La hora de fin del segundo servicio.
+     * @return true si hay solapamiento entre los dos servicios; false en caso contrario.
+     */
 		private boolean verificarSolapamiento(String fecha1, String horaInicio1, String horaFin1, String fecha2,
 				String horaInicio2, String horaFin2) {
 					
@@ -430,7 +504,11 @@ public class DetalleReservaEmpleado extends JFrame {
 		    }
 		}
 
-	// Metodo para enviar mail
+		/**
+		 * Método para enviar un correo de confirmación de un evento especial.
+		 *
+		 * @param destinatario La dirección de correo electrónico del destinatario.
+		 */
 	@SuppressWarnings("static-access")
 	public void enviarDetalles(String destinatario) {
 	    if (destinatario == null || destinatario.isEmpty()) {

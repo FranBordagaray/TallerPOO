@@ -52,26 +52,108 @@ import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
 
+/**
+ * La clase {@code Historial} extiende {@link JPanel} y se encarga de mostrar
+ * el historial de acciones o eventos en la interfaz de usuario. Esta clase
+ * permite visualizar una lista de elementos que representan actividades
+ * anteriores, facilitando el seguimiento de eventos relevantes para el usuario.
+ *
+ * <p>
+ * Se puede personalizar la visualización y el manejo de los elementos del
+ * historial, así como agregar nuevas funcionalidades según sea necesario.
+ * </p>
+ */
 @SuppressWarnings("static-access")
+
 public class Historial extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+	/**
+	 * ComboBox que permite seleccionar el estado de la reserva.
+	 */
 	private JComboBox<String> comboBoxEstado;
+
+	/**
+	 * ComboBox que permite seleccionar la mesa disponible.
+	 */
 	private JComboBox<String> comboBoxMesa;
+
+	/**
+	 * Tabla que muestra el historial de reservas.
+	 */
 	private JTable tblBHistorial;
+
+	/**
+	 * Objeto que representa la sesión del cliente.
+	 */
 	private SesionCliente s;
+
+	/**
+	 * Controlador para manejar las reservas.
+	 */
 	private ReservaControlador reservaControlador;
+
+	/**
+	 * Controlador para gestionar los comprobantes.
+	 */
 	private ComprobanteControlador comprobanteControlador;
+
+	/**
+	 * Controlador para manejar la información de las tarjetas.
+	 */
 	private TarjetaControlador tarjetaControlador;
+
+	/**
+	 * ID de la reserva seleccionada actualmente.
+	 */
 	private int idReservaSeleccionada; 
+
+	/**
+	 * Fecha de la reserva seleccionada actualmente.
+	 */
 	private String fechaReservaSeleccionada; 
+
+	/**
+	 * Hora de la reserva seleccionada actualmente.
+	 */
 	private String horaReservaSeleccionada; 
+
+	/**
+	 * Mesa seleccionada actualmente.
+	 */
 	private String mesaSeleccionada;
+
+	/**
+	 * Capacidad de la mesa seleccionada.
+	 */
 	private String capacidadSeleccionada;
+
+	/**
+	 * Ubicación de la mesa seleccionada.
+	 */
 	private String ubicacionSeleccionada;
+
+	/**
+	 * Comentario asociado a la reserva seleccionada.
+	 */
 	private String comentarioSeleccionado;
+
+	/**
+	 * Ruta para almacenar o acceder a información relacionada.
+	 */
 	private String ruta;
 
+	/**
+	 * Constructor de la clase Historial.
+	 *
+	 * Este constructor inicializa una nueva instancia de la clase Historial,
+	 * que se utiliza para gestionar y almacenar información sobre el historial
+	 * de reservas, eventos o actividades del sistema.
+	 * 
+	 * La clase Historial puede incluir detalles como fechas, horas y otros
+	 * datos relevantes relacionados con las acciones realizadas por los
+	 * usuarios en el sistema.
+	 */
 	@SuppressWarnings("serial")
 	public Historial() {
 		
@@ -255,7 +337,23 @@ public class Historial extends JPanel {
 		});
 		scrollPane.setViewportView(tblBHistorial);
 		
-		// Boton cancelar reserva
+		/**
+		 * Configura el botón "CANCELAR" para permitir la cancelación de la reserva seleccionada.
+		 * 
+		 * <p>
+		 * Al hacer clic en el botón, se verifica si hay una reserva seleccionada. Si es así, 
+		 * se muestra un cuadro de confirmación preguntando si el usuario está seguro de cancelar 
+		 * la reserva. Si el usuario confirma la acción, se procede a verificar el estado de la 
+		 * reserva y la diferencia de tiempo entre la fecha actual y la fecha de la reserva. 
+		 * Dependiendo de si la cancelación se realiza con más de 24 horas de antelación, se 
+		 * envía un comprobante por correo electrónico y se actualiza el estado de la reserva.
+		 * </p>
+		 * 
+		 * <p>
+		 * También se configuran los estilos visuales del botón, incluyendo el cambio de color 
+		 * al pasar el ratón por encima.
+		 * </p>
+		 */
 		JButton btnCancelar = new JButton("CANCELAR");
 		btnCancelar.setIcon(new ImageIcon(Historial.class.getResource("/Img/icono cancelar.png")));
 		btnCancelar.addActionListener(new ActionListener() {
@@ -325,6 +423,22 @@ public class Historial extends JPanel {
 		btnCancelar.setBounds(826, 115, 150, 25);
 		add(btnCancelar);
 		
+		/**
+		 * Configura los botones y componentes de la interfaz en el panel de historial.
+		 * 
+		 * <p>
+		 * Se crean dos botones: 
+		 * <ul>
+		 *   <li><strong>MODIFICAR</strong>: Permite modificar la reserva seleccionada.
+		 *       Al hacer clic, verifica si se ha seleccionado una reserva. Si es así,
+		 *       abre la ventana de modificación; de lo contrario, muestra un mensaje de error.</li>
+		 *   <li><strong>ACTUALIZAR TABLA</strong>: Actualiza la información mostrada en la tabla
+		 *       y los combo boxes de mesas y estados, recargando los datos del cliente actual.</li>
+		 * </ul>
+		 * Además, se configuran estilos visuales para los botones y se inicializan los datos
+		 * en la tabla y los combo boxes al cargar el panel.
+		 * </p>
+		 */
 		// Boton para modificar
         JButton btnModificar = new JButton("MODIFICAR");
         btnModificar.setIcon(new ImageIcon(Historial.class.getResource("/Img/icono modificar.png")));
@@ -406,9 +520,28 @@ public class Historial extends JPanel {
 		cargarComboEstados(s.getClienteActual().getIdCliente());
 	}
 	
-	
-
-	// Función para cargar tabla con datos almacenados en la base de datos
+	/**
+	 * Carga los datos de reservas almacenados en la base de datos y los muestra en la tabla.
+	 *
+	 * Este método consulta el historial de reservas del cliente especificado mediante el 
+	 * `idCliente` a través del controlador `reservaControlador`. Los datos obtenidos se 
+	 * utilizan para llenar la tabla `tblBHistorial`.
+	 * 
+	 * Primero, se establece el modelo de la tabla a vacío mediante `model.setRowCount(0)` 
+	 * para asegurarse de que no haya datos anteriores. Luego, se recorre cada reserva del 
+	 * historial y se determina su estado mediante un `switch` basado en el valor numérico 
+	 * correspondiente. Los estados posibles son:
+	 * - 0: CANCELADA
+	 * - 1: VIGENTE
+	 * - 2: COMPLETADA
+	 * - 3: NO ASISTIÓ
+	 * 
+	 * Para cada reserva, se añade una nueva fila a la tabla con los detalles relevantes: 
+	 * ID de reserva, fecha, hora, ID de mesa, capacidad, ubicación, comentarios y estado.
+	 * 
+	 * Si ocurre una excepción durante la obtención del historial de reservas, se imprime la 
+	 * traza de la excepción para su análisis.
+	 */
 	public void cargarDatos(int idCliente) {
 		List<HistorialReserva> historial;
 		try {
@@ -451,7 +584,23 @@ public class Historial extends JPanel {
 		}
 	}
 
-	// Función para cargar tabla con datos filtrados por mesas
+	/**
+	 * Filtra los datos de reservas y carga la tabla con los registros correspondientes a las mesas.
+	 *
+	 * Este método consulta el historial de reservas del cliente actual a través del controlador 
+	 * `reservaControlador` y carga los datos en la tabla `tblBHistorial`.
+	 * 
+	 * Si el `filtro` es nulo o tiene el valor "Todas", se cargan todas las reservas del historial 
+	 * en la tabla. Para cada reserva, se determina el estado a partir de su valor numérico y se 
+	 * añade una fila a la tabla con los detalles de la reserva.
+	 * 
+	 * Si se proporciona un filtro específico (por ejemplo, el nombre de una mesa), solo se añaden 
+	 * las reservas que coinciden con ese filtro. En este caso, se compara el nombre de la mesa 
+	 * (formato "Mesa [idMesa]") con el filtro y, si coinciden, se añade la fila correspondiente.
+	 * 
+	 * Si ocurre una excepción durante la obtención del historial de reservas, se imprime la traza 
+	 * de la excepción para su análisis.
+	 */
 	private void filtrarMesas(String filtro) {
 		List<HistorialReserva> historial;
 		try {
@@ -529,8 +678,20 @@ public class Historial extends JPanel {
 		}
 	}
 
-	// Metodo para tener combobox mesas unicamente con mesas reservadas por el
-	// cliente
+	/**
+	 * Carga el combo box con las mesas reservadas por el cliente actual.
+	 *
+	 * Este método consulta el controlador `reservaControlador` para obtener una lista de las mesas 
+	 * que han sido reservadas por el cliente identificado por el `idCliente` proporcionado.
+	 * 
+	 * Primero, limpia el combo box `comboBoxMesa` de cualquier elemento existente. 
+	 * Luego, añade una opción "Todas" para permitir la selección de todas las mesas.
+	 * A continuación, itera sobre la lista de mesas reservadas, añadiendo cada mesa al combo box 
+	 * en el formato "Mesa [idMesa]".
+	 * 
+	 * Si ocurre una excepción durante la consulta a la base de datos, se imprime la traza de la 
+	 * excepción para su análisis.
+	 */
 	private void cargarComboMesas(int idCliente) {
 		try {
 			List<Integer> mesasReservadas = reservaControlador.obtenerMesasReservadasPorCliente(idCliente);
@@ -545,7 +706,21 @@ public class Historial extends JPanel {
 		}
 	}
 
-	// Función para cargar tabla con datos filtrados por estados
+	/**
+	 * Filtra y carga la tabla con datos de reservas del cliente según el estado seleccionado.
+	 *
+	 * Este método recibe un filtro en forma de cadena que representa el estado de las reservas. 
+	 * Consulta el historial de reservas del cliente actual a través del controlador `reservaControlador`.
+	 * 
+	 * Limpia el modelo de la tabla antes de agregar nuevos datos. Dependiendo del estado filtrado, 
+	 * se determinan los estados específicos a mostrar. Los estados posibles son "CANCELADA", "VIGENTE", 
+	 * "COMPLETADA", "NO ASISTIÓ", y "ESTADO DESCONOCIDO" para cualquier valor no manejado.
+	 * 
+	 * Finalmente, si el estado de una reserva coincide con el filtro o si no hay filtro, 
+	 * se agrega una nueva fila a la tabla con la información de la reserva.
+	 * 
+	 * En caso de error durante el proceso, se imprime la traza de la excepción.
+	 */
 	private void filtrarEstados(String filtro) {
 		List<HistorialReserva> historial;
 		try {
@@ -593,7 +768,16 @@ public class Historial extends JPanel {
 		}
 	}
 
-	// Método para cargar el combo box con los estados disponibles según las reservas del cliente
+	/**
+	 * Carga el combo box con los estados disponibles de las reservas del cliente.
+	 *
+	 * Este método recibe el ID del cliente y consulta los estados de sus reservas 
+	 * a través del controlador `reservaControlador`. Limpia el combo box y agrega 
+	 * la opción "Todos", seguida de los estados específicos ("VIGENTE" y "CANCELADA")
+	 * en función de los datos obtenidos. 
+	 *
+	 * Si ocurre un error durante la consulta, se imprime la traza de la excepción.
+	 */
 	private void cargarComboEstados(int idCliente) {
 		try {
 			List<Integer> estadosReservados = reservaControlador.obtenerEstadoReservasPorCliente(idCliente);
@@ -611,8 +795,17 @@ public class Historial extends JPanel {
 		}
 	}
 	
-	 // Metodo para enviar mail
- 	
+	/**
+	 * Envía un correo electrónico con el comprobante de pago a la dirección del cliente.
+	 *
+	 * Este método recopila la información relevante de la reserva y la mesa, 
+	 * y compone un mensaje de correo que incluye los detalles de la multa por 
+	 * cancelación o no concurrencia. El mensaje es enviado a la dirección de 
+	 * correo electrónico del cliente actual. 
+	 * 
+	 * Se utiliza la clase `EnviarMail` para gestionar el envío del correo, 
+	 * incluyendo el archivo del comprobante en formato PDF como un adjunto.
+	 */
  	public void enviarMailComprobante() {
  		
  		s = new SesionCliente();
@@ -644,7 +837,20 @@ public class Historial extends JPanel {
  		 EnviarMail.enviarCorreoComprobante(destinatario, asunto, mensaje,ruta);
  	}
  	
- 	//Metodo para generar pdf del comprobante
+ 	/**
+ 	 * Genera un comprobante en formato PDF y lo guarda en un archivo.
+ 	 *
+ 	 * Este método crea un documento PDF utilizando la biblioteca iText, en el que se incluyen
+ 	 * detalles del comprobante de pago y la información de la tarjeta utilizada. El PDF se
+ 	 * guarda en el directorio "src/Comprobantes" con un nombre que incluye el ID del 
+ 	 * comprobante y una marca de tiempo para garantizar que sea único.
+ 	 * 
+ 	 * Si el archivo ya existe, se genera un nuevo nombre para evitar sobrescribirlo. 
+ 	 * Se añaden varios párrafos al documento, incluyendo el título del comprobante, 
+ 	 * información del comprobante, y detalles de la tarjeta (ocultando parte del número de tarjeta).
+ 	 *
+ 	 * @param comprobante El objeto Comprobante que contiene la información a incluir en el PDF.
+ 	 */
     @SuppressWarnings("unused")
 	private void generarComprobanteMail(Comprobante  comprobante) {
     	Tarjeta tarjeta = new Tarjeta();
@@ -699,7 +905,18 @@ public class Historial extends JPanel {
         }
     }
     
-    // Método para formatear el comentario
+    /**
+     * Formatea un comentario dividiéndolo en líneas de longitud máxima especificada.
+     *
+     * Este método toma un comentario como entrada y lo divide en palabras. Luego, 
+     * construye un nuevo comentario asegurándose de que cada línea no exceda 
+     * el límite de caracteres especificado. Si una palabra adicional haría 
+     * que la longitud actual sobrepase el límite, se inicia una nueva línea.
+     * 
+     * @param comentario El comentario a formatear.
+     * @param limiteCaracteres El límite máximo de caracteres por línea.
+     * @return Un String con el comentario formateado, con saltos de línea donde sea necesario.
+     */
 	private String formatearComentario(String comentario, int limiteCaracteres) {
 	    StringBuilder resultado = new StringBuilder();
 	    String[] palabras = comentario.split(" "); 

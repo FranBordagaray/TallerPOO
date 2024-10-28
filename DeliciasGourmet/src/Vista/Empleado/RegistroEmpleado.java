@@ -29,21 +29,29 @@ import Modelo.Empleado.Empleado;
 import Modelo.Empleado.EnumRoles;
 
 
+/**
+ * Clase que representa una ventana para registrar un nuevo empleado en el sistema.
+ * Proporciona campos para ingresar información personal y de contacto del empleado.
+ */
 public class RegistroEmpleado extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField txtDomicilio;
-	private JTextField txtTelefono;
-	private JTextField txtEmail;
-	private JTextField txtNombre;
-	private JTextField txtApellido;
-	private JTextField txtUsuario;
-	private JPasswordField txtContrasenia;
-	private JPasswordField txtRepetirContrasenia;
-	EmpleadoControlador controlador = new EmpleadoControlador();
+    private static final long serialVersionUID = 1L; // Identificador único de la clase
+    private JPanel contentPane; // Panel principal de la ventana
+    private JTextField txtDomicilio; // Campo de texto para la dirección del empleado
+    private JTextField txtTelefono; // Campo de texto para el número de teléfono del empleado
+    private JTextField txtEmail; // Campo de texto para el correo electrónico del empleado
+    private JTextField txtNombre; // Campo de texto para el nombre del empleado
+    private JTextField txtApellido; // Campo de texto para el apellido del empleado
+    private JTextField txtUsuario; // Campo de texto para el nombre de usuario del empleado
+    private JPasswordField txtContrasenia; // Campo de texto para la contraseña del empleado
+    private JPasswordField txtRepetirContrasenia; // Campo de texto para repetir la contraseña
+    private EmpleadoControlador controlador = new EmpleadoControlador(); // Controlador para la gestión de empleados
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+    /**
+     * Constructor de la clase RegistroEmpleado.
+     * Inicializa la ventana con campos para ingresar los datos del nuevo empleado.
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
 	public RegistroEmpleado() {
 		// Configuración de la ventana principal
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -227,6 +235,16 @@ public class RegistroEmpleado extends JFrame {
 		btnRegistro.setIcon(new ImageIcon(RegistroEmpleado.class.getResource("/Img/icono de crear cuenta.png")));
 		btnRegistro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				 /**
+		         * Maneja el evento de acción para crear una cuenta de empleado.
+		         *
+		         * Este método verifica los campos de entrada, comprueba si el correo electrónico
+		         * y el nombre de usuario ya están en uso, y valida la dirección de correo electrónico.
+		         * Si todos los datos son válidos, se intenta crear un nuevo empleado y se maneja 
+		         * el resultado del registro, mostrando mensajes apropiados al usuario.
+		         *
+		         * @param e El evento de acción que activa este método.
+		         */
 				try {
 					if (verificarCampos()) {
 						return;
@@ -353,7 +371,16 @@ public class RegistroEmpleado extends JFrame {
 		pnlContenedor.add(btnCerrar);
 	}
 
-	// Funcion para verificar campos vacios
+    /**
+     * Verifica que todos los campos de entrada estén completos y cumplan con las validaciones requeridas.
+     *
+     * Este método comprueba que los campos de texto no estén vacíos, que las contraseñas ingresadas coincidan 
+     * y que la longitud de la contraseña sea de al menos 8 caracteres. Si alguna de estas condiciones no se 
+     * cumple, se muestra un mensaje de advertencia o error al usuario y se retorna `true`. Si todos los 
+     * campos son válidos, se retorna `false`.
+     *
+     * @return `true` si hay campos vacíos o errores en las contraseñas; `false` si todos los campos son válidos.
+     */
 	private boolean verificarCampos() {
 		String nombre = txtNombre.getText();
 		String apellido = txtApellido.getText();
@@ -379,7 +406,16 @@ public class RegistroEmpleado extends JFrame {
 		return false;
 	}
 
-	// Metodo para verificar si esta bien el email
+	/**
+	 * Verifica si una dirección de correo electrónico es válida.
+	 *
+	 * Este método utiliza una expresión regular para comprobar si el formato del correo electrónico
+	 * cumple con los estándares típicos. Un correo electrónico válido debe contener caracteres alfanuméricos,
+	 * un símbolo de '@', y un dominio que incluye al menos un punto (.) seguido de una extensión.
+	 *
+	 * @param correo La dirección de correo electrónico a verificar.
+	 * @return `true` si el correo electrónico tiene un formato válido; `false` en caso contrario.
+	 */
 	public static boolean esCorreoValido(String correo) {
 		String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 		Pattern pattern = Pattern.compile(regex);

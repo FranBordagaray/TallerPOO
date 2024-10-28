@@ -42,46 +42,53 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.JCheckBox;
 import javax.swing.JList;
 
+/**
+ * Clase que representa la vista para la reserva de mesas por parte de un empleado.
+ * Permite seleccionar fechas, horas, mesas y realizar reservas o bloquear mesas.
+ */
 public class VistaReservaEmpleado extends JPanel {
+    private static final long serialVersionUID = 1L; // Identificador único de la clase
 
-	private static final long serialVersionUID = 1L;
+    private JPanel Mapas; // Panel principal para la interfaz
+    private JDateChooser calendario2; // Selector de fecha
+    private JComboBox<String> horarioComboBox; // ComboBox para seleccionar horarios
+    private JComboBox<String> horaFinComboBox; // ComboBox para seleccionar la hora de fin
+    private JComboBox<String> horaInicioComboBox; // ComboBox para seleccionar la hora de inicio
+    private JButton btnReservar; // Botón para realizar una reserva
+    private JButton btnBloquear; // Botón para bloquear una mesa
+    private JButton btnCrearEventoEspecial; // Botón para crear un evento especial
+    private JButton btnReservarLugar; // Botón para reservar un lugar
+    private LocalDate hoy; // Fecha de hoy
+    private LocalDate unAnoFuturo; // Fecha un año en el futuro
+    private JComboBox<String> comboUbicaciones; // ComboBox para seleccionar ubicaciones
+    private JComboBox<String> comboMesa; // ComboBox para seleccionar mesas
+    private JComboBox<Integer> comboCapacidad; // ComboBox para seleccionar capacidad
+    private MesaControlador mesaControlador; // Controlador para gestionar mesas
+    private String SeleccionarUbicacion; // Ubicación seleccionada
+    private int capacidadSeleccionada; // Capacidad seleccionada
+    private String fechaFormateada; // Fecha formateada para reservas
+    private String horaSeleccionada; // Hora seleccionada para la reserva
+    private String horaInicio; // Hora de inicio de la reserva
+    private String horaFinal; // Hora de finalización de la reserva
+    private JList<String> listaMesas; // Lista para mostrar mesas disponibles
+    private DefaultListModel<String> listModel; // Modelo de la lista de mesas
+    private JTextArea CampoComentario; // Campo de texto para comentarios de la reserva
+    private String[] ubicaciones; // Array de ubicaciones
+    private String[] mesasSeleccionadas; // Array de mesas seleccionadas
+    private Reserva reserva; // Objeto reserva
+    private Mesa mesa; // Objeto mesa
+    private int idMesaSeleccionada; // ID de la mesa seleccionada
+    private int idMesaSeleccionadaEvento; // ID de la mesa seleccionada para evento
+    private int servicioCreado; // ID del servicio creado
+    private Comprobante comprobante; // Comprobante asociado a la reserva
+    private Servicio servicio; // Objeto servicio
+    private DetalleReservaEmpleado detalle_2; // Detalle de la reserva para empleados
+    private DetalleReservaClienteParaEmpleado detalles_1; // Detalle de la reserva para clientes
 
-	private JPanel Mapas;
-	private JDateChooser calendario2;
-	private JComboBox<String> horarioComboBox;
-	private JComboBox<String> horaFinComboBox;
-	private JComboBox<String> horaInicioComboBox;
-	private JButton btnReservar;
-	private JButton btnBloquear;
-	private JButton btnCrearEventoEspecial;
-	private JButton btnReservarLugar;
-	private LocalDate hoy;
-	private LocalDate unAnoFuturo;
-	private JComboBox<String> comboUbicaciones;
-	private JComboBox<String> comboMesa;
-	private JComboBox<Integer> comboCapacidad;
-	private MesaControlador mesaControlador;
-	private String SeleccionarUbicacion;
-	private int capacidadSeleccionada;
-	private String fechaFormateada;
-	private String horaSeleccionada;
-	private String horaInicio;
-	private String horaFinal;
-	private JList<String> listaMesas;
-	private DefaultListModel<String> listModel;
-	private JTextArea CampoComentario;
-	private String[] ubicaciones;
-	private String[] mesasSeleccionadas;
-	private Reserva reserva;
-	private Mesa mesa;
-	private int idMesaSeleccionada;
-	private int idMesaSeleccionadaEvento;
-	private int servicioCreado; 
-	private Comprobante comprobante;
-	private Servicio servicio;
-	private DetalleReservaEmpleado detalle_2;
-	private DetalleReservaClienteParaEmpleado detalles_1;
-
+    /**
+     * Constructor de la clase VistaReservaEmpleado.
+     * Inicializa la vista y sus componentes.
+     */
 	public VistaReservaEmpleado() {
 
 		// Configuracion del panel
@@ -740,13 +747,27 @@ public class VistaReservaEmpleado extends JPanel {
 
 	}
 
-	// Cambia el panel visible
+	/**
+	 * Cambia el panel visible en el contenedor Mapas.
+	 *
+	 * Este método utiliza un CardLayout para mostrar el panel especificado.
+	 *
+	 * @param panel El nombre del panel que se desea mostrar.
+	 */
 	private void cambioPanel(String panel) {
 		CardLayout cl = (CardLayout) (Mapas.getLayout());
 		cl.show(Mapas, panel);
 	}
 
-	// Funcion actualiza horas disponibles
+	/**
+	 * Actualiza las horas disponibles en el combo box según la fecha seleccionada.
+	 *
+	 * Si la fecha seleccionada es hoy, solo se agregarán las horas que son 
+	 * mayores o iguales a la hora actual. Si no hay horas disponibles, 
+	 * se mostrará un mensaje indicando que no hay servicios disponibles.
+	 *
+	 * @param fechaSeleccionada La fecha para la que se desean actualizar las horas disponibles.
+	 */
 	private void actualizarHorasDisponibles(LocalDateTime fechaSeleccionada) {
 
 		horarioComboBox.removeAllItems();
@@ -779,7 +800,15 @@ public class VistaReservaEmpleado extends JPanel {
 		}
 	}
 
-	// Método para actualizar horas de inicio disponibles
+	/**
+	 * Actualiza las horas de inicio disponibles en el combo box según la fecha seleccionada.
+	 *
+	 * Si la fecha seleccionada es hoy, solo se agregarán las horas que son mayores o iguales a 
+	 * la hora actual, incluyendo la medianoche y las dos de la mañana. Si no hay horas disponibles, 
+	 * se mostrará un mensaje indicando que no hay horas de inicio disponibles.
+	 *
+	 * @param fechaSeleccionada La fecha para la que se desean actualizar las horas de inicio disponibles.
+	 */
 	private void actualizarHorasInicioDisponibles(LocalDateTime fechaSeleccionada) {
 	    horaInicioComboBox.removeAllItems();
 	    LocalDate fecha = fechaSeleccionada.toLocalDate();
@@ -812,7 +841,13 @@ public class VistaReservaEmpleado extends JPanel {
 
 
 
-	// Método para actualizar horas de fin disponibles
+	/**
+	 * Actualiza las horas de fin disponibles en el combo box.
+	 * 
+	 * Este método llena el combo box de horas de fin con un conjunto predefinido de horas
+	 * disponibles. No se aplican restricciones basadas en la fecha o la hora actual,
+	 * por lo que se agregarán todas las horas especificadas en la lista.
+	 */
 	private void actualizarHorasFinDisponibles() {
 		horaFinComboBox.removeAllItems();
 		String[] horasDisponibles = new String[] { "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00",
@@ -823,7 +858,16 @@ public class VistaReservaEmpleado extends JPanel {
 		}
 	}
 
-	// Método para validar las horas de inicio y fin
+	/**
+	 * Valida las horas de inicio y fin seleccionadas.
+	 * 
+	 * Este método verifica que las horas de inicio y fin seleccionadas sean válidas
+	 * y cumplan con las reglas establecidas. Si alguna validación falla, se muestra
+	 * un mensaje de error y el método retorna false. Si las horas son válidas,
+	 * retorna true.
+	 * 
+	 * @return true si las horas son válidas, false en caso contrario.
+	 */
 	private boolean validarHoras() {
 		String horaInicioSeleccionada = (String) horaInicioComboBox.getSelectedItem();
 		String horaFinSeleccionada = (String) horaFinComboBox.getSelectedItem();
@@ -862,7 +906,16 @@ public class VistaReservaEmpleado extends JPanel {
 		return true;
 	}
 
-	// Funcion para actualizar Mesas
+	/**
+	 * Actualiza la lista de mesas disponibles según la ubicación seleccionada.
+	 * 
+	 * Este método verifica la ubicación seleccionada en el combo box y busca
+	 * las mesas disponibles en esa ubicación. Luego, excluye las mesas que
+	 * están ocupadas por un servicio en la fecha y horario seleccionados,
+	 * y actualiza el combo box de mesas con las mesas disponibles.
+	 * 
+	 * @return una lista de mesas disponibles en la ubicación seleccionada.
+	 */
 	private List<Mesa> actualizarMesas() {
 		String ubicacionSeleccionada = (String) comboUbicaciones.getSelectedItem();
 		List<Mesa> mesasP = new ArrayList<Mesa>();
@@ -889,7 +942,17 @@ public class VistaReservaEmpleado extends JPanel {
 		return mesasP;
 	}
 
-	// Funcion para filtrar por Capacidad
+	/**
+	 * Filtra las mesas disponibles según la capacidad seleccionada.
+	 * 
+	 * Este método verifica la ubicación seleccionada y actualiza la lista
+	 * de mesas disponibles en función de la capacidad. Si la capacidad
+	 * seleccionada es cero, se mostrarán todas las mesas disponibles en
+	 * la ubicación seleccionada. De lo contrario, solo se mostrarán las
+	 * mesas que coincidan con la capacidad especificada.
+	 * 
+	 * @param capacidadSeleccionada la capacidad seleccionada para filtrar las mesas.
+	 */
 	private void filtrarCapacidad(int capacidadSeleccionada) {
 		String ubicacionSeleccionada = (String) comboUbicaciones.getSelectedItem();
 		List<Mesa> mesasP;
@@ -907,7 +970,17 @@ public class VistaReservaEmpleado extends JPanel {
 		}
 	}
 
-	// Metodo encontrar el path del mapa de la mesa
+	/**
+	 * Busca el path de la imagen del mapa de la mesa según la ubicación seleccionada.
+	 * 
+	 * Este método recibe un array de ubicaciones y una ubicación seleccionada,
+	 * y retorna el path correspondiente a la imagen de la ubicación elegida. 
+	 * Si la ubicación no está reconocida, se lanza una excepción.
+	 * 
+	 * @param ubicaciones un array de ubicaciones disponibles (no se usa en la lógica actual).
+	 * @param SeleccionarUbicacion la ubicación seleccionada por el usuario.
+	 * @return el path de la imagen correspondiente a la ubicación seleccionada.	 
+	 */
 	public String BuscarPath(String[] ubicaciones, String SeleccionarUbicacion) {
 		switch (SeleccionarUbicacion) {
 		case "COMEDOR PRINCIPAL":
@@ -925,7 +998,18 @@ public class VistaReservaEmpleado extends JPanel {
 		}
 	}
 
-	// Metodo para obtener la mesa
+	/**
+	 * Obtiene el ID de la mesa a partir de la selección del usuario.
+	 * 
+	 * Este método toma la cadena de texto que representa la selección de la mesa, 
+	 * la divide en partes y extrae el ID de la mesa. Si ocurre un error en 
+	 * el formato de la cadena, se maneja la excepción y se muestra un mensaje 
+	 * de error al usuario.
+	 * 
+	 * @param seleccionMesa la cadena que representa la selección de la mesa, 
+	 *                      formateada como "Mesa X", donde X es el ID de la mesa.
+	 * @return el ID de la mesa como un entero, o -1 si el formato es inválido.
+	 */
 	private int obtenerIdMesa(String seleccionMesa) {
 		try {
 			String[] partes = seleccionMesa.split(" ");
@@ -937,7 +1021,18 @@ public class VistaReservaEmpleado extends JPanel {
 		}
 	}
 
-	// Metodo que Almacena los datos seleccionados para el objeto de Reserva
+	/**
+	 * Almacena los datos seleccionados para el objeto de Reserva para un evento especial.
+	 * 
+	 * Este método recopila la información necesaria para crear o actualizar una reserva 
+	 * asociada a un evento especial. Utiliza información de la sesión actual del empleado 
+	 * y los datos ingresados en los campos de la interfaz de usuario.
+	 * 
+	 * @param reserva el objeto Reserva que se desea llenar con los datos.
+	 * @param horaInicio la hora de inicio del evento especial.
+	 * @param horaFin la hora de fin del evento especial.
+	 * @return el objeto Reserva con los datos actualizados.
+	 */
 	@SuppressWarnings("static-access")
 	public Reserva recopilarDatosReservaEventoEspecial(Reserva reserva, String horaInicio, String horaFin) {
 		SesionEmpleado s1 = new SesionEmpleado();
@@ -952,7 +1047,16 @@ public class VistaReservaEmpleado extends JPanel {
 		return reserva;
 	}
 
-	// Metodo que Almacena los datos seleccionados para el objeto de Reserva
+	/**
+	 * Almacena los datos seleccionados para el objeto de Reserva para una reserva normal.
+	 * 
+	 * Este método recopila la información necesaria para crear o actualizar una reserva 
+	 * asociada a un evento normal. Utiliza información de la sesión actual del empleado 
+	 * y los datos ingresados en los campos de la interfaz de usuario.
+	 * 
+	 * @param reserva el objeto Reserva que se desea llenar con los datos.
+	 * @return el objeto Reserva con los datos actualizados.
+	 */
 	@SuppressWarnings("static-access")
 	public Reserva recopilarDatosReservaNormal(Reserva reserva) {
 
@@ -968,7 +1072,16 @@ public class VistaReservaEmpleado extends JPanel {
 		return reserva;
 	}
 
-	// Metodo que Almacena los datos seleccionados para el objeto de Servicio
+	/**
+	 * Almacena los datos seleccionados para el objeto de Servicio para un servicio normal.
+	 * 
+	 * Este método recopila la información necesaria para crear o actualizar un servicio 
+	 * asociado a una reserva normal. Obtiene la hora seleccionada de la interfaz de usuario 
+	 * y la descompone en horas de inicio y fin.
+	 * 
+	 * @param servicio el objeto Servicio que se desea llenar con los datos.
+	 * @return el objeto Servicio con los datos actualizados.
+	 */
 	public Servicio recopilarDatosServicioNormal(Servicio servicio) {
 
 		horaSeleccionada = (String) horarioComboBox.getSelectedItem();
@@ -982,7 +1095,16 @@ public class VistaReservaEmpleado extends JPanel {
 		return servicio;
 	}
 
-	// Método que almacena los datos seleccionados para el objeto de Servicio
+	/**
+	 * Almacena los datos seleccionados para el objeto de Servicio para un servicio de evento especial.
+	 * 
+	 * Este método recopila la información necesaria para crear o actualizar un servicio 
+	 * asociado a una reserva de evento especial. Se establece la fecha, la hora de inicio 
+	 * y la hora de fin, así como el estado de evento privado.
+	 * 
+	 * @param servicio el objeto Servicio que se desea llenar con los datos.
+	 * @return el objeto Servicio con los datos actualizados.
+	 */
 	public Servicio recopilarDatosServicioEventoEspecial(Servicio servicio) {
 		servicio.setFecha(fechaFormateada);
 		servicio.setHoraInicio(horaInicio);
@@ -991,7 +1113,15 @@ public class VistaReservaEmpleado extends JPanel {
 		return servicio;
 	}
 
-	// Metodo que Almacena los datos seleccionados para el objeto de Comprobante
+	/**
+	 * Almacena los datos seleccionados para el objeto de Comprobante.
+	 * 
+	 * Este método recopila la información necesaria para crear un comprobante, 
+	 * estableciendo la fecha y hora actuales, y asignando un importe fijo.
+	 * 
+	 * @param comprobante el objeto Comprobante que se desea llenar con los datos.
+	 * @return el objeto Comprobante con los datos actualizados.
+	 */
 	public Comprobante recopilarDatosComprobante(Comprobante comprobante) {
 		LocalDate fechaActual = LocalDate.now();
 		DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -1006,7 +1136,17 @@ public class VistaReservaEmpleado extends JPanel {
 		return comprobante;
 	}
 
-	// Metodo que Almacena los datos seleccionados para el objeto de Mesa
+	/**
+	 * Almacena los datos seleccionados para el objeto de Mesa.
+	 * 
+	 * Este método actualiza el objeto Mesa con la identificación, 
+	 * ubicación y capacidad seleccionada. Si no se ha especificado 
+	 * una capacidad, se busca la capacidad asociada a la mesa a través
+	 * del controlador correspondiente.
+	 *
+	 * @param mesa el objeto Mesa que se desea llenar con los datos.
+	 * @return el objeto Mesa con los datos actualizados.
+	 */
 	public Mesa recopilarDatosMesaNormal(Mesa mesa) {
 		mesa.setIdMesa(idMesaSeleccionada);
 		mesa.setUbicacion(SeleccionarUbicacion);
@@ -1019,7 +1159,17 @@ public class VistaReservaEmpleado extends JPanel {
 		return mesa;
 	}
 	
-	// Metodo que Almacena los datos seleccionados para el objeto de Mesa Evento
+	/**
+	 * Almacena los datos seleccionados para el objeto de Mesa relacionado con un evento especial.
+	 * 
+	 * Este método actualiza el objeto Mesa con la identificación, 
+	 * ubicación y capacidad seleccionada. Si no se ha especificado 
+	 * una capacidad, se busca la capacidad asociada a la mesa a través 
+	 * del controlador correspondiente.
+	 *
+	 * @param mesa el objeto Mesa que se desea llenar con los datos.
+	 * @return el objeto Mesa con los datos actualizados.
+	 */
 		public Mesa recopilarDatosMesaEventoEspecial(Mesa mesa) {
 			mesa.setIdMesa(idMesaSeleccionadaEvento);
 			mesa.setUbicacion(SeleccionarUbicacion);
@@ -1032,7 +1182,19 @@ public class VistaReservaEmpleado extends JPanel {
 			return mesa;
 		}
 
-	// Método que almacena los datos seleccionados para el objeto de Mesa
+		/**
+		 * Almacena los datos seleccionados para el objeto de Mesa basado en el número de mesa proporcionado.
+		 * 
+		 * Este método actualiza el objeto Mesa con la identificación, 
+		 * ubicación y capacidad seleccionada. Si no se ha especificado 
+		 * una capacidad, se busca la capacidad asociada a la mesa a través 
+		 * del controlador correspondiente.
+		 *
+		 * @param mesasSeleccionadas un arreglo de cadenas que contiene las mesas seleccionadas.
+		 * @param id el identificador de la mesa que se desea almacenar.
+		 * @return el objeto Mesa con los datos actualizados.
+		 */
+
 	public Mesa recopilarDatosMesaPorNumero(String mesasSeleccionadas[], int id) {
 		Mesa mesa = new Mesa();
 
@@ -1048,7 +1210,15 @@ public class VistaReservaEmpleado extends JPanel {
 		return mesa;
 	}
 
-	// Método que convierte un DefaultListModel a un array de String
+	/**
+	 * Convierte un objeto DefaultListModel a un arreglo de String.
+	 * 
+	 * Este método recorre el modelo de lista proporcionado y almacena
+	 * cada elemento en un arreglo de tipo String, que luego se devuelve.
+	 *
+	 * @param listModel el DefaultListModel que se desea convertir.
+	 * @return un arreglo de String que contiene los elementos del DefaultListModel.
+	 */
 	public String[] convertirListModelAArray(DefaultListModel<String> listModel) {
 		String[] arrayMesas = new String[listModel.getSize()];
 
@@ -1058,7 +1228,16 @@ public class VistaReservaEmpleado extends JPanel {
 		return arrayMesas;
 	}
 	
-	// Método que convierte un List<Mesa> a un array de String
+	/**
+	 * Convierte una lista de objetos Mesa a un arreglo de String.
+	 *
+	 * Este método recorre la lista de mesas proporcionada y construye
+	 * un arreglo de String donde cada elemento representa una mesa
+	 * en el formato "Mesa X", donde X es el identificador de la mesa.
+	 *
+	 * @param listaMesas la lista de objetos Mesa a convertir.
+	 * @return un arreglo de String que contiene los identificadores de las mesas.
+	 */
 	public String[] convertirListAMesArray(List<Mesa> listaMesas) {
 	    String[] arrayMesas = new String[listaMesas.size()];
 
@@ -1069,7 +1248,14 @@ public class VistaReservaEmpleado extends JPanel {
 	}
 
 
-	//Metodo para resetear los campos
+	/**
+	 * Resetea todos los campos del formulario a sus valores iniciales.
+	 *
+	 * Este método restablece los campos del formulario, incluyendo
+	 * el JDateChooser, JComboBoxes y el campo de texto de comentarios.
+	 * También limpia la selección de la JList y establece el
+	 * identificador de la mesa seleccionada a -1.
+	 */
 		public void resetearCampos() {
 		    if (calendario2 != null) {
 		        calendario2.setDate(new Date());

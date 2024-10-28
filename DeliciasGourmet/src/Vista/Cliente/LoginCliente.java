@@ -3,7 +3,6 @@ package Vista.Cliente;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,28 +21,47 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import Controlador.ClienteControlador;
-
+/**
+ * La clase {@code LoginCliente} representa la interfaz de inicio de sesión
+ * para los clientes en la aplicación. Extiende {@code JFrame} y proporciona
+ * campos de entrada para el correo electrónico y la contraseña, así como un
+ * botón para iniciar sesión.
+ */
 public class LoginCliente extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Panel principal que contiene todos los componentes de la interfaz de usuario.
+	 */
 	private JPanel contentPane;
+
+	/**
+	 * Campo de texto para ingresar la dirección de correo electrónico del cliente.
+	 */
 	private JTextField txtEmail;
+
+	/**
+	 * Campo de contraseña para ingresar la contraseña del cliente. 
+	 * Este campo oculta el texto ingresado para mayor seguridad.
+	 */
 	private JPasswordField txtContrasenia;
+
+	/**
+	 * Controlador que gestiona la lógica de negocio relacionada con los clientes,
+	 * incluyendo el manejo de inicios de sesión y la interacción con la base de datos.
+	 */
 	ClienteControlador controlador = new ClienteControlador();
 	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginCliente frame = new LoginCliente();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
+	/**
+	 * Constructor de la clase LoginCliente.
+	 *
+	 * Este constructor inicializa una nueva instancia de la clase 
+	 * LoginCliente, que representa la interfaz gráfica para que los 
+	 * clientes inicien sesión en el sistema. La vista permite a los 
+	 * usuarios ingresar sus credenciales, como el nombre de usuario 
+	 * y la contraseña, y maneja la autenticación de los usuarios 
+	 * mediante la verificación de sus datos en la base de datos.
+	 */
 	public LoginCliente() {
 		// Configuración de la ventana principal
 		setTitle("Delicias Gourmet");
@@ -115,7 +133,26 @@ public class LoginCliente extends JFrame {
 		txtContrasenia.setBounds(300, 300, 300, 30);
 		pnlContenedor.add(txtContrasenia);
 
-		// Boton para iniciar sesion
+		/**
+		 * Crea un botón que permite al usuario registrarse en el sistema.
+		 * Al hacer clic en este botón, se abre una nueva ventana de registro
+		 * y se oculta la ventana actual de inicio de sesión.
+		 * 
+		 * <p>El botón incluye un icono representativo y cambia su color de fondo
+		 * y texto cuando el cursor se coloca sobre él para mejorar la experiencia
+		 * del usuario.</p>
+		 * 
+		 * <p>Detalles del botón:</p>
+		 * <ul>
+		 *   <li>Texto del botón: "Registrarse"</li>
+		 *   <li>Icono: se carga desde la ruta especificada en los recursos del proyecto.</li>
+		 *   <li>Acción: al hacer clic, se instancia un objeto de la clase {@link Registro}.</li>
+		 *   <li>Estilo: fuente, color de fondo y color del texto se ajustan para
+		 *       mejorar la apariencia.</li>
+		 *   <li>Posicionamiento: el botón se ubica en el panel contenedor en una posición
+		 *       específica.</li>
+		 * </ul>
+		 */
 		JButton btnLogin = new JButton("Iniciar sesión");
 		btnLogin.setIcon(new ImageIcon(LoginCliente.class.getResource("/Img/icono de inicio de sesion.png")));
 		btnLogin.addActionListener(new ActionListener() {
@@ -168,7 +205,26 @@ public class LoginCliente extends JFrame {
 		lblRecuperarClave.setBounds(277, 450, 158, 30);
 		pnlContenedor.add(lblRecuperarClave);
 
-		// Boton para registrarse
+		/**
+		 * Crea un botón que permite al usuario registrarse en el sistema.
+		 * Al hacer clic en este botón, se abre una nueva ventana de registro
+		 * y se oculta la ventana actual de inicio de sesión.
+		 * 
+		 * <p>El botón incluye un icono representativo y cambia su color de fondo
+		 * y texto cuando el cursor se coloca sobre él para mejorar la experiencia
+		 * del usuario.</p>
+		 * 
+		 * <p>Detalles del botón:</p>
+		 * <ul>
+		 *   <li>Texto del botón: "Registrarse"</li>
+		 *   <li>Icono: se carga desde la ruta especificada en los recursos del proyecto.</li>
+		 *   <li>Acción: al hacer clic, se instancia un objeto de la clase {@link Registro}.</li>
+		 *   <li>Estilo: fuente, color de fondo y color del texto se ajustan para
+		 *       mejorar la apariencia.</li>
+		 *   <li>Posicionamiento: el botón se ubica en el panel contenedor en una posición
+		 *       específica.</li>
+		 * </ul>
+		 */
 		JButton btnRegistro = new JButton("Registrarse");
 		btnRegistro.setIcon(new ImageIcon(LoginCliente.class.getResource("/Img/icono de registrarse.png")));
 		btnRegistro.addActionListener(new ActionListener() {
@@ -239,7 +295,15 @@ public class LoginCliente extends JFrame {
 		pnlContenedor.add(btnRecuperarClave);
 	}
 
-	// Funcion para verificar campos vacios
+	/**
+	 * Verifica si los campos de entrada están vacíos.
+	 *
+	 * Este método comprueba si el campo de correo electrónico y el campo de contraseña
+	 * contienen texto. Si alguno de los campos está vacío, se muestra un mensaje de error
+	 * al usuario indicando que debe completar todos los campos. 
+	 *
+	 * @return true si alguno de los campos está vacío, false si ambos campos tienen datos.
+	 */
 	private boolean verificarCampos() {
 		String email = txtEmail.getText();
 		String contrasenia = String.valueOf(txtContrasenia.getPassword());

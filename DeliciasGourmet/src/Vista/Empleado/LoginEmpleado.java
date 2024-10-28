@@ -23,31 +23,24 @@ import javax.swing.border.EmptyBorder;
 
 import Controlador.EmpleadoControlador;
 
+/**
+ * Clase que representa la ventana de inicio de sesión para empleados del sistema.
+ * Permite a los empleados ingresar sus credenciales para acceder a la aplicación.
+ */
 public class LoginEmpleado extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField txtUsuario;
-	private JPasswordField txtContrasenia;
+    private static final long serialVersionUID = 1L; // Identificador único de la clase
+    private JPanel contentPane; // Panel principal de la ventana
+    private JTextField txtUsuario; // Campo de texto para el nombre de usuario
+    private JPasswordField txtContrasenia; // Campo de texto para la contraseña
 
-	EmpleadoControlador controlador = new EmpleadoControlador();
+    // Controlador para la gestión de empleados
+    EmpleadoControlador controlador = new EmpleadoControlador();
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginEmpleado frame = new LoginEmpleado();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+    /**
+     * Constructor de la clase LoginEmpleado.
+     * Inicializa la ventana con los componentes necesarios y la configuración básica.
+     */
 	public LoginEmpleado() {
 		// Configuración de la ventana principal
 		setTitle("Login empleado");

@@ -21,17 +21,52 @@ import javax.swing.SwingConstants;
 import Controlador.ClienteControlador;
 import Modelo.Cliente.SesionCliente;
 import Modelo.Cliente.Cliente;
-
+/**
+ * Clase que representa el panel para actualizar el perfil del usuario.
+ * Este panel permite al usuario modificar su información personal y configuraciones.
+ */
 public class ActualizarPerfil extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Campo de texto para ingresar el nombre del usuario.
+	 */
 	private JTextField txtNombre;
+
+	/**
+	 * Campo de texto para ingresar el apellido del usuario.
+	 */
 	private JTextField txtApellido;
+
+	/**
+	 * Campo de texto para ingresar la contraseña del usuario.
+	 */
 	private JTextField txtContrasenia;
+
+	/**
+	 * Campo de texto para ingresar el domicilio del usuario.
+	 */
 	private JTextField txtDomicilio;
+
+	/**
+	 * Campo de texto para ingresar el correo electrónico del usuario.
+	 */
 	private JTextField txtEmail;
+
+	/**
+	 * Campo de texto para ingresar el número de teléfono del usuario.
+	 */
 	private JTextField txtTelefono;
 
+	/**
+	 * Constructor de la clase ActualizarPerfil.
+	 *
+	 * Este constructor inicializa una nueva instancia de la clase ActualizarPerfil,
+	 * que permite a los usuarios modificar y actualizar su información de perfil.
+	 * Al invocar este constructor, se preparan los componentes necesarios para 
+	 * la edición de datos del usuario, como nombre, apellido, correo electrónico,
+	 * entre otros.
+	 */
 	@SuppressWarnings("static-access")
 	public ActualizarPerfil() {
 		
@@ -142,7 +177,30 @@ public class ActualizarPerfil extends JPanel {
 		separator.setBounds(10, 453, 972, 18);
 		add(separator);
 				
-		// Boton para actualizar informacion de contacto
+		/**
+		 * Crea y configura un botón para guardar los cambios en la información
+		 * de contacto del cliente.
+		 * 
+		 * El botón se inicializa con el texto "Guardar Cambios" y un icono
+		 * representando una acción de guardar. Se añaden oyentes de mouse para
+		 * cambiar el color de fondo y el color del texto cuando el ratón entra
+		 * y sale del área del botón, proporcionando un efecto visual al usuario.
+		 * 
+		 * Un ActionListener se asocia al botón, que se activa al hacer clic
+		 * en él. Este oyente realiza las siguientes acciones:
+		 * - Obtiene el cliente actual.
+		 * - Actualiza el correo electrónico y el teléfono del cliente con
+		 *   los valores introducidos en los campos de texto correspondientes.
+		 * - Utiliza un ClienteControlador para actualizar la información en
+		 *   la base de datos.
+		 * - Muestra un mensaje de éxito si la actualización se realiza
+		 *   correctamente, o imprime un error en la consola si falla.
+		 * 
+		 * El botón se configura con un fondo blanco, texto negro y un
+		 * cursor de mano para mejorar la experiencia del usuario. Su tamaño
+		 * y alineación se establecen para que se muestre correctamente en
+		 * la interfaz.
+		 */
 		JButton btnGuardar = new JButton("Guardar Cambios");
 		btnGuardar.setIcon(new ImageIcon(ActualizarPerfil.class.getResource("/Img/icono de guardar.png")));
 		btnGuardar.addMouseListener(new MouseAdapter() {

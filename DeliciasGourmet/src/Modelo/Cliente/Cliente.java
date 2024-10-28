@@ -4,47 +4,87 @@ import java.util.Random;
 
 import Modelo.Complementos.Persona;
 
+/**
+ * Clase que representa un cliente en el sistema. Extiende la clase {@link Persona}.
+ * Cada cliente tiene un ID único, un código de recuperación, y una tarjeta asociada.
+ */
 public class Cliente extends Persona {
-	// Variables de clase
-	private int idCliente;
-	private String codRecuperacion;
-	private Tarjeta tarjeta;
 
-	// Constructor de clase
-	public Cliente() {
-	}
+    /**
+     * Identificador único del cliente.
+     */
+    private int idCliente;
 
-	// Getter de idCliente
-	public int getIdCliente() {
-		return idCliente;
-	}
+    /**
+     * Código de recuperación que permite al cliente recuperar su cuenta.
+     */
+    private String codRecuperacion;
 
-	// Setter de idCliente
-	public void setIdCliente(int idCliente) {
-		this.idCliente = idCliente;
-	}
-	
-	// Getter de tarjeta
-	public Tarjeta getTarjeta() {
-		return tarjeta;
-	}
+    /**
+     * Tarjeta asociada al cliente.
+     */
+    private Tarjeta tarjeta;
 
-	// Setter de tarjeta
-	public void setTarjeta(Tarjeta tarjeta) {
-		this.tarjeta = tarjeta;
-	}
-	
-	// Getter codRecuperacion
-	public String getCodRecuperacion() {
-		return codRecuperacion;
-	}
+    /**
+     * Constructor vacío de la clase Cliente.
+     */
+    public Cliente() {
+    }
 
-	// Genera un codigo aleatorio para recuperar su clave
-	public String generarCodigoRecuperacion() {
-	    Random random = new Random();
-	    int codigo = 100000 + random.nextInt(900000);
-	    return String.valueOf(codigo);
-	}
+    /**
+     * Obtiene el identificador único del cliente.
+     * 
+     * @return el ID del cliente.
+     */
+    public int getIdCliente() {
+        return idCliente;
+    }
 
-	
+    /**
+     * Establece el identificador único del cliente.
+     * 
+     * @param idCliente el ID a establecer para el cliente.
+     */
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    /**
+     * Obtiene la tarjeta asociada al cliente.
+     * 
+     * @return la tarjeta del cliente.
+     */
+    public Tarjeta getTarjeta() {
+        return tarjeta;
+    }
+
+    /**
+     * Establece la tarjeta asociada al cliente.
+     * 
+     * @param tarjeta la tarjeta a asociar con el cliente.
+     */
+    public void setTarjeta(Tarjeta tarjeta) {
+        this.tarjeta = tarjeta;
+    }
+
+    /**
+     * Obtiene el código de recuperación del cliente.
+     * 
+     * @return el código de recuperación del cliente.
+     */
+    public String getCodRecuperacion() {
+        return codRecuperacion;
+    }
+
+    /**
+     * Genera un código de recuperación aleatorio de seis dígitos.
+     * Este código puede ser utilizado para recuperar la cuenta del cliente.
+     * 
+     * @return un código de recuperación de seis dígitos como {@code String}.
+     */
+    public String generarCodigoRecuperacion() {
+        Random random = new Random();
+        int codigo = 100000 + random.nextInt(900000);
+        return String.valueOf(codigo);
+    }
 }

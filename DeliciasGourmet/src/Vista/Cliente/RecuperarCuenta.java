@@ -22,12 +22,43 @@ import javax.swing.border.EmptyBorder;
 import Controlador.ClienteControlador;
 import Modelo.Cliente.EnviarMail;
 
+/**
+ * Clase que representa la ventana de recuperación de cuenta de usuario.
+ * Esta clase extiende JFrame y proporciona una interfaz gráfica para que
+ * los usuarios puedan solicitar la recuperación de su cuenta introduciendo
+ * su dirección de correo electrónico.
+ * 
+ * La funcionalidad de recuperación de cuentas se maneja a través de la
+ * instancia de ClienteControlador, que se encarga de validar y procesar
+ * la solicitud de recuperación.
+ * 
+ * Uso:
+ * - Para utilizar esta clase, se debe instanciar un objeto de tipo
+ *   RecuperarCuenta y llamar al método setVisible(true) para mostrar la ventana.
+ */
 public class RecuperarCuenta extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Panel principal que contiene todos los componentes de la interfaz gráfica.
+	 */
 	private JPanel contentPane;
+
+	/**
+	 * Controlador que maneja la lógica de negocio relacionada con los clientes,
+	 * incluyendo la recuperación de cuentas.
+	 */
 	private ClienteControlador controlador;
+
+	/**
+	 * Campo de texto donde el usuario ingresa su dirección de correo electrónico
+	 * para la recuperación de cuenta.
+	 */
 	private JTextField txtEmail;
+
+	/**
+	 * Variable que almacena el correo electrónico ingresado por el usuario.
+	 */
 	private String email;
 
 	public RecuperarCuenta() {
@@ -75,7 +106,22 @@ public class RecuperarCuenta extends JFrame {
 		txtEmail.setBounds(125, 190, 350, 30);
 		contentPane.add(txtEmail);
 
-		// Boton para enviar correo de recuperación
+		/**
+		 * Crea un botón "ENVIAR" que permite al usuario solicitar el envío 
+		 * de un correo electrónico para recuperar su contraseña.
+		 * 
+		 * Al hacer clic en el botón, se verifica si los campos están completos. 
+		 * Si el correo electrónico ingresado está registrado, se genera un 
+		 * código de recuperación y se envía al correo electrónico del usuario. 
+		 * Se muestra un mensaje al usuario indicando que revise su correo 
+		 * electrónico. Luego, se abre la ventana para ingresar el código de 
+		 * verificación y se cierra la ventana actual (RecuperarCuenta).
+		 * 
+		 * Si el correo no está registrado, se muestra un mensaje de error.
+		 * 
+		 * El botón cambia de color al pasar el mouse sobre él para indicar 
+		 * que es interactivo.
+		 */
 		JButton btnEnviar = new JButton("ENVIAR");
 		btnEnviar.setIcon(new ImageIcon(RecuperarCuenta.class.getResource("/Img/icono enviar.png")));
 		btnEnviar.addActionListener(new ActionListener() {
@@ -124,7 +170,15 @@ public class RecuperarCuenta extends JFrame {
 		btnEnviar.setBounds(220, 277, 160, 30);
 		contentPane.add(btnEnviar);
 
-		// Boton x para cerrar el frame
+		/**
+		 * Crea un botón "X" que permite al usuario cerrar la ventana de 
+		 * recuperación de cuenta y volver a la ventana de inicio de sesión.
+		 * 
+		 * El botón cambia su color de fondo y de texto al pasar el mouse 
+		 * sobre él para indicar que es interactivo. Al hacer clic, 
+		 * se crea una nueva instancia de la ventana de inicio de sesión 
+		 * (LoginCliente) y se oculta la ventana actual (RecuperarCuenta).
+		 */
 		JButton btnCerrar = new JButton("X");
 		btnCerrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -154,7 +208,15 @@ public class RecuperarCuenta extends JFrame {
 		contentPane.add(btnCerrar);
 	}
 	
-	// Funcion para verificar campos vacios
+	/**
+	 * Verifica si los campos requeridos están completos.
+	 * 
+	 * @return true si el campo de correo electrónico está vacío, 
+	 *         de lo contrario, devuelve false.
+	 *         Si el campo está vacío, muestra un mensaje de advertencia
+	 *         al usuario indicando que debe ingresar un correo electrónico
+	 *         para la recuperación de la contraseña.
+	 */
 	private boolean verificarCampos() {
 		String mail = txtEmail.getText();
 		if (mail.isEmpty()) {

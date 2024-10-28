@@ -34,11 +34,19 @@ import Modelo.Empleado.Reportes;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
+/**
+ * Clase que representa una ventana para generar reportes de reservas por temporada.
+ * Permite seleccionar una temporada y visualizar las reservas asociadas.
+ */
 public class ReportePorTemporada extends JFrame {
+    private static final long serialVersionUID = 1L; // Identificador único de la clase
+    private JPanel contentPane; // Panel principal de la ventana
+    private ReservaControlador controlador; // Controlador para gestionar reservas
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private ReservaControlador controlador;
+    /**
+     * Constructor de la clase ReportePorTemporada.
+     * Inicializa la ventana y sus componentes.
+     */
 
 	public ReportePorTemporada() {
 		controlador = new ReservaControlador();
@@ -248,13 +256,36 @@ public class ReportePorTemporada extends JFrame {
 		contentPane.add(btnTodas);
 	}
 
+	/**
+	 * Verifica si un correo electrónico tiene un formato válido.
+	 *
+	 * Este método utiliza una expresión regular para comprobar si el correo 
+	 * electrónico proporcionado sigue la estructura comúnmente aceptada. 
+	 * Se permite el uso de letras, números y algunos caracteres especiales 
+	 * antes del símbolo '@', seguido por un dominio que puede incluir 
+	 * letras, números y puntos.
+	 *
+	 * @param correo el correo electrónico a validar
+	 * @return true si el correo es válido; false en caso contrario
+	 */
 	public static boolean esCorreoValido(String correo) {
 		String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 		Pattern pattern = Pattern.compile(regex);
 		return pattern.matcher(correo).matches();
 	}
 	
-    // Método para generar los reportes por temporada
+	/**
+	 * Genera un reporte en formato PDF con información sobre las reservas 
+	 * por temporada específica.
+	 *
+	 * Este método obtiene un historial de comensales basado en la temporada 
+	 * proporcionada, crea un documento PDF y agrega una tabla que muestra 
+	 * el total de reservas y la cantidad de comensales para esa temporada. 
+	 * Si el archivo ya existe, se genera un nuevo archivo con un nombre 
+	 * diferente.
+	 *
+	 * @param temporada la temporada para la cual se generará el reporte
+	 */
     @SuppressWarnings("unused")
     private void generarReportePorTemporada(String temporada) {
         List<Reportes> reporteReservas = controlador.obtenerHistorialComensalesPorTemporada(temporada);
@@ -297,7 +328,15 @@ public class ReportePorTemporada extends JFrame {
         }
     }
     
-    // Método para generar el reporte de todas las temporadas
+    /**
+     * Genera un reporte en formato PDF con información sobre las reservas 
+     * agrupadas por todas las temporadas: primavera, verano, otoño e invierno.
+     *
+     * Este método itera a través de cada temporada, obtiene el historial de 
+     * comensales, y crea un documento PDF que incluye una tabla con el total 
+     * de reservas y la cantidad de comensales para cada temporada. Si el 
+     * archivo ya existe, se genera un nuevo archivo con un nombre diferente.
+     */
     @SuppressWarnings("unused")
     private void generarReportePorDeTodasTemporadas() {
         String[] temporadas = {"PRIMAVERA", "VERANO", "OTOÑO", "INVIERNO"};

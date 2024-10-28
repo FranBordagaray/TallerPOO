@@ -15,12 +15,22 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Clase que representa la ventana principal para los empleados del sistema.
+ * Proporciona acceso a las funcionalidades de gestión de reservas y mesas.
+ */
 public class InicioEmpleado extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private VistaReservaEmpleado gestionMesas;
-	
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane; // Panel principal de la ventana
+    private VistaReservaEmpleado gestionMesas; // Vista para la gestión de mesas
+
+    /**
+     * Constructor de la clase InicioEmpleado.
+     * Inicializa la ventana con los componentes necesarios y la configuración básica.
+     *
+     * @param rol El rol del empleado que accede a la aplicación (ej. recepcionista, gerente).
+     */
 	public InicioEmpleado(String rol) {
 
 		// Configuración de la ventana principal
