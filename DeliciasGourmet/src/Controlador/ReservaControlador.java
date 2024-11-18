@@ -774,7 +774,7 @@ public class ReservaControlador {
 	            "SELECT c.nombre, c.apellido, r.fecha, r.hora, m.capacidad, m.ubicacion, r.comentario " +
 	            "FROM Reserva r JOIN MesaPrecargada m ON r.idMesa = m.idMesa " +
 	            "JOIN Cliente c ON r.idCliente = c.idCliente " +
-	            "WHERE r.idCliente = ? AND r.fecha >= DATE('now')"
+	            "WHERE r.idCliente = ?"
 	        );
 	        ps.setInt(1, idCliente);
 	        rs = ps.executeQuery();

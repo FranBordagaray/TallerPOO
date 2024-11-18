@@ -272,11 +272,29 @@ public class GestionReserva extends JPanel {
 	     * @param e El evento de acción que ocurre al presionar el botón.
 	     */
 		public void actionPerformed(ActionEvent e) {
+			
 		    if (idReservaSeleccionada != 0) {
-		        ConfirmacionDeCancelacion confirmacionDialog = new ConfirmacionDeCancelacion();
-		        boolean confirmacion = confirmacionDialog.mostrarConfirmacion();
-		        
-		        if (confirmacion) {
+		    	int respuesta = JOptionPane.showConfirmDialog(
+		                null, 
+		                "¿Estás seguro de que deseas cancelar la Reserva?", 
+		                "Confirmación de Cancelación", 
+		                JOptionPane.YES_NO_OPTION, 
+		                JOptionPane.WARNING_MESSAGE
+		        );
+		    	
+		    	// Evaluar la respuesta del usuario
+		        if (respuesta == JOptionPane.YES_OPTION) {
+		            System.out.println("Cancelación confirmada.");
+		            
+		        } else if (respuesta == JOptionPane.NO_OPTION) {
+		            System.out.println("Cancelación abortada.");
+		            
+		        } else {
+		            System.out.println("No se seleccionó ninguna opción.");
+		        }
+		    	
+		    	
+		        if (respuesta == JOptionPane.YES_OPTION) {
 		            LocalDateTime ahora = LocalDateTime.now();
 		            DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 		            String horaSinRango = horaReservaSeleccionada.split(" - ")[0];
@@ -301,13 +319,12 @@ public class GestionReserva extends JPanel {
 		                System.out.println("Error al cancelar la Reserva.");
 		            }
 		        } else {
-		            JOptionPane.showMessageDialog(null, "La cancelación fue cancelada por el usuario", "Cancelación", JOptionPane.INFORMATION_MESSAGE);
 		        }
 		    } else {
 		        JOptionPane.showMessageDialog(GestionReserva.this, "No seleccionó ninguna reserva", "Error", JOptionPane.ERROR_MESSAGE);
 		    }
 		    cargarDatos();	    
-		}	
+		}		
 	});
 	btnCancelar.addMouseListener(new MouseAdapter() {
     	@Override
@@ -435,10 +452,15 @@ public class GestionReserva extends JPanel {
 	     * @param e El evento de acción que ocurre al presionar el botón.
 	     */
 		public void actionPerformed(ActionEvent e) {
+			
 			if(idReservaSeleccionada != 0) {
+				
 				reservaControlador.actualizarEstadoReserva(idReservaSeleccionada, 3);
+				
 				generarComprobanteMail(comprobanteControlador.obtenerComprobantePorReserva(idReservaSeleccionada));
+				
 				enviarMailComprobante();
+				
 			 JOptionPane.showMessageDialog(GestionReserva.this,"Inasistencia Cargada con exito","Éxito",JOptionPane.INFORMATION_MESSAGE);
 			} else {
 				JOptionPane.showMessageDialog(GestionReserva.this,"No selecciono ninguna reserva","Error",JOptionPane.ERROR_MESSAGE);
@@ -685,7 +707,7 @@ public class GestionReserva extends JPanel {
  			    "Estimado/a cliente,\n\n" +
  			    "Le informamos que se ha generado un comprobante de pago por la multa correspondiente a su reserva.\n\n" +
  			    "Detalle Reserva:\n"+
- 			    "   - Id de la Reserva: %s\n"+		
+ 			    "   - Id de la Reserva: %d\n"+		
  			    "   - Número de Mesa: %s\n" +
  			    "   - Ubicación: %s\n" +
  			    "   - Capacidad de la Mesa: %s personas\n" +
@@ -702,7 +724,7 @@ public class GestionReserva extends JPanel {
  			    horaReservaSeleccionada,
  			    "Delicias Gourmet"
  			);
- 		
+ 		 email = reservaControlador.obtenerEmailClientePorReserva(idReservaSeleccionada);
  		 EnviarMail.enviarCorreoComprobante(email, asunto, mensaje, ruta);
  	}
  	

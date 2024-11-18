@@ -788,6 +788,10 @@ public class Historial extends JPanel {
 					comboBoxEstado.addItem("VIGENTE");
 				} else if (estado == 0) {
 					comboBoxEstado.addItem("CANCELADA");
+				}else if (estado == 2) {
+					comboBoxEstado.addItem("COMPLETADA");
+				}else if (estado == 3) {
+					comboBoxEstado.addItem("NO ASISTIÓ");
 				}
 			}
 		} catch (SQLException e) {

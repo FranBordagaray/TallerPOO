@@ -497,6 +497,8 @@ public class VistaReservaCliente extends JPanel {
         cambioPanel("COMEDOR PRINCIPAL");
         // Si no se selecciona ninguna ubicacion setea comedor principal
         SeleccionarUbicacion = "COMEDOR PRINCIPAL";
+        
+        actualizarMesas();
 
     }
 
@@ -563,7 +565,6 @@ public class VistaReservaCliente extends JPanel {
         List<Mesa> mesasP = new ArrayList<Mesa>();
         if (ubicacionSeleccionada != null && !ubicacionSeleccionada.equals("Seleccione una ubicación")) {
             try {
-            	List<Mesa> mesasB = verificarDisponibilidadMesas(mesasP);
             	
                 mesasP = mesaControlador.buscarMesasPorUbicacion(ubicacionSeleccionada);
                 List<Integer> mesasO = mesaControlador.buscarMesasOcupadasPorServicio(fechaFormateada, (String) comboHora.getSelectedItem());
@@ -572,7 +573,7 @@ public class VistaReservaCliente extends JPanel {
                 //List<Integer> mesasB 
                 comboMesa.removeAllItems();
 
-                for (Mesa mesa : mesasB) {
+                for (Mesa mesa : mesasP) {
                     if (!mesasO.contains(mesa.getIdMesa())) {
                         comboMesa.addItem("Mesa " + mesa.getIdMesa());
                     }
@@ -786,83 +787,5 @@ public class VistaReservaCliente extends JPanel {
         
         idMesaSeleccionada = 1;
     }
-    
-    /**
-     * Verifica si hay solapamiento entre dos servicios en base a sus fechas y horarios.
-     *
-     * @param fecha1     Fecha del primer servicio.
-     * @param horaInicio1 Hora de inicio del primer servicio.
-     * @param horaFin1   Hora de fin del primer servicio.
-     * @param fecha2     Fecha del segundo servicio.
-     * @param horaInicio2 Hora de inicio del segundo servicio.
-     * @param horaFin2   Hora de fin del segundo servicio.
-     * @return true si hay solapamiento entre los dos servicios; false en caso contrario.
-     */
- 	private boolean verificarSolapamiento(String fecha1, String horaInicio1, String horaFin1, String fecha2,
- 			String horaInicio2, String horaFin2) {
- 				
- 	    if (!fecha1.equals(fecha2)) {
- 	        return false;
- 	    }
- 	    	
- 	    LocalTime inicio1 = LocalTime.parse(horaInicio1);
- 	    LocalTime fin1 = LocalTime.parse(horaFin1);
- 	    LocalTime inicio2 = LocalTime.parse(horaInicio2);
- 	    LocalTime fin2 = LocalTime.parse(horaFin2);
- 	 
- 	    if (fin1.isBefore(inicio1)) {	        
- 	        return (inicio1.isBefore(fin2) || fin2.equals(fin1)) || (inicio2.isBefore(fin1) || fin1.equals(fin2));
- 	    } else {
- 	        return (inicio1.isBefore(fin2) && fin1.isAfter(inicio2));
- 	    }
- 	}
-    
- 	/**
- 	 * Verifica la disponibilidad de las mesas en una lista dada, retornando aquellas que no están solapadas 
- 	 * con servicios existentes. 
- 	 *
- 	 * @param mesasAverificar Lista de mesas que se desea verificar para disponibilidad.
- 	 * @return Lista de mesas disponibles que no tienen solapamientos con los servicios existentes.
- 	 */
-    public List<Mesa> verificarDisponibilidadMesas(List<Mesa> mesasAverificar) {
-        List<Mesa> mesasDisponibles = new ArrayList<>();
-
-        try {
-            if (mesasAverificar.isEmpty()) {
-                System.out.println("La lista de mesas a verificar está vacía.");
-                return mesasDisponibles;
-            }
-            
-            for (Mesa m : mesasAverificar) {
-                Servicio servicioExistente = servicioControlador.buscarServicioPorId(m.getIdServicio());
-
-                if (servicioExistente != null) {
-                    System.out.println("Servicio existente: " + servicioExistente.getIdServicio()
-                            + ", Fecha: " + servicioExistente.getFecha()
-                            + ", HoraInicio: " + servicioExistente.getHoraInicio()
-                            + ", HoraFin: " + servicioExistente.getHoraFin());
-                    boolean solapamiento = verificarSolapamiento(
-                            servicioExistente.getFecha(),
-                            servicioExistente.getHoraInicio(),
-                            servicioExistente.getHoraFin(),
-                            servicio.getFecha(),
-                            servicio.getHoraInicio(),
-                            servicio.getHoraFin()
-                    );
-                    if (!solapamiento) {
-                        mesasDisponibles.add(m);
-                    } else {
-                        System.out.println("Solapamiento en la mesa: " + m.getIdMesa());
-                    }
-                } else {
-                    mesasDisponibles.add(m);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return mesasDisponibles;
-    }
-    
+    	
 }

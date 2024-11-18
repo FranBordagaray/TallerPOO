@@ -30,6 +30,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+
+import Controlador.EmpleadoControlador;
 import Controlador.MesaControlador;
 import Modelo.Complementos.Comprobante;
 import Modelo.Complementos.EnumEstado;
@@ -64,6 +66,7 @@ public class VistaReservaEmpleado extends JPanel {
     private JComboBox<String> comboMesa; // ComboBox para seleccionar mesas
     private JComboBox<Integer> comboCapacidad; // ComboBox para seleccionar capacidad
     private MesaControlador mesaControlador; // Controlador para gestionar mesas
+    private EmpleadoControlador empleadoControlador; // Controlador para gestion mesas
     private String SeleccionarUbicacion; // Ubicación seleccionada
     private int capacidadSeleccionada; // Capacidad seleccionada
     private String fechaFormateada; // Fecha formateada para reservas
@@ -84,6 +87,7 @@ public class VistaReservaEmpleado extends JPanel {
     private Servicio servicio; // Objeto servicio
     private DetalleReservaEmpleado detalle_2; // Detalle de la reserva para empleados
     private DetalleReservaClienteParaEmpleado detalles_1; // Detalle de la reserva para clientes
+   
 
     /**
      * Constructor de la clase VistaReservaEmpleado.
@@ -97,6 +101,7 @@ public class VistaReservaEmpleado extends JPanel {
 		setBackground(new Color(222, 184, 135));
 
 		mesaControlador = new MesaControlador();
+		empleadoControlador = new EmpleadoControlador();
 
 		// Inicializa fechas de restricción
 		hoy = LocalDate.now();
@@ -744,7 +749,15 @@ public class VistaReservaEmpleado extends JPanel {
 
 		cambioPanel("COMEDOR PRINCIPAL");
 		SeleccionarUbicacion = "COMEDOR PRINCIPAL";
-
+		
+		SesionEmpleado s = new SesionEmpleado();
+		String rol = empleadoControlador.obtenerRol(s.getEmpleadoActual().getUsuario());
+		
+		// Deshabilitar botones según el rol
+		if (rol.equals("RECEPCION")) {
+			eventoEspecialCheckBox.setEnabled(false);
+		}
+				
 	}
 
 	/**

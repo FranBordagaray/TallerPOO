@@ -253,9 +253,8 @@ public class InicioEmpleado extends JFrame {
 		panelMenu.add(btnCerrarSesion);
 
 		// Deshabilitar botones según el rol
-		if (rol.equals("RECEPCIONISTA")) {
+		if (rol.equals("RECEPCION")) {
 			btnGestionEmpleados.setEnabled(false);
-			btnGestionDeMesas.setEnabled(false);
 			btnReportes.setEnabled(false);
 		} else if (rol.equals("MESERO")) {
 			btnGestionEmpleados.setEnabled(false);

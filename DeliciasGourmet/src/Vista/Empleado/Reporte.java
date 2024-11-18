@@ -165,7 +165,7 @@ public class Reporte extends JPanel {
         lblClienteMasFrecuente.setBounds(1, 331, 494, 30);
         add(lblClienteMasFrecuente);
         
-        JButton btnClienteFrecuente = new JButton("BUSCAR");
+        JButton btnClienteFrecuente = new JButton("Obtener");
         btnClienteFrecuente.setIcon(new ImageIcon(Reporte.class.getResource("/Img/icono de buscar.png")));
         btnClienteFrecuente.addActionListener(new ActionListener() {
         	@SuppressWarnings("unused")

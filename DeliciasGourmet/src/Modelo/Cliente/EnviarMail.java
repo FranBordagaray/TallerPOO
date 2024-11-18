@@ -31,7 +31,7 @@ public class EnviarMail {
     public static void enviarCorreo(String destinatario, String asunto, String cuerpo) {
         // Mail y clave de aplicación del restaurante
         final String remitente = "deliciasgourmet.recuperar@gmail.com";
-        final String password = "ygjc cwvz xigu rxhk";
+        final String password = "hial ubxe dwui ndeb";
 
         // Configuración del servidor de correo
         Properties props = new Properties();
@@ -75,7 +75,7 @@ public class EnviarMail {
     public static void enviarCorreoComprobante(String destinatario, String asunto, String cuerpo, String ruta) {
         // Mail y clave de aplicación del restaurante
         final String remitente = "deliciasgourmet.recuperar@gmail.com";
-        final String password = "ygjc cwvz xigu rxhk";
+        final String password = "hial ubxe dwui ndeb";
 
         // Configuración del servidor de correo
         Properties props = new Properties();

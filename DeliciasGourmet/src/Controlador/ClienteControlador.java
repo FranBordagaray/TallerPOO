@@ -290,9 +290,10 @@ public class ClienteControlador {
 	public boolean recuperarContrasena(String email, String nuevaContrasenia, String codigoRecuperacion) {
 	    PreparedStatement ps = null;
 	    try {
-	        ps = connection.prepareStatement("UPDATE Cliente SET contrasenia = ?, codRecuperacion = NULL WHERE email = ?");
+	        ps = connection.prepareStatement("UPDATE Cliente SET contrasenia = ?, codRecuperacion = ? WHERE email = ?");
 	        ps.setString(1, convertirSHA256(nuevaContrasenia));
-	        ps.setString(2, email);
+	        ps.setString(2, codigoRecuperacion);
+	        ps.setString(3, email);
 
 	        int filasActualizadas = ps.executeUpdate();
 	        if (filasActualizadas > 0) {

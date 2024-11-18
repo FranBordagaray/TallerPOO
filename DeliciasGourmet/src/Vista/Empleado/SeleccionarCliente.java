@@ -25,6 +25,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.JOptionPane;
@@ -373,6 +374,16 @@ public class SeleccionarCliente extends JFrame {
 		if (archivo.exists()) {
 			String nuevoNombre = "Reservas_Cliente_" + System.currentTimeMillis() + ".pdf";
 			ruta = "src\\ReportesPDF\\" + nuevoNombre;
+		}
+		
+		LocalDate ahora = LocalDate.now();
+		DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		
+		for(Reportes r : reportesCliente) {
+			LocalDate fechaReporte = LocalDate.parse(r.getFecha(),formatoFecha);
+			if(fechaReporte.isBefore(ahora)) {
+				reportesCliente.remove(r);
+			}
 		}
 
 		try {
